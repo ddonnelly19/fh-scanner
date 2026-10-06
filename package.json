@@ -1,0 +1,32 @@
+{
+  "name": "fh-scanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run --config src\\vitest.config.ts",
+    "test:watch": "vitest --config src\\vitest.config.ts",
+    "ownership": "node src\\cli\\review-ownership.ts",
+    "sync": "node src\\cli\\sync-garage.ts --apply",
+    "match": "node --use-system-ca src\\cli\\match-ordinals.ts",
+	"run": "node --use-system-ca src\\cli\\scanner.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/screenshot-desktop": "^1.15.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "@nut-tree-fork/nut-js": "^4.2.6",
+    "@tesseract.js-data/eng": "1.0.0",
+    "screenshot-desktop": "^1.15.6",
+    "sharp": "^0.35.5",
+    "playwright": "^1.63.0",
+    "tesseract.js": "^7.0.0"
+  }
+}

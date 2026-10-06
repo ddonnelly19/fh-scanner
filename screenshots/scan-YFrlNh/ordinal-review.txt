@@ -1,0 +1,1420 @@
+[INVALID] tiles\page-002-r2-c2.txt
+Car: [Cannot parse model followed by year/manufacturer]
+OCR: "M12S Warthog CST\n2554 AMG Transport Dvnamics\n"
+
+[UNMATCHED] tiles\page-003-r2-c3.txt
+Car: 1986 Audi #2 Audi Sport quattro $1
+OCR: "#2 Audi Sport quattro $1\n1986 Audi\n"
+Candidate (not accepted): kudosprime:32	1986 AUDI #2 AUDI SPORT QUATTRO S1
+Candidate (not accepted): 1478	1986 Audi Sport Quattro S2
+
+[UNMATCHED] tiles\page-004-r1-c4.txt
+Car: 2013 Audi R8 Coupé V10 plus 5.2 FSI q..
+OCR: "R8 Coupé V10 plus 5.2 FSI q..\n2013 Audi\n"
+Candidate (not accepted): kudosprime:41	2013 AUDI R8 COUPÉ V10 PLUS 5.2 FSI QUATTRO
+Candidate (not accepted): 2010	2013 Audi R8 Plus
+
+[UNMATCHED] tiles\page-004-r2-c1.txt
+Car: 2015 Audi St
+OCR: "St\n2015 Audi\n"
+Candidate (not accepted): 2179	2015 Audi S1
+Candidate (not accepted): kudosprime:45	2015 AUDI S1
+Candidate (not accepted): 2180	2015 Audi RS6
+Candidate (not accepted): kudosprime:44	2015 AUDI RS 6 AVANT
+
+[UNMATCHED] tiles\page-004-r3-c5.txt
+Car: 1965 Austin-Healev 3000 MKIII
+OCR: "3000 MKIII\n1965 Austin-Healev\n"
+Candidate (not accepted): kudosprime:54	1965 AUSTIN-HEALEY 3000 MKIII
+Candidate (not accepted): 1481	1965 Austin-Healey 3000
+
+[UNMATCHED] tiles\page-005-r1-c1.txt
+Car: 1993 Autozam AZ
+OCR: "AZ\n1993 Autozam\n"
+Candidate (not accepted): 3854	1993 Autozam AZ-1
+Candidate (not accepted): kudosprime:55	1993 AUTOZAM AZ-1
+
+[UNMATCHED] tiles\page-005-r1-c3.txt
+Car: 2016 Bentlev Bentayga
+OCR: "Bentayga\n2016 Bentlev\n"
+Candidate (not accepted): 2625	2016 Bentley Bentayga
+Candidate (not accepted): kudosprime:57	2016 BENTLEY BENTAYGA
+
+[UNMATCHED] tiles\page-005-r1-c4.txt
+Car: 2021 Bentlev Continental GT Convertible
+OCR: "Continental GT Convertible\n2021 Bentlev\n"
+Candidate (not accepted): kudosprime:58	2021 BENTLEY Continental GT Convertible
+Candidate (not accepted): 3728	2021 Bentley Continental GTC
+
+[UNMATCHED] tiles\page-005-r1-c5.txt
+Car: 2025 Bentlev Continental GT Speed
+OCR: "Continental GT Speed\n2025 Bentlev\n"
+Candidate (not accepted): kudosprime:645	2025 BENTLEY CONTINENTAL GT SPEED
+Candidate (not accepted): 4067	2025 Bently Continental GT
+
+[INVALID] tiles\page-005-r2-c2.txt
+Car: [Cannot parse model followed by year/manufacturer]
+OCR: "2002 Turbo\n1973 BMW\n"
+
+[UNMATCHED] tiles\page-006-r3-c4.txt
+Car: 2021 BMW M4 Competition Coupé 'Wel..
+OCR: "M4 Competition Coupé 'Wel..\n2021 BMW\n"
+Candidate (not accepted): kudosprime:81	2021 BMW M4 COMPETITION COUPÉ
+Candidate (not accepted): kudosprime:82	2021 BMW M4 Competition Coupé "Welcome Pack"
+Candidate (not accepted): 4266	2021 BMW M4 (Welcome Pack)
+Candidate (not accepted): 3645	2021 BMW M4
+
+[UNMATCHED] tiles\page-007-r1-c5.txt
+Car: 2025 BMW M4 CS
+OCR: "M4 CS\n2025 BMW\n"
+
+[UNMATCHED] tiles\page-007-r3-c3.txt
+Car: 2019 Casev Currie Motorsports #4402 Ultra 4 "Trophy Jeep’
+OCR: "#4402 Ultra 4 \"Trophy Jeep’\n2019 Casev Currie Motorsports\n"
+Candidate (not accepted): kudosprime:95	2019 CASEY CURRIE MOTORSPORTS #4402 ULTRA 4 ‘TROPHY JEEP’
+Candidate (not accepted): 3603	2019 Casey Currie Motorsports #4402 Ultra 4 Trophy Jeep
+
+[UNMATCHED] tiles\page-008-r2-c2.txt
+Car: 1970 Chevrolet Camaro 228
+OCR: "Camaro 228\n1970 Chevrolet\n"
+Candidate (not accepted): 1330	1970 Chevrolet Camaro Z/28
+Candidate (not accepted): kudosprime:104	1970 CHEVROLET CAMARO Z28
+Candidate (not accepted): 1291	1970 Chevrolet El Camino SS
+Candidate (not accepted): 299	1970 Chevrolet Chevelle
+Candidate (not accepted): kudosprime:106	1970 CHEVROLET CORVETTE ZR-1
+
+[UNMATCHED] tiles\page-008-r3-c2.txt
+Car: 1979 Chevrolet Camaro 228
+OCR: "Camaro 228\n1979 Chevrolet\n"
+Candidate (not accepted): 1064	1979 Chevrolet Camaro Z/28
+Candidate (not accepted): kudosprime:109	1979 CHEVROLET CAMARO Z28
+
+[UNMATCHED] tiles\page-009-r1-c1.txt
+Car: 2002 Chevrolet Corvette 206
+OCR: "Corvette 206\n2002 Chevrolet\n"
+Candidate (not accepted): 314	2002 Chevrolet Corvette Z06
+Candidate (not accepted): kudosprime:113	2002 CHEVROLET CORVETTE Z06
+
+[UNMATCHED] tiles\page-009-r1-c3.txt
+Car: 2015 Chevrolet Camaro 2/28
+OCR: "Camaro 2/28\n2015 Chevrolet\n"
+Candidate (not accepted): 2183	2015 Chevrolet Camaro Z/28
+Candidate (not accepted): kudosprime:115	2015 CHEVROLET CAMARO Z/28
+Candidate (not accepted): 2177	2015 Chevrolet Corvette Z06
+Candidate (not accepted): kudosprime:116	2015 CHEVROLET CORVETTE Z06
+
+[UNMATCHED] tiles\page-009-r3-c3.txt
+Car: 1970 Citroén 2CV
+OCR: "2CV\n1970 Citroén\n"
+
+[INVALID] tiles\page-009-r3-c4.txt
+Car: [Cannot parse model followed by year/manufacturer]
+OCR: "2000 Roadster\n1969 Datsun\n"
+
+[UNMATCHED] tiles\page-010-r1-c1.txt
+Car: 1972 Datsun #269 Attacking the Clock R...
+OCR: "#269 Attacking the Clock R...\n1972 Datsun\n"
+Candidate (not accepted): kudosprime:126	1972 DATSUN #269 240Z Attacking the Clock Racing Hill Climb
+Candidate (not accepted): 4084	1972 Datsun #269 Attacking The Clock Racing 240Z All Carbon Hillclimb Beast
+
+[UNMATCHED] tiles\page-010-r1-c4.txt
+Car: 2018 DeBerti Ford Mustang GT
+OCR: "Ford Mustang GT\n2018 DeBerti\n"
+Candidate (not accepted): 3108	2018 Ford Mustang RTR Spec 5
+Candidate (not accepted): kudosprime:219	2018 FORD MUSTANG RTR SPEC 5
+
+[UNMATCHED] tiles\page-010-r1-c5.txt
+Car: 2018 DeBerti Chevrolet Silverado 1500 D...
+OCR: "Chevrolet Silverado 1500 D...\n2018 DeBerti\n"
+Candidate (not accepted): kudosprime:128	2018 DEBERTI CHEVROLET SILVERADO 1500 DRIFT TRUCK
+Candidate (not accepted): 3088	2018 Chevrolet Deberti Drift Truck
+
+[UNMATCHED] tiles\page-010-r2-c1.txt
+Car: 2019 DeBerti Ford Super Duty F-250 Lari...
+OCR: "Ford Super Duty F-250 Lari...\n2019 DeBerti\n"
+Candidate (not accepted): kudosprime:129	2019 DEBERTI FORD SUPER DUTY F-250 LARIAT 'TRANSFORMER'
+Candidate (not accepted): 3439	2019 Ford F-250 Deberti
+
+[UNMATCHED] tiles\page-010-r2-c2.txt
+Car: 2019 DeBerti Toyota Tacoma TRD "The Pe...
+OCR: "Toyota Tacoma TRD \"The Pe...\n2019 DeBerti\n"
+Candidate (not accepted): kudosprime:130	2019 DEBERTI TOYOTA TACOMA TRD "THE PERFORMANCE TRUCK"
+Candidate (not accepted): 3441	2019 Deberti Toyota Tacoma TRD The Performance Truck
+Candidate (not accepted): 3374	2019 Toyota Tacoma TRD Pro
+Candidate (not accepted): kudosprime:589	2019 TOYOTA TACOMA TRD PRO
+Candidate (not accepted): 4199	2019 Toyota Tacoma TRD Pro (Forza Edition)
+
+[UNMATCHED] tiles\page-010-r2-c4.txt
+Car: 1968 Dodae Dart HEMI Super Stock
+OCR: "Dart HEMI Super Stock\n1968 Dodae\n"
+Candidate (not accepted): kudosprime:132	1968 DODGE DART HEMI SUPER STOCK
+Candidate (not accepted): 1332	1968 Dodge Dart
+
+[UNMATCHED] tiles\page-010-r2-c5.txt
+Car: 1969 Dodae Charger Daytona HEMI
+OCR: "Charger Daytona HEMI\n1969 Dodae\n"
+Candidate (not accepted): kudosprime:133	1969 DODGE CHARGER DAYTONA HEMI
+Candidate (not accepted): 1063	1969 Dodge Charger Daytona
+Candidate (not accepted): 513	1969 Dodge Charger R/T
+Candidate (not accepted): kudosprime:134	1969 DODGE CHARGER R/T
+
+[UNMATCHED] tiles\page-010-r3-c1.txt
+Car: 1969 Dodae Charger R/T
+OCR: "Charger R/T\n1969 Dodae\n"
+Candidate (not accepted): 513	1969 Dodge Charger R/T
+Candidate (not accepted): kudosprime:134	1969 DODGE CHARGER R/T
+Candidate (not accepted): 1063	1969 Dodge Charger Daytona
+Candidate (not accepted): kudosprime:133	1969 DODGE CHARGER DAYTONA HEMI
+
+[UNMATCHED] tiles\page-010-r3-c2.txt
+Car: 1970 Dodae Coronet Super Bee
+OCR: "Coronet Super Bee\n1970 Dodae\n"
+Candidate (not accepted): kudosprime:136	1970 DODGE CORONET SUPER BEE
+Candidate (not accepted): 1352	1970 Dodge Super Bee
+
+[UNMATCHED] tiles\page-010-r3-c3.txt
+Car: 1970 Dodae Challenger R/T
+OCR: "Challenger R/T\n1970 Dodae\n"
+Candidate (not accepted): kudosprime:135	1970 DODGE CHALLENGER R/T
+Candidate (not accepted): 639	1970 Dodge Challenger Hemi
+
+[UNMATCHED] tiles\page-010-r3-c4.txt
+Car: 1999 Dodae Viper GTS ACR Forza Edition
+OCR: "Viper GTS ACR Forza Edition\n1999 Dodae\n"
+Candidate (not accepted): 4198	1999 Dodge Viper GTS ACR (Forza Edition)
+Candidate (not accepted): kudosprime:138	1999 DODGE VIPER GTS ACR Forza Edition
+Candidate (not accepted): 483	1999 Dodge Viper GTS ACR
+Candidate (not accepted): kudosprime:137	1999 DODGE VIPER GTS ACR
+
+[UNMATCHED] tiles\page-010-r3-c5.txt
+Car: 1999 Dodae Viper GTS ACR
+OCR: "Viper GTS ACR\n1999 Dodae\n"
+Candidate (not accepted): 483	1999 Dodge Viper GTS ACR
+Candidate (not accepted): kudosprime:137	1999 DODGE VIPER GTS ACR
+Candidate (not accepted): 4198	1999 Dodge Viper GTS ACR (Forza Edition)
+Candidate (not accepted): kudosprime:138	1999 DODGE VIPER GTS ACR Forza Edition
+
+[UNMATCHED] tiles\page-011-r1-c1.txt
+Car: 2006 Dodae Ram SRT-10
+OCR: "Ram SRT-10\n2006 Dodae\n"
+Candidate (not accepted): 1052	2006 Dodge Ram SRT-10
+Candidate (not accepted): kudosprime:139	2006 DODGE RAM SRT10
+
+[UNMATCHED] tiles\page-011-r1-c2.txt
+Car: 2008 Dodae Viper SRT-10 ACR
+OCR: "Viper SRT-10 ACR\n2008 Dodae\n"
+Candidate (not accepted): 1046	2008 Dodge Viper SRT-10 ACR
+Candidate (not accepted): kudosprime:140	2008 DODGE VIPER SRT10 ACR
+
+[UNMATCHED] tiles\page-011-r1-c3.txt
+Car: 2015 Dodae Charger SRT Hellcat
+OCR: "Charger SRT Hellcat\n2015 Dodae\n"
+Candidate (not accepted): 2468	2015 Dodge Charger SRT Hellcat
+Candidate (not accepted): kudosprime:143	2015 DODGE CHARGER SRT HELLCAT
+Candidate (not accepted): kudosprime:142	2015 DODGE CHALLENGER SRT HELLCAT
+Candidate (not accepted): 2263	2015 Dodge Challenger Hellcat
+
+[UNMATCHED] tiles\page-011-r1-c4.txt
+Car: 2015 Dodae Challenger SRT Hellcat
+OCR: "Challenger SRT Hellcat\n2015 Dodae\n"
+Candidate (not accepted): kudosprime:142	2015 DODGE CHALLENGER SRT HELLCAT
+Candidate (not accepted): 2263	2015 Dodge Challenger Hellcat
+Candidate (not accepted): 2468	2015 Dodge Charger SRT Hellcat
+Candidate (not accepted): kudosprime:143	2015 DODGE CHARGER SRT HELLCAT
+
+[UNMATCHED] tiles\page-011-r1-c5.txt
+Car: 2016 Dodae Viper ACR
+OCR: "Viper ACR\n2016 Dodae\n"
+Candidate (not accepted): 2544	2016 Dodge Viper ACR
+Candidate (not accepted): kudosprime:144	2016 DODGE VIPER ACR
+
+[UNMATCHED] tiles\page-011-r2-c1.txt
+Car: 2018 Dodae Challenger SRT Demon
+OCR: "Challenger SRT Demon\n2018 Dodae\n"
+Candidate (not accepted): 2909	2018 Dodge Challenger SRT Demon
+Candidate (not accepted): kudosprime:145	2018 DODGE CHALLENGER SRT DEMON
+
+[UNMATCHED] tiles\page-011-r2-c2.txt
+Car: 2021 Dodae Durango SRT Hellcat
+OCR: "Durango SRT Hellcat\n2021 Dodae\n"
+Candidate (not accepted): kudosprime:146	2021 DODGE Durango SRT Hellcat
+Candidate (not accepted): 3850	2021 Dodge Durango Hellcat
+
+[UNMATCHED] tiles\page-011-r2-c3.txt
+Car: 2022 Dodae Challenger SRT Super Stock
+OCR: "Challenger SRT Super Stock\n2022 Dodae\n"
+Candidate (not accepted): kudosprime:147	2022 DODGE Challenger SRT Super Stock
+Candidate (not accepted): 3959	2022 Dodge Challenger SRT
+
+[UNMATCHED] tiles\page-011-r2-c4.txt
+Car: 2023 Dodae Challenger SRT Demon 170
+OCR: "Challenger SRT Demon 170\n2023 Dodae\n"
+Candidate (not accepted): 3958	2023 Dodge Challenger SRT Demon 170
+Candidate (not accepted): kudosprime:653	2023 DODGE CHALLENGER SRT DEMON 170
+
+[UNMATCHED] tiles\page-013-r2-c2.txt
+Car: 2017 Ferrari J50 Preorder Car
+OCR: "J50 Preorder Car\n2017 Ferrari\n"
+Candidate (not accepted): 4341	2017 Ferrari J50 (Pre Order)
+Candidate (not accepted): kudosprime:173	2017 FERRARI J50 Preorder
+Candidate (not accepted): 3226	2017 Ferrari J50
+Candidate (not accepted): kudosprime:172	2017 FERRARI J50
+Candidate (not accepted): kudosprime:171	2017 FERRARI 812 SUPERFAST
+
+[UNMATCHED] tiles\page-014-r1-c2.txt
+Car: 2024 Ferrari F80
+OCR: "F80\n2024 Ferrari\n"
+
+[UNMATCHED] tiles\page-014-r2-c2.txt
+Car: 1968 Ford Mustang GT 2+2 Fastback F...
+OCR: "Mustang GT 2+2 Fastback F...\n1968 Ford\n"
+Candidate (not accepted): kudosprime:187	1968 FORD MUSTANG GT 2+2 FASTBACK
+Candidate (not accepted): 4168	1968 Ford Mustang GT 2+2 Fastback (Forza Edition
+Candidate (not accepted): kudosprime:188	1968 FORD MUSTANG GT 2+2 FASTBACK Forza Edition
+Candidate (not accepted): 2614	1968 Ford Mustang GT390
+
+[UNMATCHED] tiles\page-014-r3-c2.txt
+Car: 1977 Ford #5 Escort RS1800 Mkll
+OCR: "#5 Escort RS1800 Mkll\n1977 Ford\n"
+Candidate (not accepted): kudosprime:192	1977 FORD #5 ESCORT RS1800 MKII
+Candidate (not accepted): 3184	1977 Ford Escort Mk2
+
+[UNMATCHED] tiles\page-014-r3-c4.txt
+Car: 1986 Ford F-150 XLT Lariat Forza Editior
+OCR: "F-150 XLT Lariat Forza Editior\n1986 Ford\n"
+Candidate (not accepted): 4171	1986 Ford F-150 XLT Lariat (Forza Edition)
+Candidate (not accepted): kudosprime:194	1986 FORD F-150 XLT LARIAT Forza Edition
+Candidate (not accepted): kudosprime:193	1986 FORD F-150 XLT LARIAT
+
+[UNMATCHED] tiles\page-015-r2-c1.txt
+Car: 2000 Ford Mustang SVT Cobra R
+OCR: "Mustang SVT Cobra R\n2000 Ford\n"
+Candidate (not accepted): 405	2000 Ford Mustang Cobra R
+Candidate (not accepted): kudosprime:201	2000 FORD SVT COBRA R
+
+[UNMATCHED] tiles\page-015-r3-c2.txt
+Car: 2010 Ford Crown Victoria Police Interc...
+OCR: "Crown Victoria Police Interc...\n2010 Ford\n"
+Candidate (not accepted): kudosprime:207	2010 FORD CROWN VICTORIA POLICE INTERCEPTOR
+Candidate (not accepted): 2649	2010 Ford Crown Victoria
+
+[UNMATCHED] tiles\page-015-r3-c5.txt
+Car: 2014 Ford #11 Rockstar F-150 Trophy...
+OCR: "#11 Rockstar F-150 Trophy...\n2014 Ford\n"
+Candidate (not accepted): kudosprime:210	2014 FORD #11 ROCKSTAR F-150 TROPHY TRUCK
+Candidate (not accepted): 2517	2014 Ford F-150 Trophy Truck
+
+[UNMATCHED] tiles\page-016-r1-c1.txt
+Car: 2014 Ford FPV Limited Edition Pursuit...
+OCR: "FPV Limited Edition Pursuit...\n2014 Ford\n"
+Candidate (not accepted): kudosprime:211	2014 FORD FPV LIMITED EDITION PURSUIT UTE
+Candidate (not accepted): kudosprime:284	2014 HSV LIMITED EDITION GEN-F GTS MALOO
+
+[UNMATCHED] tiles\page-016-r1-c3.txt
+Car: 2016 Ford Mustang Shelby GT350R
+OCR: "Mustang Shelby GT350R\n2016 Ford\n"
+Candidate (not accepted): 2400	2016 Ford Shelby GT350R
+Candidate (not accepted): kudosprime:214	2016 FORD SHELBY GT350R
+
+[UNMATCHED] tiles\page-016-r2-c1.txt
+Car: 2017 Ford #14 Rahal Letterman Laniga...
+OCR: "#14 Rahal Letterman Laniga...\n2017 Ford\n"
+Candidate (not accepted): kudosprime:215	2017 FORD #14 RAHAL LETTERMAN LANIGAN RACING GRC FIESTA
+
+[UNMATCHED] tiles\page-016-r2-c2.txt
+Car: 2017 Ford #25 'Brocky' Ultra4 Bronco...
+OCR: "#25 'Brocky' Ultra4 Bronco...\n2017 Ford\n"
+Candidate (not accepted): kudosprime:216	2017 FORD #25 'BROCKY' ULTRA4 BRONCO RTR
+Candidate (not accepted): 3128	2017 Ford #25 Brocky Ultra4 Bronco RTR
+
+[UNMATCHED] tiles\page-016-r2-c5.txt
+Car: 2020 Ford Super Duty F-450 DRW PLA..
+OCR: "Super Duty F-450 DRW PLA..\n2020 Ford\n"
+Candidate (not accepted): kudosprime:222	2020 FORD SUPER DUTY F-450 DRW PLATINUM
+Candidate (not accepted): kudosprime:223	2020 FORD Super Duty F-450 DRW PLATINUM FORZA EDITION
+Candidate (not accepted): 3476	2020 Ford F-450 DRW
+Candidate (not accepted): 4175	2020 Ford F-450 DRW (Forza Edition)
+
+[UNMATCHED] tiles\page-016-r3-c1.txt
+Car: 2020 Ford ce Bronco R #2069 |
+OCR: "ce Bronco R #2069 |\n2020 Ford\n"
+Candidate (not accepted): 3404	2020 Ford Bronco R
+Candidate (not accepted): kudosprime:220	2020 FORD #2069 FORD PERFORMANCE BRONCO R
+
+[UNMATCHED] tiles\page-016-r3-c2.txt
+Car: 2020 Ford Super Duty F-450 DRW PLA...
+OCR: "Super Duty F-450 DRW PLA...\n2020 Ford\n"
+Candidate (not accepted): kudosprime:222	2020 FORD SUPER DUTY F-450 DRW PLATINUM
+Candidate (not accepted): kudosprime:223	2020 FORD Super Duty F-450 DRW PLATINUM FORZA EDITION
+Candidate (not accepted): 3476	2020 Ford F-450 DRW
+Candidate (not accepted): 4175	2020 Ford F-450 DRW (Forza Edition)
+
+[UNMATCHED] tiles\page-017-r1-c3.txt
+Car: 2023 Ford F-150 Raptor R "Welcome P...
+OCR: "F-150 Raptor R \"Welcome P...\n2023 Ford\n"
+Candidate (not accepted): kudosprime:229	2023 FORD F-150 Raptor R "Welcome Pack"
+Candidate (not accepted): 4268	2023 Ford F-150 Raptor R (Welcome Pack)
+Candidate (not accepted): 3849	2023 Ford F-150 Raptor R
+Candidate (not accepted): kudosprime:228	2023 FORD F-150 Raptor R
+
+[UNMATCHED] tiles\page-017-r3-c1.txt
+Car: 2006 Formula Drift #43 Dodge Viper SRT-10 ACR
+OCR: "#43 Dodge Viper SRT-10 ACR\n2006 Formula Drift\n"
+Candidate (not accepted): 3003	2006 Formula Drift #43 Dodge Viper SRT10
+Candidate (not accepted): kudosprime:236	2006 FORMULA DRIFT #43 DODGE VIPER SRT10
+Candidate (not accepted): 1052	2006 Dodge Ram SRT-10
+Candidate (not accepted): kudosprime:139	2006 DODGE RAM SRT10
+
+[UNMATCHED] tiles\page-018-r1-c2.txt
+Car: 2019 Formula Drift #411 Toyota Corolla Hatchb...
+OCR: "#411 Toyota Corolla Hatchb...\n2019 Formula Drift\n"
+Candidate (not accepted): 3524	2019 Formula Drift #411 Toyota Corolla Hatchback
+Candidate (not accepted): kudosprime:242	2019 FORMULA DRIFT #411 TOYOTA COROLLA HATCHBACK
+
+[UNMATCHED] tiles\page-018-r1-c5.txt
+Car: 2023 Formula Drift #64 Forsberg Racing Nissa...
+OCR: "#64 Forsberg Racing Nissa...\n2023 Formula Drift\n"
+Candidate (not accepted): 3744	2023 Formula Drift #64 Forsberg Racing Nissan Z
+Candidate (not accepted): kudosprime:467	2023 FORMULA DRIFT #64 FORSBERG RACING NISSAN Z
+
+[UNMATCHED] tiles\page-018-r3-c2.txt
+Car: 2020 Gordon Murrav Automotive T.50
+OCR: "T.50\n2020 Gordon Murrav Automotive\n"
+Candidate (not accepted): kudosprime:250	2020 GORDON MURRAY AUTOMOTIVE T.50
+
+[UNMATCHED] tiles\page-018-r3-c3.txt
+Car: 2025 GR GR GT (Prototype)
+OCR: "GR GT (Prototype)\n2025 GR\n"
+Candidate (not accepted): kudosprime:598	2025 GR GT (Prototype)
+
+[UNMATCHED] tiles\page-018-r3-c4.txt
+Car: 2012 Hennessev Venom GT
+OCR: "Venom GT\n2012 Hennessev\n"
+Candidate (not accepted): 1532	2012 Hennessey Venom GT
+Candidate (not accepted): kudosprime:251	2012 HENNESSEY VENOM GT
+
+[UNMATCHED] tiles\page-018-r3-c5.txt
+Car: 2019 Hennessev Ford F-150 VelociRaptor 6X6
+OCR: "Ford F-150 VelociRaptor 6X6\n2019 Hennessev\n"
+Candidate (not accepted): kudosprime:252	2019 HENNESSEY Ford F-150 VELOCIRAPTOR 6X6
+
+[UNMATCHED] tiles\page-019-r1-c1.txt
+Car: 2021 Hennessev Venom F5
+OCR: "Venom F5\n2021 Hennessev\n"
+Candidate (not accepted): 3600	2021 Hennessey Venom F5
+Candidate (not accepted): kudosprime:253	2021 HENNESSEY VENOM F5
+
+[UNMATCHED] tiles\page-019-r1-c2.txt
+Car: 1968 Holden Monaro GTS 327
+OCR: "Monaro GTS 327\n1968 Holden\n"
+
+[UNMATCHED] tiles\page-019-r3-c1.txt
+Car: 1990 Honda X WTAC #19 101 Mot
+OCR: "X WTAC #19 101 Mot\n1990 Honda\n"
+Candidate (not accepted): 4211	1990 Honda #19 101 Motorsport CRX WTAC
+Candidate (not accepted): kudosprime:260	1990 HONDA #19 101 Motorsport CRX WTAC
+
+[UNMATCHED] tiles\page-019-r3-c5.txt
+Car: 1992 Honda #21 Hardrace/JDMYard Civi...
+OCR: "#21 Hardrace/JDMYard Civi...\n1992 Honda\n"
+Candidate (not accepted): 4277	1992 Honda #21 Hardrace/JDMYard Civic WTAC
+Candidate (not accepted): kudosprime:263	1992 HONDA #21 Hardrace/JDMYard Civic WTAC
+
+[UNMATCHED] tiles\page-020-r1-c4.txt
+Car: 2000 Honda Prelude Type SH
+OCR: "Prelude Type SH\n2000 Honda\n"
+
+[UNMATCHED] tiles\page-020-r1-c5.txt
+Car: 2001 Honda #33 BYP Racing Integra WT..
+OCR: "#33 BYP Racing Integra WT..\n2001 Honda\n"
+Candidate (not accepted): kudosprime:269	2001 HONDA #33 Integra WTAC
+Candidate (not accepted): 368	2001 Acura Integra Type R
+Candidate (not accepted): kudosprime:3	2001 ACURA INTEGRA TYPE-R
+
+[UNMATCHED] tiles\page-020-r2-c1.txt
+Car: 2003 Honda $2000
+OCR: "$2000\n2003 Honda\n"
+Candidate (not accepted): 427	2003 Honda S2000
+Candidate (not accepted): kudosprime:271	2003 HONDA S2000
+Candidate (not accepted): 4251	2003 Honda S2000 (Touge Edition)
+
+[UNMATCHED] tiles\page-020-r2-c3.txt
+Car: 2004 Honda #52 Evasive Motorsports S...
+OCR: "#52 Evasive Motorsports S...\n2004 Honda\n"
+Candidate (not accepted): 4231	2004 Honda #52 Evasive Motorsports S2000 WTAC
+Candidate (not accepted): kudosprime:273	2004 HONDA #52 Evasive Motorsports S2000 WTAC
+
+[UNMATCHED] tiles\page-021-r1-c3.txt
+Car: 2014 HSV Limited Edition Gen-F GTS...
+OCR: "Limited Edition Gen-F GTS...\n2014 HSV\n"
+Candidate (not accepted): kudosprime:284	2014 HSV LIMITED EDITION GEN-F GTS MALOO
+Candidate (not accepted): kudosprime:283	2014 HSV GEN-F GTS
+Candidate (not accepted): kudosprime:211	2014 FORD FPV LIMITED EDITION PURSUIT UTE
+Candidate (not accepted): 2131	2014 Holden HSV GTS
+
+[UNMATCHED] tiles\page-021-r1-c5.txt
+Car: 2019 Hvundai Veloster N
+OCR: "Veloster N\n2019 Hvundai\n"
+Candidate (not accepted): 2872	2019 Hyundai Veloster N
+Candidate (not accepted): kudosprime:285	2019 HYUNDAI VELOSTER N
+
+[UNMATCHED] tiles\page-021-r2-c1.txt
+Car: 2020 Hvundai iON
+OCR: "iON\n2020 Hvundai\n"
+Candidate (not accepted): 3678	2020 Hyundai i30 N
+Candidate (not accepted): kudosprime:286	2020 HYUNDAI i30N
+
+[UNMATCHED] tiles\page-021-r2-c2.txt
+Car: 2021 Hvundai i20N
+OCR: "i20N\n2021 Hvundai\n"
+Candidate (not accepted): kudosprime:287	2021 HYUNDAI i20 N
+
+[UNMATCHED] tiles\page-021-r2-c3.txt
+Car: 2022 Hvundai N Vision 74
+OCR: "N Vision 74\n2022 Hvundai\n"
+Candidate (not accepted): 3829	2022 Hyundai N Vision 74
+Candidate (not accepted): kudosprime:288	2022 HYUNDAI N Vision 74
+Candidate (not accepted): 3908	2022 Honda e
+Candidate (not accepted): kudosprime:281	2022 HONDA E
+Candidate (not accepted): 3928	2022 Hyundai i20 N
+
+[UNMATCHED] tiles\page-021-r2-c4.txt
+Car: 2023 Hvundai IONIQ5N
+OCR: "IONIQ5N\n2023 Hvundai\n"
+Candidate (not accepted): 3827	2023 Hyundai Ioniq 5 N
+Candidate (not accepted): kudosprime:289	2023 HYUNDAI iONIQ 5 N
+
+[UNMATCHED] tiles\page-021-r2-c5.txt
+Car: 1956 Jaauar D-Type
+OCR: "D-Type\n1956 Jaauar\n"
+Candidate (not accepted): 1301	1956 Jaguar D-Type
+Candidate (not accepted): kudosprime:290	1956 JAGUAR D-TYPE
+
+[UNMATCHED] tiles\page-021-r3-c1.txt
+Car: 1961 Jaauar E-type
+OCR: "E-type\n1961 Jaauar\n"
+Candidate (not accepted): 336	1961 Jaguar E-Type
+Candidate (not accepted): kudosprime:291	1961 JAGUAR E-TYPE
+
+[UNMATCHED] tiles\page-021-r3-c2.txt
+Car: 1964 Jaauar Lightweight E-Type
+OCR: "Lightweight E-Type\n1964 Jaauar\n"
+Candidate (not accepted): kudosprime:292	1964 JAGUAR LIGHTWEIGHT E-TYPE
+Candidate (not accepted): 2992	1964 Jaguar E-Type Lightweight
+
+[UNMATCHED] tiles\page-021-r3-c3.txt
+Car: 1990 Jaauar XJ-S
+OCR: "XJ-S\n1990 Jaauar\n"
+Candidate (not accepted): kudosprime:650	1990 JAGUAR XJ-S
+Candidate (not accepted): 4354	1990 Jaguar XJ-S Forza Edition
+Candidate (not accepted): kudosprime:651	1990 JAGUAR XJ-S FORZA EDITION
+
+[UNMATCHED] tiles\page-021-r3-c4.txt
+Car: 1990 Jaauar XJ-S Forza Edition
+OCR: "XJ-S Forza Edition\n1990 Jaauar\n"
+Candidate (not accepted): 4354	1990 Jaguar XJ-S Forza Edition
+Candidate (not accepted): kudosprime:651	1990 JAGUAR XJ-S FORZA EDITION
+Candidate (not accepted): kudosprime:650	1990 JAGUAR XJ-S
+
+[UNMATCHED] tiles\page-021-r3-c5.txt
+Car: 1991 Jaauar Sport XJR-15
+OCR: "Sport XJR-15\n1991 Jaauar\n"
+Candidate (not accepted): kudosprime:293	1991 JAGUAR SPORT XJR-15
+Candidate (not accepted): 3287	1991 Jaguar XJR-15
+
+[UNMATCHED] tiles\page-022-r1-c1.txt
+Car: 1993 Jaauar XJ220
+OCR: "XJ220\n1993 Jaauar\n"
+Candidate (not accepted): 489	1993 Jaguar XJ220
+Candidate (not accepted): kudosprime:294	1993 JAGUAR XJ220
+Candidate (not accepted): 3293	1993 Jaguar XJ220 S
+Candidate (not accepted): kudosprime:295	1993 JAGUAR XJ220S TWR
+
+[UNMATCHED] tiles\page-022-r1-c2.txt
+Car: 1993 Jaauar XJ220S TWR
+OCR: "XJ220S TWR\n1993 Jaauar\n"
+Candidate (not accepted): kudosprime:295	1993 JAGUAR XJ220S TWR
+Candidate (not accepted): 3293	1993 Jaguar XJ220 S
+Candidate (not accepted): 489	1993 Jaguar XJ220
+Candidate (not accepted): kudosprime:294	1993 JAGUAR XJ220
+
+[UNMATCHED] tiles\page-022-r1-c3.txt
+Car: 2010 Jaauar C-X75
+OCR: "C-X75\n2010 Jaauar\n"
+Candidate (not accepted): 3055	2010 Jaguar C-X75
+Candidate (not accepted): kudosprime:296	2010 JAGUAR C-X75
+
+[UNMATCHED] tiles\page-022-r1-c4.txt
+Car: 2015 Jaauar XKR-S GT
+OCR: "XKR-S GT\n2015 Jaauar\n"
+Candidate (not accepted): kudosprime:647	2015 JAGUAR XKR-S GT
+
+[UNMATCHED] tiles\page-022-r1-c5.txt
+Car: 2012 Jeen Wrangler Rubicon
+OCR: "Wrangler Rubicon\n2012 Jeen\n"
+Candidate (not accepted): kudosprime:300	2012 JEEP WRANGLER RUBICON
+Candidate (not accepted): 3486	2012 Jeep Wrangler Rubicon (Traffic)
+Candidate (not accepted): 1522	2012 Jeep Wrangler
+
+[UNMATCHED] tiles\page-022-r2-c4.txt
+Car: 2019 Jimeo #240 Fastball Racing Class...
+OCR: "#240 Fastball Racing Class...\n2019 Jimeo\n"
+Candidate (not accepted): kudosprime:301	2019 JIMCO #240 FASTBALL RACING CLASS 6100 SPEC TROPHY TRUCK
+Candidate (not accepted): 3605	2019 Jimco #240 Fastball Racing Spec Trophy Truck
+
+[UNMATCHED] tiles\page-022-r3-c1.txt
+Car: 2008 Koeniaseaa CCGT
+OCR: "CCGT\n2008 Koeniaseaa\n"
+Candidate (not accepted): 1007	2008 Koenigsegg CCGT
+Candidate (not accepted): kudosprime:303	2008 KOENIGSEGG CCGT
+
+[UNMATCHED] tiles\page-022-r3-c2.txt
+Car: 2011 Koeniaseaa Agera
+OCR: "Agera\n2011 Koeniaseaa\n"
+Candidate (not accepted): 1397	2011 Koenigsegg Agera
+Candidate (not accepted): kudosprime:304	2011 KOENIGSEGG AGERA
+
+[UNMATCHED] tiles\page-022-r3-c3.txt
+Car: 2015 Koeniaseaa One:1
+OCR: "One:1\n2015 Koeniaseaa\n"
+Candidate (not accepted): 2188	2015 Koenigsegg One:1
+Candidate (not accepted): kudosprime:305	2015 KOENIGSEGG ONE:1
+
+[UNMATCHED] tiles\page-022-r3-c4.txt
+Car: 2016 Koeniaseaa Regera
+OCR: "Regera\n2016 Koeniaseaa\n"
+Candidate (not accepted): 2526	2016 Koenigsegg Regera
+Candidate (not accepted): kudosprime:306	2016 KOENIGSEGG REGERA
+
+[UNMATCHED] tiles\page-022-r3-c5.txt
+Car: 2017 Koeniaseaa Agera RS
+OCR: "Agera RS\n2017 Koeniaseaa\n"
+Candidate (not accepted): 2910	2017 Koenigsegg Agera RS
+Candidate (not accepted): kudosprime:307	2017 KOENIGSEGG AGERA RS
+
+[UNMATCHED] tiles\page-023-r1-c1.txt
+Car: 2020 Koeniaseaa Jesko
+OCR: "Jesko\n2020 Koeniaseaa\n"
+Candidate (not accepted): 3315	2020 Koenigsegg Jesko
+Candidate (not accepted): kudosprime:308	2020 KOENIGSEGG JESKO
+
+[UNMATCHED] tiles\page-023-r1-c2.txt
+Car: 2024 Koeniaseaa Gemera
+OCR: "Gemera\n2024 Koeniaseaa\n"
+Candidate (not accepted): 4081	2024 Koenigsegg Gemera
+Candidate (not accepted): kudosprime:309	2024 KOENIGSEGG Gemera
+
+[UNMATCHED] tiles\page-023-r1-c4.txt
+Car: 1967 Lamborahini Miura P400
+OCR: "Miura P400\n1967 Lamborahini\n"
+Candidate (not accepted): 637	1967 Lamborghini Miura P400
+Candidate (not accepted): kudosprime:311	1967 LAMBORGHINI MIURA P400
+
+[UNMATCHED] tiles\page-023-r1-c5.txt
+Car: 1973 Lamborahini Espada 400 GT
+OCR: "Espada 400 GT\n1973 Lamborahini\n"
+
+[UNMATCHED] tiles\page-023-r2-c1.txt
+Car: 1988 Lamborahini Countach LP5000 QV
+OCR: "Countach LP5000 QV\n1988 Lamborahini\n"
+Candidate (not accepted): kudosprime:312	1988 LAMBORGHINI COUNTACH LP5000 QV
+Candidate (not accepted): 316	1988 Lamborghini Countach
+
+[UNMATCHED] tiles\page-023-r2-c2.txt
+Car: 1997 Lamborahini Diablo SV
+OCR: "Diablo SV\n1997 Lamborahini\n"
+Candidate (not accepted): 325	1997 Lamborghini Diablo SV
+Candidate (not accepted): kudosprime:313	1997 LAMBORGHINI DIABLO SV
+
+[UNMATCHED] tiles\page-023-r2-c3.txt
+Car: 1999 Lamborahini Diablo GTR
+OCR: "Diablo GTR\n1999 Lamborahini\n"
+Candidate (not accepted): 324	1999 Lamborghini Diablo GTR
+Candidate (not accepted): kudosprime:314	1999 LAMBORGHINI DIABLO GTR
+
+[UNMATCHED] tiles\page-023-r2-c4.txt
+Car: 2010 Lamborahini Murciélago LP 670-4 SV
+OCR: "Murciélago LP 670-4 SV\n2010 Lamborahini\n"
+Candidate (not accepted): kudosprime:315	2010 LAMBORGHINI MURCIELAGO LP 670-4 SV
+Candidate (not accepted): 1173	2010 Lamborghini Gallardo LP670-4 SV
+
+[UNMATCHED] tiles\page-023-r2-c5.txt
+Car: 2011 Lamborahini Sesto Elemento
+OCR: "Sesto Elemento\n2011 Lamborahini\n"
+Candidate (not accepted): 1392	2011 Lamborghini Sesto Elemento
+Candidate (not accepted): kudosprime:316	2011 LAMBORGHINI SESTO ELEMENTO
+
+[UNMATCHED] tiles\page-023-r3-c1.txt
+Car: 2012 Lamborahini der Performante Gal
+OCR: "der Performante Gal\n2012 Lamborahini\n"
+Candidate (not accepted): kudosprime:318	2012 LAMBORGHINI GALLARDO LP 570-4 SPYDER PERFORMANTE
+Candidate (not accepted): 1601	2012 Lamborghini Gallardo LP570-4 Spyder Performante
+Candidate (not accepted): 1398	2012 Lamborghini Aventador LP700-4
+Candidate (not accepted): kudosprime:317	2012 LAMBORGHINI AVENTADOR LP700-4
+
+[UNMATCHED] tiles\page-023-r3-c2.txt
+Car: 2012 Lamborahini Aventador LP700-4
+OCR: "Aventador LP700-4\n2012 Lamborahini\n"
+Candidate (not accepted): 1398	2012 Lamborghini Aventador LP700-4
+Candidate (not accepted): kudosprime:317	2012 LAMBORGHINI AVENTADOR LP700-4
+Candidate (not accepted): kudosprime:318	2012 LAMBORGHINI GALLARDO LP 570-4 SPYDER PERFORMANTE
+Candidate (not accepted): 1601	2012 Lamborghini Gallardo LP570-4 Spyder Performante
+
+[UNMATCHED] tiles\page-023-r3-c3.txt
+Car: 2013 Lamborahini Veneno
+OCR: "Veneno\n2013 Lamborahini\n"
+Candidate (not accepted): 2042	2013 Lamborghini Veneno
+Candidate (not accepted): kudosprime:319	2013 LAMBORGHINI VENENO
+
+[UNMATCHED] tiles\page-023-r3-c4.txt
+Car: 2014 Lamborahini Huracan LP 610-4
+OCR: "Huracan LP 610-4\n2014 Lamborahini\n"
+Candidate (not accepted): kudosprime:320	2014 LAMBORGHINI HURACÁN LP 610-4
+
+[UNMATCHED] tiles\page-023-r3-c5.txt
+Car: 2016 Lamborahini Centenario LP 770-4
+OCR: "Centenario LP 770-4\n2016 Lamborahini\n"
+Candidate (not accepted): kudosprime:321	2016 LAMBORGHINI CENTENARIO LP 770-4
+
+[UNMATCHED] tiles\page-024-r1-c1.txt
+Car: 2018 Lamborahini Aventador SVJ
+OCR: "Aventador SVJ\n2018 Lamborahini\n"
+Candidate (not accepted): kudosprime:322	2018 LAMBORGHINI AVENTADOR SVJ
+
+[UNMATCHED] tiles\page-024-r1-c2.txt
+Car: 2019 Lamborahini Urus
+OCR: "Urus\n2019 Lamborahini\n"
+Candidate (not accepted): 3120	2019 Lamborghini Urus
+Candidate (not accepted): kudosprime:323	2019 LAMBORGHINI URUS
+Candidate (not accepted): 3289	2019 Lamborghini Aventador SVJ
+
+[UNMATCHED] tiles\page-024-r1-c3.txt
+Car: 2020 Lamborahini Sian Roadster
+OCR: "Sian Roadster\n2020 Lamborahini\n"
+Candidate (not accepted): kudosprime:327	2020 LAMBORGHINI SIÁN ROADSTER
+Candidate (not accepted): kudosprime:326	2020 LAMBORGHINI HURACÁN STO
+Candidate (not accepted): 3371	2020 Lamborghini Huracan EVO
+Candidate (not accepted): kudosprime:325	2020 LAMBORGHINI HURACÁN EVO
+Candidate (not accepted): 3759	2020 Lamborghini Huracan Evo Spyder
+
+[UNMATCHED] tiles\page-024-r1-c4.txt
+Car: 2020 Lamborahini Essenza SCV12
+OCR: "Essenza SCV12\n2020 Lamborahini\n"
+Candidate (not accepted): 3606	2020 Lamborghini Essenza SCV12
+Candidate (not accepted): kudosprime:324	2020 LAMBORGHINI ESSENZA SCV12
+Candidate (not accepted): 3371	2020 Lamborghini Huracan EVO
+Candidate (not accepted): kudosprime:325	2020 LAMBORGHINI HURACÁN EVO
+Candidate (not accepted): kudosprime:326	2020 LAMBORGHINI HURACÁN STO
+
+[UNMATCHED] tiles\page-024-r1-c5.txt
+Car: 2020 Lamborabhini Huracan STO
+OCR: "Huracan STO\n2020 Lamborabhini\n"
+Candidate (not accepted): kudosprime:326	2020 LAMBORGHINI HURACÁN STO
+Candidate (not accepted): 3371	2020 Lamborghini Huracan EVO
+Candidate (not accepted): kudosprime:325	2020 LAMBORGHINI HURACÁN EVO
+Candidate (not accepted): 3759	2020 Lamborghini Huracan Evo Spyder
+Candidate (not accepted): kudosprime:327	2020 LAMBORGHINI SIÁN ROADSTER
+
+[UNMATCHED] tiles\page-024-r2-c1.txt
+Car: 2020 Lamborahini Huracan EVO
+OCR: "Huracan EVO\n2020 Lamborahini\n"
+Candidate (not accepted): 3371	2020 Lamborghini Huracan EVO
+Candidate (not accepted): kudosprime:325	2020 LAMBORGHINI HURACÁN EVO
+Candidate (not accepted): 3759	2020 Lamborghini Huracan Evo Spyder
+Candidate (not accepted): kudosprime:326	2020 LAMBORGHINI HURACÁN STO
+Candidate (not accepted): kudosprime:327	2020 LAMBORGHINI SIÁN ROADSTER
+
+[UNMATCHED] tiles\page-024-r2-c2.txt
+Car: 2021 Lamborahini Aventador LP 780-4 Ultimae
+OCR: "Aventador LP 780-4 Ultimae\n2021 Lamborahini\n"
+Candidate (not accepted): kudosprime:328	2021 LAMBORGHINI Aventador LP 780-4 Ultimae
+Candidate (not accepted): kudosprime:329	2021 LAMBORGHINI Countach LPI 800-4
+Candidate (not accepted): 3608	2021 Lamborghini Sian Roadster
+
+[UNMATCHED] tiles\page-024-r2-c3.txt
+Car: 2021 Lamborahini Countach LPI 800-4
+OCR: "Countach LPI 800-4\n2021 Lamborahini\n"
+Candidate (not accepted): kudosprime:329	2021 LAMBORGHINI Countach LPI 800-4
+Candidate (not accepted): 3672	2021 Lamborghini Huracan STO
+Candidate (not accepted): kudosprime:328	2021 LAMBORGHINI Aventador LP 780-4 Ultimae
+
+[UNMATCHED] tiles\page-024-r2-c4.txt
+Car: 2022 Lamborahini Huracan EVO Spyder
+OCR: "Huracan EVO Spyder\n2022 Lamborahini\n"
+Candidate (not accepted): kudosprime:627	2022 LAMBORGHINI HURACÁN EVO SPYDER
+Candidate (not accepted): kudosprime:330	2022 LAMBORGHINI HURACÁN TECNICA
+
+[UNMATCHED] tiles\page-024-r2-c5.txt
+Car: 2022 Lamborahini Huracan Tecnica
+OCR: "Huracan Tecnica\n2022 Lamborahini\n"
+Candidate (not accepted): kudosprime:330	2022 LAMBORGHINI HURACÁN TECNICA
+Candidate (not accepted): kudosprime:627	2022 LAMBORGHINI HURACÁN EVO SPYDER
+
+[UNMATCHED] tiles\page-024-r3-c1.txt
+Car: 2023 Lamborahini Huracan Sterrato
+OCR: "Huracan Sterrato\n2023 Lamborahini\n"
+Candidate (not accepted): 3840	2023 Lamborghini Huracan Sterrato
+Candidate (not accepted): kudosprime:331	2023 LAMBORGHINI Huracán Sterrato
+Candidate (not accepted): 3753	2023 Lamborghini Huracan Tecnica
+Candidate (not accepted): 3774	2023 Lamborghini Countach
+
+[UNMATCHED] tiles\page-024-r3-c2.txt
+Car: 2024 Lamborahini Temerario
+OCR: "Temerario\n2024 Lamborahini\n"
+Candidate (not accepted): 4002	2024 Lamborghini Temerario
+Candidate (not accepted): kudosprime:623	2024 LAMBORGHINI TEMERARIO
+Candidate (not accepted): 3891	2024 Lamborghini Revuelto
+Candidate (not accepted): kudosprime:332	2024 LAMBORGHINI Revuelto
+
+[UNMATCHED] tiles\page-024-r3-c3.txt
+Car: 2024 Lamboradhini Revuelto
+OCR: "Revuelto\n2024 Lamboradhini\n"
+Candidate (not accepted): 3891	2024 Lamborghini Revuelto
+Candidate (not accepted): kudosprime:332	2024 LAMBORGHINI Revuelto
+Candidate (not accepted): 4002	2024 Lamborghini Temerario
+Candidate (not accepted): kudosprime:623	2024 LAMBORGHINI TEMERARIO
+
+[UNMATCHED] tiles\page-025-r3-c2.txt
+Car: 2002 Lotus Esprit V8
+OCR: "Esprit V8\n2002 Lotus\n"
+Candidate (not accepted): kudosprime:649	2002 LOTUS ESPRIT
+
+[UNMATCHED] tiles\page-025-r3-c4.txt
+Car: 2018 Lotus Scura Motorsports Exige W...
+OCR: "Scura Motorsports Exige W...\n2018 Lotus\n"
+Candidate (not accepted): 4210	2018 Lotus Scura Motorsports Exige WTAC
+Candidate (not accepted): kudosprime:346	2018 LOTUS Scura Motorsport Exige WTAC
+Candidate (not accepted): 3661	2018 Lotus Exige Cup 430
+Candidate (not accepted): kudosprime:345	2018 LOTUS Exige Cup 430
+Candidate (not accepted): kudosprime:245	2018 FUNCO MOTORSPORTS F9
+
+[UNMATCHED] tiles\page-026-r2-c3.txt
+Car: 1972 Mazda Cosmo 110S Series li
+OCR: "Cosmo 110S Series li\n1972 Mazda\n"
+Candidate (not accepted): kudosprime:355	1972 MAZDA COSMO 110S SERIES II
+Candidate (not accepted): 1587	1972 Mazda Cosmo
+
+[UNMATCHED] tiles\page-026-r3-c1.txt
+Car: 1974 Mazda agon 'FURSTY' #123
+OCR: "agon 'FURSTY' #123\n1974 Mazda\n"
+Candidate (not accepted): kudosprime:358	1974 MAZDA #123 Mad Mike 808 Wagon 'FURSTY'
+Candidate (not accepted): 4145	1974 Mazda #123 Mad MIke 808 Wagon Fursty
+
+[UNMATCHED] tiles\page-027-r3-c5.txt
+Car: 2014 McLaren 6508S Spider
+OCR: "6508S Spider\n2014 McLaren\n"
+Candidate (not accepted): 3087	2014 McLaren 650S Spider
+Candidate (not accepted): kudosprime:377	2014 MCLAREN 650S SPIDER
+
+[UNMATCHED] tiles\page-028-r2-c1.txt
+Car: 2021 McLaren 7165LT Coupé
+OCR: "7165LT Coupé\n2021 McLaren\n"
+Candidate (not accepted): 3482	2021 McLaren 765LT
+Candidate (not accepted): kudosprime:382	2021 MCLAREN 765LT
+Candidate (not accepted): 3655	2021 McLaren 620R
+Candidate (not accepted): kudosprime:381	2021 MCLAREN 620R
+Candidate (not accepted): 3700	2021 McLaren Sabre
+
+[UNMATCHED] tiles\page-028-r2-c3.txt
+Car: 2025 McLaren Wi
+OCR: "Wi\n2025 McLaren\n"
+Candidate (not accepted): 4118	2025 McLaren W1
+Candidate (not accepted): kudosprime:652	2025 MCLAREN W1
+
+[UNMATCHED] tiles\page-028-r3-c2.txt
+Car: 2018 Mercedes-AMG EG3S
+OCR: "EG3S\n2018 Mercedes-AMG\n"
+Candidate (not accepted): kudosprime:388	2018 MERCEDES-AMG E 63 S
+Candidate (not accepted): 3064	2018 Mercedes-AMG GT4
+Candidate (not accepted): 3250	2018 Mercedes-Benz E63 S AMG
+Candidate (not accepted): kudosprime:389	2018 MERCEDES-AMG GT 4-DOOR COUPE
+Candidate (not accepted): 3063	2018 Mercedes-Benz X-Class
+
+[UNMATCHED] tiles\page-028-r3-c4.txt
+Car: 2020 Mercedes-AMG GT Black Series "Welcome P..
+OCR: "GT Black Series \"Welcome P..\n2020 Mercedes-AMG\n"
+Candidate (not accepted): kudosprime:391	2020 MERCEDES-AMG GT BLACK SERIES "Welcome Pack"
+Candidate (not accepted): 3895	2020 Mercedes-Benz SLC43 AMG
+Candidate (not accepted): kudosprime:407	2020 MERCEDES-AMG SLC 43 Final Edition
+
+[UNMATCHED] tiles\page-029-r1-c3.txt
+Car: 2021 Mercedes-AMG Mercedes-AMG ONE
+OCR: "Mercedes-AMG ONE\n2021 Mercedes-AMG\n"
+Candidate (not accepted): kudosprime:392	2021 MERCEDES-AMG ONE
+Candidate (not accepted): 3650	2021 Merceds-AMG One
+Candidate (not accepted): kudosprime:393	2021 MERCEDES-AMG SL 63
+Candidate (not accepted): 3616	2021 Mercedes-AMG GT Black Series
+Candidate (not accepted): kudosprime:390	2021 MERCEDES-AMG GT Black Series
+
+[UNMATCHED] tiles\page-029-r2-c2.txt
+Car: 1990 Mercedes-Benz 190 E 2.5-16 Evolution Il For...
+OCR: "190 E 2.5-16 Evolution Il For...\n1990 Mercedes-Benz\n"
+Candidate (not accepted): kudosprime:397	1990 MERCEDES-BENZ 190E 2.5-16 EVOLUTION II
+Candidate (not accepted): 4169	1990 Mercedes-Benz 190E 2.5-16 Evolution II (Forza Edition)
+Candidate (not accepted): kudosprime:398	1990 MERCEDES-BENZ 190E 2.5-16 EVOLUTION II Forza Edition
+Candidate (not accepted): 1296	1990 Mercedes-Benz 190E
+
+[UNMATCHED] tiles\page-029-r2-c3.txt
+Car: 1990 Mercedes-Benz 190 E 2.5-16 Evolution li
+OCR: "190 E 2.5-16 Evolution li\n1990 Mercedes-Benz\n"
+Candidate (not accepted): kudosprime:397	1990 MERCEDES-BENZ 190E 2.5-16 EVOLUTION II
+Candidate (not accepted): 4169	1990 Mercedes-Benz 190E 2.5-16 Evolution II (Forza Edition)
+Candidate (not accepted): kudosprime:398	1990 MERCEDES-BENZ 190E 2.5-16 EVOLUTION II Forza Edition
+Candidate (not accepted): 1296	1990 Mercedes-Benz 190E
+
+[UNMATCHED] tiles\page-029-r3-c1.txt
+Car: 2012 Mercedes-Benz k Series C63 AMGC
+OCR: "k Series C63 AMGC\n2012 Mercedes-Benz\n"
+Candidate (not accepted): kudosprime:401	2012 MERCEDES-BENZ C 63 AMG COUPÉ BLACK SERIES
+Candidate (not accepted): 1500	2012 Mercedes-Benz C63 AMG
+
+[UNMATCHED] tiles\page-030-r1-c2.txt
+Car: 1971 Mevers Manx
+OCR: "Manx\n1971 Mevers\n"
+Candidate (not accepted): 2416	1971 Meyers Manx
+Candidate (not accepted): kudosprime:408	1971 MEYERS MANX
+
+[UNMATCHED] tiles\page-030-r1-c3.txt
+Car: 2023 Mevers Manx 2.0
+OCR: "Manx 2.0\n2023 Mevers\n"
+Candidate (not accepted): kudosprime:409	2023 MEYERS Manx 2.0
+Candidate (not accepted): 3795	2023 Meyers Manx
+
+[UNMATCHED] tiles\page-030-r2-c2.txt
+Car: 2013 MINI X-Raid All4 Racing Country...
+OCR: "X-Raid All4 Racing Country...\n2013 MINI\n"
+Candidate (not accepted): 2148	2013 Mini X-Raid All4 Racing Countryman
+Candidate (not accepted): kudosprime:413	2013 MINI X-RAID ALL4 RACING COUNTRYMAN
+
+[UNMATCHED] tiles\page-030-r2-c3.txt
+Car: 2018 MINI X-Raid John Cooper Works...
+OCR: "X-Raid John Cooper Works...\n2018 MINI\n"
+Candidate (not accepted): 3132	2018 Mini X-Raid John Cooper Works Buggy
+Candidate (not accepted): kudosprime:414	2018 MINI X-RAID JOHN COOPER WORKS BUGGY
+
+[UNMATCHED] tiles\page-030-r3-c1.txt
+Car: 1990 Mitsubishi ock Racing Minicab Time Att:
+OCR: "ock Racing Minicab Time Att:\n1990 Mitsubishi\n"
+Candidate (not accepted): 4085	1990 Mitsubishi #269 Attacking The Clock Racing Minicab Time Attack
+Candidate (not accepted): kudosprime:416	1990 MITSUBISHI #269 Attacking the Clock Racing Minicab Time Attack
+
+[UNMATCHED] tiles\page-030-r3-c5.txt
+Car: 1995 Mitsubishi Lancer Evolution Ill GSR
+OCR: "Lancer Evolution Ill GSR\n1995 Mitsubishi\n"
+Candidate (not accepted): kudosprime:419	1995 MITSUBISHI Lancer Evolution III GSR
+Candidate (not accepted): 3886	1995 Mitsubishi Lancer Evolution III
+Candidate (not accepted): 3750	1995 Mitsubishi Pajero
+Candidate (not accepted): 327	1995 Mitsubishi Eclipse GSX
+Candidate (not accepted): kudosprime:418	1995 MITSUBISHI ECLIPSE GSX
+
+[UNMATCHED] tiles\page-031-r1-c3.txt
+Car: 2001 Mitsubishi Lancer Evolution VI GSR TM...
+OCR: "Lancer Evolution VI GSR TM...\n2001 Mitsubishi\n"
+Candidate (not accepted): 4090	2001 Mitsubishi Lancer Evolution VI TME
+Candidate (not accepted): kudosprime:423	2001 MITSUBISHI Lancer Evolution VI GSR TM Edition
+
+[UNMATCHED] tiles\page-031-r1-c5.txt
+Car: 2004 Mitsubishi Lancer Evolution VII MR 'W...
+OCR: "Lancer Evolution VII MR 'W...\n2004 Mitsubishi\n"
+Candidate (not accepted): 378	2004 Mitsubishi Lancer Evolution VIII MR
+Candidate (not accepted): kudosprime:424	2004 MITSUBISHI LANCER EVOLUTION VIII MR
+Candidate (not accepted): kudosprime:425	2004 MITSUBISHI LANCER EVOLUTION VIII MR "Welcome Pack"
+Candidate (not accepted): 4267	2004 Mitsubishi Lancer Evolution VIII MR (Welcome Pack)
+
+[UNMATCHED] tiles\page-031-r2-c1.txt
+Car: 2005 Mitsubishi #1 Sierra Sierra Enterprises...
+OCR: "#1 Sierra Sierra Enterprises...\n2005 Mitsubishi\n"
+Candidate (not accepted): kudosprime:426	2005 MITSUBISHI #1 Sierra Sierra Enterprises Lancer Evolution Time Attack
+Candidate (not accepted): 3554	2005 Mitsubishi #1 Sierra Enterprises Lancer Evolution Time Attack
+
+[UNMATCHED] tiles\page-031-r3-c3.txt
+Car: 1983 Nissan #11 Tomica Skyline Turbo S...
+OCR: "#11 Tomica Skyline Turbo S...\n1983 Nissan\n"
+Candidate (not accepted): 2801	1983 Nissan #11 Tomica Skylien Turbo Super Silhouette
+Candidate (not accepted): kudosprime:432	1983 NISSAN #11 SKYLINE TURBO SUPER SILHOUETTE
+Candidate (not accepted): 4238	1983 Nissan Skyline 2000 Turbo RS
+Candidate (not accepted): kudosprime:644	1983 NISSAN SKYLINE 2000 TURBO RS
+
+[UNMATCHED] tiles\page-032-r2-c2.txt
+Car: 1990 Nissan #12 Skyline GT-R (BNR32 Gr...
+OCR: "#12 Skyline GT-R (BNR32 Gr...\n1990 Nissan\n"
+Candidate (not accepted): kudosprime:440	1990 NISSAN #12 Skyline GT-R (BNR32 Gr. A) JTC
+Candidate (not accepted): 4179	1990 Nissan #12 Skyline GT-R (BNR32GR.A) JTC
+
+[UNMATCHED] tiles\page-032-r3-c1.txt
+Car: 1993 Nissan 240SX
+OCR: "240SX\n1993 Nissan\n"
+Candidate (not accepted): kudosprime:444	1993 NISSAN 240SX SE
+
+[UNMATCHED] tiles\page-032-r3-c2.txt
+Car: 1993 Nissan #32 Skyline WTAC "Xtreme...
+OCR: "#32 Skyline WTAC \"Xtreme...\n1993 Nissan\n"
+Candidate (not accepted): kudosprime:445	1993 NISSAN #32 Skyline WTAC 'Xtreme GTR'
+Candidate (not accepted): 4212	1993 Nissan #32 Skyline WTAC XTREME GTR
+
+[UNMATCHED] tiles\page-032-r3-c4.txt
+Car: 1994 Nissan Fairlady Z Version S Twin T...
+OCR: "Fairlady Z Version S Twin T...\n1994 Nissan\n"
+Candidate (not accepted): 345	1994 Nissan Fairlady Z Version S Twin Turbo
+Candidate (not accepted): kudosprime:446	1994 NISSAN FAIRLADY Z VERSION S TWIN TURBO
+Candidate (not accepted): 440	1994 Nissan Silvia K's
+Candidate (not accepted): kudosprime:447	1994 NISSAN SILVIA K'S
+
+[UNMATCHED] tiles\page-033-r1-c4.txt
+Car: 1998 Nissan Skyline GT-R 40th Annivers...
+OCR: "Skyline GT-R 40th Annivers...\n1998 Nissan\n"
+Candidate (not accepted): kudosprime:455	1998 NISSAN Skyline GT-R 40th Anniversary
+Candidate (not accepted): 3363	1998 Nissan #23 Pennzoil Nismo Skyline GT-R
+Candidate (not accepted): kudosprime:452	1998 NISSAN #23 Pennzoil NISMO Skyline GT-R
+Candidate (not accepted): 4119	1998 Nissan Skyline Autech
+
+[UNMATCHED] tiles\page-033-r2-c2.txt
+Car: 1998 Nissan #23 Pennzoil NISMO Skylin...
+OCR: "#23 Pennzoil NISMO Skylin...\n1998 Nissan\n"
+Candidate (not accepted): 3363	1998 Nissan #23 Pennzoil Nismo Skyline GT-R
+Candidate (not accepted): kudosprime:452	1998 NISSAN #23 Pennzoil NISMO Skyline GT-R
+Candidate (not accepted): 4119	1998 Nissan Skyline Autech
+Candidate (not accepted): kudosprime:455	1998 NISSAN Skyline GT-R 40th Anniversary
+
+[UNMATCHED] tiles\page-033-r2-c3.txt
+Car: 2000 Nissan #36 Dream Project S15 Silvi...
+OCR: "#36 Dream Project S15 Silvi...\n2000 Nissan\n"
+Candidate (not accepted): 4213	2000 Nissan #36 Dream Project S15 Silvia WTAC
+Candidate (not accepted): kudosprime:456	2000 NISSAN #36 Dream Project S15 Silvia WTAC
+
+[UNMATCHED] tiles\page-033-r3-c3.txt
+Car: 2012 Nissan GT-R Black Edition (R35) Fo...
+OCR: "GT-R Black Edition (R35) Fo...\n2012 Nissan\n"
+Candidate (not accepted): kudosprime:461	2012 NISSAN GT-R BLACK EDITION (R35)
+Candidate (not accepted): kudosprime:462	2012 NISSAN GT-R Black Edition (R35) Forza Edition
+Candidate (not accepted): 4167	2012 Nisan GT-R Black Edition R35 (Forza Edition)
+Candidate (not accepted): 4303	2012 Nissan GT-R Black Edition R35 (Touge Edition)
+Candidate (not accepted): 2002	2012 Nissan GT-R
+
+[UNMATCHED] tiles\page-034-r2-c1.txt
+Car: 1984 Onel Manta 400
+OCR: "Manta 400\n1984 Onel\n"
+Candidate (not accepted): 2420	1984 Opel Manta 400
+Candidate (not accepted): kudosprime:472	1984 OPEL MANTA 400
+
+[UNMATCHED] tiles\page-034-r2-c2.txt
+Car: 2009 Paaani Zonda R
+OCR: "Zonda R\n2009 Paaani\n"
+Candidate (not accepted): kudosprime:474	2009 PAGANI ZONDA R
+Candidate (not accepted): 1369	2009 Pagani Zonda Cinque
+
+[UNMATCHED] tiles\page-034-r2-c3.txt
+Car: 2010 Paaani Zonda Cinque Roadster
+OCR: "Zonda Cinque Roadster\n2010 Paaani\n"
+Candidate (not accepted): kudosprime:473	2010 PAGANI ZONDA CINQUE ROADSTER
+Candidate (not accepted): 1175	2010 Pagani Zonda R
+
+[UNMATCHED] tiles\page-034-r2-c4.txt
+Car: 2016 Paaani Huayra BC Coupe
+OCR: "Huayra BC Coupe\n2016 Paaani\n"
+Candidate (not accepted): kudosprime:475	2016 PAGANI HUAYRA BC
+Candidate (not accepted): 2647	2016 Pagani Huayra
+
+[UNMATCHED] tiles\page-034-r2-c5.txt
+Car: 2021 Paaani HuayraR
+OCR: "HuayraR\n2021 Paaani\n"
+Candidate (not accepted): kudosprime:476	2021 PAGANI HUAYRA R
+
+[UNMATCHED] tiles\page-034-r3-c3.txt
+Car: 1984 Peuaeot 205 Turbo 16
+OCR: "205 Turbo 16\n1984 Peuaeot\n"
+Candidate (not accepted): kudosprime:480	1984 PEUGEOT 205 TURBO 16
+Candidate (not accepted): 1591	1984 Peugeot 205 T16
+
+[UNMATCHED] tiles\page-034-r3-c4.txt
+Car: 1991 Peuaeot 205 Rallye
+OCR: "205 Rallye\n1991 Peuaeot\n"
+Candidate (not accepted): 3180	1991 Peugeot 205 Rallye
+Candidate (not accepted): kudosprime:481	1991 PEUGEOT 205 RALLYE
+
+[UNMATCHED] tiles\page-034-r3-c5.txt
+Car: 2007 Peuaeot 207 Super 2000
+OCR: "207 Super 2000\n2007 Peuaeot\n"
+Candidate (not accepted): 615	2007 Peugeot 207 Super 2000
+Candidate (not accepted): kudosprime:482	2007 PEUGEOT 207 SUPER 2000
+
+[UNMATCHED] tiles\page-035-r1-c1.txt
+Car: 1958 Plvmouth Fury
+OCR: "Fury\n1958 Plvmouth\n"
+Candidate (not accepted): 2216	1958 Plymouth Fury
+Candidate (not accepted): kudosprime:483	1958 PLYMOUTH FURY
+
+[UNMATCHED] tiles\page-035-r1-c2.txt
+Car: 1968 Plvmouth Barracuda Formula S
+OCR: "Barracuda Formula S\n1968 Plvmouth\n"
+Candidate (not accepted): kudosprime:484	1968 PLYMOUTH BARRACUDA FORMULA-S
+Candidate (not accepted): 281	1968 Plymouth Barracuda
+
+[UNMATCHED] tiles\page-035-r1-c3.txt
+Car: 1971 Plvmouth Cuda 426 HEMI
+OCR: "Cuda 426 HEMI\n1971 Plvmouth\n"
+Candidate (not accepted): kudosprime:485	1971 PLYMOUTH CUDA 426 HEMI
+Candidate (not accepted): 1277	1971 Plymouth 'Cuda 426
+
+[UNMATCHED] tiles\page-035-r1-c5.txt
+Car: 2021 Polaris RZR Pro XP Factory Racing...
+OCR: "RZR Pro XP Factory Racing...\n2021 Polaris\n"
+Candidate (not accepted): 3686	2021 Polaris RZR Pro XP Factory Racing Limited Edition
+Candidate (not accepted): kudosprime:486	2021 POLARIS RZR PRO XP FACTORY RACING LIMITED EDITION
+Candidate (not accepted): 3687	2021 Polaris RZR Pro XP Ultimate
+Candidate (not accepted): kudosprime:487	2021 POLARIS RZR PRO XP ULTIMATE
+Candidate (not accepted): 3662	2021 RJ Anderson #37 Polaris RZR Pro 4 Truck
+
+[UNMATCHED] tiles\page-035-r3-c4.txt
+Car: 1987 Porsche 911 Carrera Coupe 'Luftauto..
+OCR: "911 Carrera Coupe 'Luftauto..\n1987 Porsche\n"
+Candidate (not accepted): kudosprime:655	1987 PORSCHE CARRERA COUPE 'LUFTAUTO 002'
+Candidate (not accepted): 269	1987 Porsche 959
+Candidate (not accepted): kudosprime:495	1987 PORSCHE 959
+
+[UNMATCHED] tiles\page-037-r3-c3.txt
+Car: 1972 Reliant Supervan lll
+OCR: "Supervan lll\n1972 Reliant\n"
+Candidate (not accepted): 2563	1972 Reliant Supervan III
+Candidate (not accepted): kudosprime:524	1972 RELIANT SUPERVAN III
+
+[UNMATCHED] tiles\page-038-r2-c2.txt
+Car: 2021 RIVIAN RIT
+OCR: "RIT\n2021 RIVIAN\n"
+Candidate (not accepted): kudosprime:532	2021 RIVIAN R1T
+
+[UNMATCHED] tiles\page-038-r2-c5.txt
+Car: 2004 Saleen S7
+OCR: "S7\n2004 Saleen\n"
+
+[UNMATCHED] tiles\page-038-r3-c2.txt
+Car: 1993 Schunbnan 962CR
+OCR: "962CR\n1993 Schunbnan\n"
+Candidate (not accepted): kudosprime:536	1993 SCHUPPAN 962CR
+Candidate (not accepted): 3288	1993 Porsche 962 C RS
+
+[UNMATCHED] tiles\page-039-r1-c3.txt
+Car: 2013 SRT Viper GTS
+OCR: "Viper GTS\n2013 SRT\n"
+Candidate (not accepted): kudosprime:141	2013 SRT SRT VIPER GTS
+Candidate (not accepted): 1562	2013 Viper GTS
+
+[UNMATCHED] tiles\page-040-r2-c3.txt
+Car: 1969 Tovota 2000GT
+OCR: "2000GT\n1969 Tovota\n"
+Candidate (not accepted): 247	1969 Toyota 2000 GT
+Candidate (not accepted): kudosprime:563	1969 TOYOTA 2000GT
+
+[UNMATCHED] tiles\page-040-r2-c4.txt
+Car: 1974 Tovota Celica GT
+OCR: "Celica GT\n1974 Tovota\n"
+Candidate (not accepted): kudosprime:639	1974 TOYOTA CELICA GT
+
+[UNMATCHED] tiles\page-040-r2-c5.txt
+Car: 1974 Tovota Corolla SR5
+OCR: "Corolla SR5\n1974 Tovota\n"
+Candidate (not accepted): kudosprime:564	1974 TOYOTA COROLLA SR5
+
+[UNMATCHED] tiles\page-040-r3-c1.txt
+Car: 1979 Tovota FJ40
+OCR: "FJ40\n1979 Tovota\n"
+Candidate (not accepted): kudosprime:565	1979 TOYOTA FJ40
+
+[UNMATCHED] tiles\page-040-r3-c2.txt
+Car: 1985 Tovota Sprinter Trueno GT-APEX F...
+OCR: "Sprinter Trueno GT-APEX F...\n1985 Tovota\n"
+Candidate (not accepted): kudosprime:567	1985 TOYOTA SPRINTER TRUENO GT APEX
+Candidate (not accepted): kudosprime:568	1985 TOYOTA Sprinter Trueno GT Apex Forza Edition
+Candidate (not accepted): 455	1985 Toyota Sprinter
+Candidate (not accepted): 4250	1985 Toyota Sprinter (Touge Edition)
+Candidate (not accepted): 4162	1985 Toyota Sprinter (Forza Edition)
+
+[UNMATCHED] tiles\page-040-r3-c3.txt
+Car: 1985 Tovota Sprinter Trueno GT Apex
+OCR: "Sprinter Trueno GT Apex\n1985 Tovota\n"
+Candidate (not accepted): kudosprime:567	1985 TOYOTA SPRINTER TRUENO GT APEX
+Candidate (not accepted): kudosprime:568	1985 TOYOTA Sprinter Trueno GT Apex Forza Edition
+Candidate (not accepted): 455	1985 Toyota Sprinter
+Candidate (not accepted): 4250	1985 Toyota Sprinter (Touge Edition)
+Candidate (not accepted): 4162	1985 Toyota Sprinter (Forza Edition)
+
+[UNMATCHED] tiles\page-040-r3-c4.txt
+Car: 1989 Tovota MR2 SC
+OCR: "MR2 SC\n1989 Tovota\n"
+Candidate (not accepted): 1395	1989 Toyota MR2 SC
+Candidate (not accepted): kudosprime:569	1989 TOYOTA MR2 SC
+
+[UNMATCHED] tiles\page-040-r3-c5.txt
+Car: 1991 Tovota Chaser GT Twin Turbo
+OCR: "Chaser GT Twin Turbo\n1991 Tovota\n"
+Candidate (not accepted): kudosprime:570	1991 TOYOTA Chaser GT Twin Turbo
+Candidate (not accepted): 3914	1991 Toyota Chaser GT
+Candidate (not accepted): 3851	1991 Toyota Sera
+Candidate (not accepted): kudosprime:571	1991 TOYOTA Sera
+
+[UNMATCHED] tiles\page-041-r1-c1.txt
+Car: 1991 Tovota Sera
+OCR: "Sera\n1991 Tovota\n"
+Candidate (not accepted): 3851	1991 Toyota Sera
+Candidate (not accepted): kudosprime:571	1991 TOYOTA Sera
+Candidate (not accepted): 3914	1991 Toyota Chaser GT
+Candidate (not accepted): kudosprime:570	1991 TOYOTA Chaser GT Twin Turbo
+
+[UNMATCHED] tiles\page-041-r1-c2.txt
+Car: 1992 Tovota Supra 2.0 GT
+OCR: "Supra 2.0 GT\n1992 Tovota\n"
+Candidate (not accepted): 460	1992 Toyota Supra 2.0 GT
+Candidate (not accepted): kudosprime:573	1992 TOYOTA SUPRA 2.0 GT TWIN TURBO
+
+[UNMATCHED] tiles\page-041-r1-c3.txt
+Car: 1992 Tovota Celica GT-Four RC ST185
+OCR: "Celica GT-Four RC ST185\n1992 Tovota\n"
+Candidate (not accepted): kudosprime:572	1992 TOYOTA CELICA GT-FOUR RC ST185
+
+[UNMATCHED] tiles\page-041-r1-c4.txt
+Car: 1993 Tovota #1 T1100 Baja Truck
+OCR: "#1 T1100 Baja Truck\n1993 Tovota\n"
+Candidate (not accepted): 2636	1993 Toyota #1 T100 Baja Truck
+Candidate (not accepted): kudosprime:574	1993 TOYOTA #1 T100 BAJA TRUCK
+
+[UNMATCHED] tiles\page-041-r1-c5.txt
+Car: 1994 Tovota Celica GT-Four ST205
+OCR: "Celica GT-Four ST205\n1994 Tovota\n"
+Candidate (not accepted): kudosprime:575	1994 TOYOTA CELICA GT-FOUR ST205
+Candidate (not accepted): 1034	1994 Toyota Celica ST205
+
+[UNMATCHED] tiles\page-041-r2-c1.txt
+Car: 1995 Tovota MR2 GT
+OCR: "MR2 GT\n1995 Tovota\n"
+Candidate (not accepted): 398	1995 Toyota MR2 GT
+Candidate (not accepted): kudosprime:576	1995 TOYOTA MR2 GT
+
+[UNMATCHED] tiles\page-041-r2-c2.txt
+Car: 1995 Tovota J&J Motorsport Supra WTAC
+OCR: "J&J Motorsport Supra WTAC\n1995 Tovota\n"
+Candidate (not accepted): 4214	1995 Toyota J&J Motorsport Supra WTAC
+Candidate (not accepted): kudosprime:577	1995 TOYOTA J&J Motorsport Supra WTAC
+
+[UNMATCHED] tiles\page-041-r2-c3.txt
+Car: 1996 Tovota Starlet Glanza V
+OCR: "Starlet Glanza V\n1996 Tovota\n"
+Candidate (not accepted): kudosprime:578	1996 TOYOTA Starlet Glanza V
+Candidate (not accepted): 4055	1996 Toyota Starlet Glanza
+
+[UNMATCHED] tiles\page-041-r2-c4.txt
+Car: 1997 Tovota Soarer 2.5 GT-T
+OCR: "Soarer 2.5 GT-T\n1997 Tovota\n"
+Candidate (not accepted): kudosprime:579	1997 TOYOTA Soarer 2.5 GT-T
+Candidate (not accepted): 3785	1997 Toyota Soarer
+Candidate (not accepted): kudosprime:580	1997 TOYOTA Chaser 2.5 Tourer V
+Candidate (not accepted): 3933	1997 Toyota Chaser
+
+[UNMATCHED] tiles\page-041-r2-c5.txt
+Car: 1997 Tovota Chaser 2.5 Tourer V
+OCR: "Chaser 2.5 Tourer V\n1997 Tovota\n"
+Candidate (not accepted): kudosprime:580	1997 TOYOTA Chaser 2.5 Tourer V
+Candidate (not accepted): 3933	1997 Toyota Chaser
+Candidate (not accepted): kudosprime:579	1997 TOYOTA Soarer 2.5 GT-T
+Candidate (not accepted): 3785	1997 Toyota Soarer
+
+[UNMATCHED] tiles\page-041-r3-c1.txt
+Car: 1998 Tovota Supra RZ
+OCR: "Supra RZ\n1998 Tovota\n"
+Candidate (not accepted): 461	1998 Toyota Supra RZ
+Candidate (not accepted): kudosprime:581	1998 TOYOTA SUPRA RZ
+
+[UNMATCHED] tiles\page-041-r3-c2.txt
+Car: 1999 Tovota Altezza RS200 Z EDITION
+OCR: "Altezza RS200 Z EDITION\n1999 Tovota\n"
+Candidate (not accepted): kudosprime:582	1999 TOYOTA Altezza RS200 Z Edition
+Candidate (not accepted): 4038	1999 Toyota Altezza
+
+[UNMATCHED] tiles\page-041-r3-c3.txt
+Car: 2003 Tovota Celica Sport Specialty II
+OCR: "Celica Sport Specialty II\n2003 Tovota\n"
+Candidate (not accepted): kudosprime:583	2003 TOYOTA CELICA SPORT SPECIALTY II
+Candidate (not accepted): 295	2003 Toyota Celica SS-I
+
+[UNMATCHED] tiles\page-041-r3-c4.txt
+Car: 2005 Tovota Crown Super Deluxe Taxi
+OCR: "Crown Super Deluxe Taxi\n2005 Tovota\n"
+Candidate (not accepted): kudosprime:584	2005 TOYOTA Crown Super Deluxe Taxi
+Candidate (not accepted): 4255	2005 Toyota Crown Taxi
+Candidate (not accepted): 4332	2005 Toyota Crown Taxi (Traffic)
+
+[UNMATCHED] tiles\page-041-r3-c5.txt
+Car: 2013 Tovota 86
+OCR: "86\n2013 Tovota\n"
+Candidate (not accepted): 2007	2013 Toyota GT86
+Candidate (not accepted): kudosprime:585	2013 TOYOTA GT86
+Candidate (not accepted): kudosprime:622	2013 TOYOTA 86 'Stories'
+Candidate (not accepted): 4259	2013 Toyota 86 Stories
+
+[UNMATCHED] tiles\page-042-r1-c1.txt
+Car: 2013 Tovota 86 'Stories'
+OCR: "86 'Stories'\n2013 Tovota\n"
+Candidate (not accepted): kudosprime:622	2013 TOYOTA 86 'Stories'
+Candidate (not accepted): 4259	2013 Toyota 86 Stories
+Candidate (not accepted): 2007	2013 Toyota GT86
+Candidate (not accepted): kudosprime:585	2013 TOYOTA GT86
+
+[UNMATCHED] tiles\page-042-r1-c2.txt
+Car: 2016 Tovota Land Cruiser Arctic Trucks...
+OCR: "Land Cruiser Arctic Trucks...\n2016 Tovota\n"
+Candidate (not accepted): kudosprime:586	2016 TOYOTA LAND CRUISER ARCTIC TRUCKS AT37
+Candidate (not accepted): 2743	2016 Toyota Land Cruiser Arctic
+
+[UNMATCHED] tiles\page-042-r1-c3.txt
+Car: 2017 Tovota JPN Taxi
+OCR: "JPN Taxi\n2017 Tovota\n"
+Candidate (not accepted): 4257	2017 Toyota JPN Taxi
+Candidate (not accepted): kudosprime:587	2017 TOYOTA JPN Taxi
+Candidate (not accepted): 4333	2017 Toyota JPN Taxi (Traffic)
+
+[UNMATCHED] tiles\page-042-r1-c4.txt
+Car: 2019 Tovota Tacoma TRD Pro Forza Editi...
+OCR: "Tacoma TRD Pro Forza Editi...\n2019 Tovota\n"
+Candidate (not accepted): 4199	2019 Toyota Tacoma TRD Pro (Forza Edition)
+Candidate (not accepted): kudosprime:590	2019 TOYOTA Tacoma TRD Pro Forza Edition
+Candidate (not accepted): 3374	2019 Toyota Tacoma TRD Pro
+Candidate (not accepted): kudosprime:589	2019 TOYOTA TACOMA TRD PRO
+Candidate (not accepted): kudosprime:130	2019 DEBERTI TOYOTA TACOMA TRD "THE PERFORMANCE TRUCK"
+
+[UNMATCHED] tiles\page-042-r1-c5.txt
+Car: 2019 Tovota 4Runner TRD Pro
+OCR: "4Runner TRD Pro\n2019 Tovota\n"
+Candidate (not accepted): 3373	2019 Toyota 4Runner TRD Pro
+Candidate (not accepted): kudosprime:588	2019 TOYOTA 4RUNNER TRD PRO
+Candidate (not accepted): 3374	2019 Toyota Tacoma TRD Pro
+Candidate (not accepted): kudosprime:589	2019 TOYOTA TACOMA TRD PRO
+
+[UNMATCHED] tiles\page-042-r2-c1.txt
+Car: 2019 Tovota Tacoma TRD Pro
+OCR: "Tacoma TRD Pro\n2019 Tovota\n"
+Candidate (not accepted): 3374	2019 Toyota Tacoma TRD Pro
+Candidate (not accepted): kudosprime:589	2019 TOYOTA TACOMA TRD PRO
+Candidate (not accepted): 4199	2019 Toyota Tacoma TRD Pro (Forza Edition)
+Candidate (not accepted): kudosprime:590	2019 TOYOTA Tacoma TRD Pro Forza Edition
+Candidate (not accepted): 3373	2019 Toyota 4Runner TRD Pro
+
+[UNMATCHED] tiles\page-042-r2-c2.txt
+Car: 2020 Tovota GR Supra
+OCR: "GR Supra\n2020 Tovota\n"
+Candidate (not accepted): 3402	2020 Toyota GR Supra
+Candidate (not accepted): kudosprime:591	2020 TOYOTA GR SUPRA
+Candidate (not accepted): 3523	2020 Formula Drift #151 Toyota GR Supra
+Candidate (not accepted): kudosprime:243	2020 FORMULA DRIFT #151 TOYOTA GR SUPRA
+
+[UNMATCHED] tiles\page-042-r2-c3.txt
+Car: 2021 Tovota GR Yaris
+OCR: "GR Yaris\n2021 Tovota\n"
+Candidate (not accepted): 3629	2021 Toyota GR Yaris
+Candidate (not accepted): kudosprime:592	2021 TOYOTA GR Yaris
+
+[UNMATCHED] tiles\page-042-r2-c4.txt
+Car: 2022 Tovota GR86
+OCR: "GR86\n2022 Tovota\n"
+Candidate (not accepted): 3761	2022 Toyota GR86
+Candidate (not accepted): kudosprime:593	2022 TOYOTA GR86
+
+[UNMATCHED] tiles\page-042-r2-c5.txt
+Car: 2023 Tovota GR Corolla
+OCR: "GR Corolla\n2023 Tovota\n"
+Candidate (not accepted): 3880	2023 Toyota GR Corolla
+Candidate (not accepted): kudosprime:595	2023 TOYOTA GR Corolla
+
+[UNMATCHED] tiles\page-042-r3-c1.txt
+Car: 2023 Tovota Camry TRD
+OCR: "Camry TRD\n2023 Tovota\n"
+Candidate (not accepted): 3848	2023 Toyota Camry TRD
+Candidate (not accepted): kudosprime:594	2023 TOYOTA Camry TRD
+
+[UNMATCHED] tiles\page-042-r3-c2.txt
+Car: 2024 Tovota Prius Prime XSE Premium
+OCR: "Prius Prime XSE Premium\n2024 Tovota\n"
+Candidate (not accepted): 3964	2024 Toyota Prius Prime XSE Premium
+Candidate (not accepted): kudosprime:634	2024 TOYOTA PRIUS PRIME XSE PREMIUM
+
+[UNMATCHED] tiles\page-042-r3-c3.txt
+Car: 2025 Tovota Land Cruiser
+OCR: "Land Cruiser\n2025 Tovota\n"
+Candidate (not accepted): 4278	2025 Toyota Land Cruiser
+Candidate (not accepted): kudosprime:596	2025 TOYOTA Land Cruiser
+
+[UNMATCHED] tiles\page-043-r1-c4.txt
+Car: 1963 Volkswaaen Beetle
+OCR: "Beetle\n1963 Volkswaaen\n"
+Candidate (not accepted): kudosprime:603	1963 VOLKSWAGEN BEETLE
+Candidate (not accepted): 2151	1963 Volkswagen Type 2
+Candidate (not accepted): kudosprime:604	1963 VOLKSWAGEN TYPE 2 DE LUXE
+
+[UNMATCHED] tiles\page-043-r1-c5.txt
+Car: 1963 Volkswaaen Type 2 De Luxe
+OCR: "Type 2 De Luxe\n1963 Volkswaaen\n"
+Candidate (not accepted): kudosprime:604	1963 VOLKSWAGEN TYPE 2 DE LUXE
+Candidate (not accepted): 2151	1963 Volkswagen Type 2
+Candidate (not accepted): kudosprime:603	1963 VOLKSWAGEN BEETLE
+
+[UNMATCHED] tiles\page-043-r2-c1.txt
+Car: 1969 Volkswaaen Class 5/1600 Baja Bug
+OCR: "Class 5/1600 Baja Bug\n1969 Volkswaaen\n"
+Candidate (not accepted): 2568	1969 Volkswagen Class 5/1600 Baja Bug
+Candidate (not accepted): kudosprime:605	1969 VOLKSWAGEN CLASS 5/1600 BAJA BUG
+
+[UNMATCHED] tiles\page-043-r2-c2.txt
+Car: 1982 Volkswaaen Pickup LX
+OCR: "Pickup LX\n1982 Volkswaaen\n"
+Candidate (not accepted): kudosprime:606	1982 VOLKSWAGEN PICKUP LX
+Candidate (not accepted): 3235	1982 Volkswagen Caddy
+
+[UNMATCHED] tiles\page-043-r2-c3.txt
+Car: 1983 Volkswaaen Golf GTI
+OCR: "Golf GTI\n1983 Volkswaaen\n"
+Candidate (not accepted): 2995	1983 Volkswagen Golf GTI
+Candidate (not accepted): kudosprime:607	1983 VOLKSWAGEN GOLF GTI
+
+[UNMATCHED] tiles\page-043-r2-c4.txt
+Car: 1989 Volkswaaen Rallye Golf
+OCR: "Rallye Golf\n1989 Volkswaaen\n"
+Candidate (not accepted): kudosprime:608	1989 VOLKSWAGEN Rallye Golf
+Candidate (not accepted): 3783	1989 Volkswagen Golf Rallye
+
+[UNMATCHED] tiles\page-043-r2-c5.txt
+Car: 1992 Volkswaaen Golf GTi 16v Mk2
+OCR: "Golf GTi 16v Mk2\n1992 Volkswaaen\n"
+Candidate (not accepted): 353	1992 Volkswagen Golf GTi 16v Mk2
+Candidate (not accepted): kudosprime:609	1992 VOLKSWAGEN GOLF GTI 16V MK2
+
+[UNMATCHED] tiles\page-043-r3-c1.txt
+Car: 1995 Volkswaaen Corrado VR6
+OCR: "Corrado VR6\n1995 Volkswaaen\n"
+Candidate (not accepted): kudosprime:610	1995 VOLKSWAGEN CORRADO VR6
+Candidate (not accepted): 309	1995 Volkswagen Corrado
+
+[UNMATCHED] tiles\page-043-r3-c2.txt
+Car: 2010 Volkswaaen Golf R
+OCR: "Golf R\n2010 Volkswaaen\n"
+Candidate (not accepted): 1231	2010 Volkswagen Golf R
+Candidate (not accepted): kudosprime:611	2010 VOLKSWAGEN GOLF R
+
+[UNMATCHED] tiles\page-043-r3-c3.txt
+Car: 2011 Volkswaaen Scirocco R
+OCR: "Scirocco R\n2011 Volkswaaen\n"
+Candidate (not accepted): 1428	2011 Volkswagen Scirocco R
+Candidate (not accepted): kudosprime:612	2011 VOLKSWAGEN SCIROCCO R
+
+[UNMATCHED] tiles\page-043-r3-c4.txt
+Car: 2014 Volkswaaen Golf R
+OCR: "Golf R\n2014 Volkswaaen\n"
+Candidate (not accepted): 2142	2014 Volkswagen Golf R
+Candidate (not accepted): kudosprime:613	2014 VOLKSWAGEN GOLF R
+
+[UNMATCHED] tiles\page-043-r3-c5.txt
+Car: 2017 Volkswaaen #34 Andretti Rally Cross Be..
+OCR: "#34 Andretti Rally Cross Be..\n2017 Volkswaaen\n"
+Candidate (not accepted): kudosprime:614	2017 VOLKSWAGEN #34 VOLKSWAGEN ANDRETTI RALLYCROSS BEETLE
+Candidate (not accepted): 3007	2017 Volkswagen Beetle GRC
+
+[INVALID] tiles\page-046-r1-c2.txt
+Car: [Cannot parse model followed by year/manufacturer]
+OCR: "M12S Warthog CST\n2554 AMG Transport Dvnamics\n"

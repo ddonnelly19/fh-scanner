@@ -1,0 +1,5522 @@
+[
+  {
+    "source": "tiles\\page-001-r1-c1.png",
+    "text": "595 esseesse\n1968 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\np—————\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r1-c2.png",
+    "text": "Fiat 131\n1980 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r1-c3.png",
+    "text": "695 Biposto\n2016 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r1-c4.png",
+    "text": "124 Spider\n2017 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r1-c5.png",
+    "text": "Integra Type R\n2001 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n7 Ee\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r2-c1.png",
+    "text": "RSX Type S\n2002 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r2-c2.png",
+    "text": "NSX Type S\n2022 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r2-c3.png",
+    "text": "Integra A-Spec\n2023 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n—- _ = _ J. = a — —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r2-c4.png",
+    "text": "Giulia Sprint GTA Stradale\n1965 Alfa Romeo\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r2-c5.png",
+    "text": "Giulia TZ2\n1965 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r3-c1.png",
+    "text": "Autodelta Tipo 33/2 Daytona\n1968 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r3-c2.png",
+    "text": "33 Stradale\n1968 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r3-c3.png",
+    "text": "SE 048SP\n1990 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r3-c4.png",
+    "text": "155 Q4\n1992 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n|\n"
+    }
+  },
+  {
+    "source": "tiles\\page-001-r3-c5.png",
+    "text": "8C Competizione\n2007 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r1-c1.png",
+    "text": "4C\n2014 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nAER\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r1-c2.png",
+    "text": "Giulia Quadrifoglio\n2017 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\nB a Ea\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r1-c3.png",
+    "text": "Giulia GTAm\n2021 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r1-c4.png",
+    "text": "Class 10 Race Car\n2015 Alumicraft\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nFr. AS\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r1-c5.png",
+    "text": "#122 Class 1 Buggy\n2021 Alumicraft\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r2-c1.png",
+    "text": "#6165 Trick Truck\n2022 Alumicraft\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r2-c2.png",
+    "text": "M12S Warthog CST\n2554 AMG Transport Dvnamics\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r2-c3.png",
+    "text": "Intensa Emozione\n2019 Apollo\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r2-c4.png",
+    "text": "Atom 500 V8\n2013 Ariel\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nadlliste.\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r2-c5.png",
+    "text": "Nomad\n2016 Ariel\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\noes\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r3-c1.png",
+    "text": "DB5\n1964 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n| a i = Ee\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r3-c2.png",
+    "text": "DB7 GT\n2003 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\nCT ~— ~s i,\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r3-c3.png",
+    "text": "Vulcan\n2016 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nwt [A — _ _ = } Za\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r3-c4.png",
+    "text": "DB11\n2017 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-002-r3-c5.png",
+    "text": "Vulcan AMR Pro\n2017 Aston Martin\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r1-c1.png",
+    "text": "Valhalla Concept Car\n2019 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n= Ra a ~~ NR RY\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r1-c2.png",
+    "text": "DBS Superleggera\n2019 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r1-c3.png",
+    "text": "Vantage\n2019 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n| | | ’ ) ) h TES\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r1-c4.png",
+    "text": "DBX\n2021 Aston Martin\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r1-c5.png",
+    "text": "Valkyrie AMR Pro\n2022 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\nNN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r2-c1.png",
+    "text": "Valkyrie\n2023 Aston Martin\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r2-c2.png",
+    "text": "Sport quattro\n1983 Audi\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r2-c3.png",
+    "text": "#2 Audi Sport quattro $1\n1986 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n— ~ how = - |\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r2-c4.png",
+    "text": "RS 4 Avant\n2001 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n) - — = ~ EE —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r2-c5.png",
+    "text": "RS 6\n2003 Audi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r3-c1.png",
+    "text": "RS 4\n2006 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE [B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r3-c2.png",
+    "text": "RS 6\n2009 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n© ’ Ba 3. - — - =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r3-c3.png",
+    "text": "R8 LMS\n2009 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r3-c4.png",
+    "text": "TT RS Coupé\n2010 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\nSE a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-003-r3-c5.png",
+    "text": "RS 5 Coupé\n2011 Audi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\nN a i =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r1-c1.png",
+    "text": "RS 3 Sportback\n2011 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n[4 he - Ey < | Te==\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r1-c2.png",
+    "text": "RS 4 Avant\n2013 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n| | = | : a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r1-c3.png",
+    "text": "RS 7 Sportback\n2013 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nI a —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r1-c4.png",
+    "text": "R8 Coupé V10 plus 5.2 FSI q..\n2013 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r1-c5.png",
+    "text": "RS 6 Avant\n2015 Audi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r2-c1.png",
+    "text": "St\n2015 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r2-c2.png",
+    "text": "R8 V10 plus\n2016 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r2-c3.png",
+    "text": "RS 4 Avant\n2018 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\na - — i\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r2-c4.png",
+    "text": "R8 V10 performance\n2020 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r2-c5.png",
+    "text": "RS 3 Sedan\n2020 Audi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n| h ’ ha Xe =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r3-c1.png",
+    "text": "RS 6 Avant\n2021 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r3-c2.png",
+    "text": "RS 7 Sportback\n2021 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\nBN i ~ TE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r3-c3.png",
+    "text": "RS e-tron GT\n2021 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r3-c4.png",
+    "text": "R8 Coupé V10 GT RWD\n2023 Audi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-004-r3-c5.png",
+    "text": "3000 MKIII\n1965 Austin-Healev\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r1-c1.png",
+    "text": "AZ\n1993 Autozam\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nEF\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r1-c2.png",
+    "text": "Mono\n2014 BAC\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r1-c3.png",
+    "text": "Bentayga\n2016 Bentlev\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r1-c4.png",
+    "text": "Continental GT Convertible\n2021 Bentlev\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\nRa. .\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r1-c5.png",
+    "text": "Continental GT Speed\n2025 Bentlev\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r2-c1.png",
+    "text": "Isetta 300 Export\n1957 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r2-c2.png",
+    "text": "2002 Turbo\n1973 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r2-c3.png",
+    "text": "M1\n1981 BMW\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r2-c4.png",
+    "text": "M3\n1988 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n) a : NN TL\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r2-c5.png",
+    "text": "M5\n1988 BMW\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r3-c1.png",
+    "text": "850CSi\n1995 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nCow = : FE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r3-c2.png",
+    "text": "M5\n1995 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r3-c3.png",
+    "text": "M3\n1997 BMW\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r3-c4.png",
+    "text": "M5\n2003 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-005-r3-c5.png",
+    "text": "M3\n2005 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n~ = : ~ 3 - p= _ a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r1-c1.png",
+    "text": "Z4 M Coupé\n2008 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE HB\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r1-c2.png",
+    "text": "M3\n2008 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r1-c3.png",
+    "text": "M5\n2009 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r1-c4.png",
+    "text": "M3 GTS\n2010 BMW\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r1-c5.png",
+    "text": "X5M\n2011 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\nTe I == |\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r2-c1.png",
+    "text": "M5\n2012 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r2-c2.png",
+    "text": "M4 Coupé\n2014 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r2-c3.png",
+    "text": "i8\n2015 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r2-c4.png",
+    "text": "M4 GTS\n2016 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r2-c5.png",
+    "text": "Z4 Roadster\n2019 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\na CLs\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r3-c1.png",
+    "text": "M8 Competition Coupé\n2020 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nnN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r3-c2.png",
+    "text": "M2 Competition Coupé\n2020 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n] | va Te\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r3-c3.png",
+    "text": "M4 Competition Coupé\n2021 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r3-c4.png",
+    "text": "M4 Competition Coupé 'Wel..\n2021 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-006-r3-c5.png",
+    "text": "iX xDrive50\n2022 BMW\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n| | . - C= = : |\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r1-c1.png",
+    "text": "M5 CS\n2022 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE HB\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r1-c2.png",
+    "text": "M2 Forza Edition\n2023 BMW\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\ni. hn ) - pet -\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r1-c3.png",
+    "text": "M2\n2023 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nre > a , —— ,\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r1-c4.png",
+    "text": "X6 M Competition\n2024 BMW\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r1-c5.png",
+    "text": "M4 CS\n2025 BMW\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r2-c1.png",
+    "text": "Regal GNX\n1987 Buick\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r2-c2.png",
+    "text": "XTS Limousine\n2013 Cadillac\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r2-c3.png",
+    "text": "CTS-V Sedan\n2016 Cadillac\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r2-c4.png",
+    "text": "ATS-V\n2016 Cadillac\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n[SS\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r2-c5.png",
+    "text": "CT4-V Blackwing\n2022 Cadillac\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r3-c1.png",
+    "text": "CT5-V Blackwing\n2022 Cadillac\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n) RE — i= —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r3-c2.png",
+    "text": "Maverick X RS Turbo R\n2018 Can-Am\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n| “ . . )\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r3-c3.png",
+    "text": "#4402 Ultra 4 \"Trophy Jeep’\n2019 Casev Currie Motorsports\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r3-c4.png",
+    "text": "Corvette\n1953 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-007-r3-c5.png",
+    "text": "150 Utility Sedan\n1955 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r1-c1.png",
+    "text": "Bel Air\n1957 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r1-c2.png",
+    "text": "Corvette\n1960 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r1-c3.png",
+    "text": "Impala Super Sport 409\n1964 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r1-c4.png",
+    "text": "Corvette Stingray 427\n1967 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r1-c5.png",
+    "text": "Nova Super Sport 396\n1969 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r2-c1.png",
+    "text": "Camaro Super Sport Coupe\n1969 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r2-c2.png",
+    "text": "Camaro 228\n1970 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r2-c3.png",
+    "text": "El Camino Super Sport 454\n1970 Chevrolet\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r2-c4.png",
+    "text": "Chevelle Super Sport 454\n1970 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n]\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r2-c5.png",
+    "text": "Corvette ZR-1\n1970 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r3-c1.png",
+    "text": "K-10 Custom\n1972 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r3-c2.png",
+    "text": "Camaro 228\n1979 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\n’. eo Te\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r3-c3.png",
+    "text": "Monte Carlo Super Sport\n1988 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r3-c4.png",
+    "text": "Corvette ZR-1\n1995 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-008-r3-c5.png",
+    "text": "Impala Super Sport\n1996 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\ni R oT\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r1-c1.png",
+    "text": "Corvette 206\n2002 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r1-c2.png",
+    "text": "Corvette ZR1\n2009 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r1-c3.png",
+    "text": "Camaro 2/28\n2015 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r1-c4.png",
+    "text": "Corvette Z06\n2015 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r1-c5.png",
+    "text": "Camaro ZL1\n2017 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r2-c1.png",
+    "text": "Camaro ZL11LE\n2018 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n—\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r2-c2.png",
+    "text": "Corvette ZR1\n2019 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r2-c3.png",
+    "text": "Silverado LT Trail Boss\n2020 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r2-c4.png",
+    "text": "Corvette Stingray Coupe\n2020 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r2-c5.png",
+    "text": "Corvette Z06\n2023 Chevrolet\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r3-c1.png",
+    "text": "Corvette E-Ray\n2024 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r3-c2.png",
+    "text": "Camaro ZL1\n2024 Chevrolet\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r3-c3.png",
+    "text": "2CV\n1970 Citroén\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r3-c4.png",
+    "text": "2000 Roadster\n1969 Datsun\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-009-r3-c5.png",
+    "text": "510\n1970 Datsun\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n ——\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r1-c1.png",
+    "text": "#269 Attacking the Clock R...\n1972 Datsun\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r1-c2.png",
+    "text": "Pantera GT5\n1984 De Tomaso\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r1-c3.png",
+    "text": "Jeep Wrangler Unlimited\n2018 DeBerti\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r1-c4.png",
+    "text": "Ford Mustang GT\n2018 DeBerti\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r1-c5.png",
+    "text": "Chevrolet Silverado 1500 D...\n2018 DeBerti\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r2-c1.png",
+    "text": "Ford Super Duty F-250 Lari...\n2019 DeBerti\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r2-c2.png",
+    "text": "Toyota Tacoma TRD \"The Pe...\n2019 DeBerti\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r2-c3.png",
+    "text": "DMC-12\n1982 Delorean\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r2-c4.png",
+    "text": "Dart HEMI Super Stock\n1968 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r2-c5.png",
+    "text": "Charger Daytona HEMI\n1969 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r3-c1.png",
+    "text": "Charger R/T\n1969 Dodae\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r3-c2.png",
+    "text": "Coronet Super Bee\n1970 Dodae\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "|\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r3-c3.png",
+    "text": "Challenger R/T\n1970 Dodae\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r3-c4.png",
+    "text": "Viper GTS ACR Forza Edition\n1999 Dodae\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-010-r3-c5.png",
+    "text": "Viper GTS ACR\n1999 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\nTT T=\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r1-c1.png",
+    "text": "Ram SRT-10\n2006 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n| | Se B\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r1-c2.png",
+    "text": "Viper SRT-10 ACR\n2008 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r1-c3.png",
+    "text": "Charger SRT Hellcat\n2015 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r1-c4.png",
+    "text": "Challenger SRT Hellcat\n2015 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r1-c5.png",
+    "text": "Viper ACR\n2016 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r2-c1.png",
+    "text": "Challenger SRT Demon\n2018 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r2-c2.png",
+    "text": "Durango SRT Hellcat\n2021 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nEs - o = | ) -\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r2-c3.png",
+    "text": "Challenger SRT Super Stock\n2022 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r2-c4.png",
+    "text": "Challenger SRT Demon 170\n2023 Dodae\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r2-c5.png",
+    "text": "Exocet Sport V8 XP-5\n2018 Exomotive\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r3-c1.png",
+    "text": "250 GTO\n1962 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r3-c2.png",
+    "text": "250 GT Berlinetta Lusso\n1962 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r3-c3.png",
+    "text": "#24 Ferrari Spa 330 P4\n1967 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r3-c4.png",
+    "text": "275 GTB4 Spider\n1967 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n| EEE EER\n"
+    }
+  },
+  {
+    "source": "tiles\\page-011-r3-c5.png",
+    "text": "Dino 246 GT\n1969 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r1-c1.png",
+    "text": "512S\n1970 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r1-c2.png",
+    "text": "288 GTO\n1984 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r1-c3.png",
+    "text": "F40\n1987 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r1-c4.png",
+    "text": "F40 Competizione\n1989 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r1-c5.png",
+    "text": "512 TR\n1992 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r2-c1.png",
+    "text": "F355 Berlinetta\n1994 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r2-c2.png",
+    "text": "F50\n1995 Ferrari\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r2-c3.png",
+    "text": "F50 GT\n1996 Ferrari\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r2-c4.png",
+    "text": "Enzo Ferrari\n2002 Ferrari\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r2-c5.png",
+    "text": "FXX\n2005 Ferrari\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r3-c1.png",
+    "text": "430 Scuderia\n2007 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r3-c2.png",
+    "text": "458 Italia\n2009 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r3-c3.png",
+    "text": "599XX\n2010 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r3-c4.png",
+    "text": "599XX Evolution\n2012 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-012-r3-c5.png",
+    "text": "LaFerrari\n2013 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r1-c1.png",
+    "text": "458 Speciale\n2013 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r1-c2.png",
+    "text": "FXXK\n2014 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r1-c3.png",
+    "text": "488 GTB\n2015 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r1-c4.png",
+    "text": "F12tdf\n2015 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r1-c5.png",
+    "text": "812 Superfast\n2017 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r2-c1.png",
+    "text": "J50\n2017 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r2-c2.png",
+    "text": "J50 Preorder Car\n2017 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r2-c3.png",
+    "text": "FXX-K Evo\n2018 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r2-c4.png",
+    "text": "Portofino\n2018 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r2-c5.png",
+    "text": "FXX-K Evo \"Welcome Pack’\n2018 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n) h - = = SS\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r3-c1.png",
+    "text": "F8 Tributo\n2019 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r3-c2.png",
+    "text": "Monza SP2\n2019 Ferrari\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "|\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r3-c3.png",
+    "text": "488 Pista\n2019 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nCa a — aS\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r3-c4.png",
+    "text": "SF90 Stradale\n2020 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-013-r3-c5.png",
+    "text": "Roma\n2020 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r1-c1.png",
+    "text": "296 GTB\n2022 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r1-c2.png",
+    "text": "F80\n2024 Ferrari\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nEo — ¢ | ~ my =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r1-c3.png",
+    "text": "De Luxe Five-Window Coupe\n1932 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\nF NS\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r1-c4.png",
+    "text": "Thunderbird\n1957 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\nB EE : —m—\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r1-c5.png",
+    "text": "Mustang GT Coupe\n1965 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r2-c1.png",
+    "text": "#2 GT40 Mk lI\n1966 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r2-c2.png",
+    "text": "Mustang GT 2+2 Fastback F...\n1968 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r2-c3.png",
+    "text": "Mustang GT 2+2 Fastback\n1968 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r2-c4.png",
+    "text": "Mustang Boss 302\n1969 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r2-c5.png",
+    "text": "XB Falcon GT\n1973 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r3-c1.png",
+    "text": "Capri RS3100\n1973 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE [B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r3-c2.png",
+    "text": "#5 Escort RS1800 Mkll\n1977 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r3-c3.png",
+    "text": "RS200 Evolution\n1985 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r3-c4.png",
+    "text": "F-150 XLT Lariat Forza Editior\n1986 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-014-r3-c5.png",
+    "text": "F-150 XLT Lariat\n1986 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r1-c1.png",
+    "text": "Sierra Cosworth RS500\n1987 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r1-c2.png",
+    "text": "Escort RS Cosworth\n1992 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r1-c3.png",
+    "text": "Mustang SVT Cobra R\n1993 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r1-c4.png",
+    "text": "Supervan 3\n1994 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r1-c5.png",
+    "text": "Racing Puma\n1999 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r2-c1.png",
+    "text": "Mustang SVT Cobra R\n2000 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r2-c2.png",
+    "text": "#4 Ford Focus RS\n2001 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r2-c3.png",
+    "text": "Focus RS\n2003 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n| TN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r2-c4.png",
+    "text": "F-150 SVT Lightning\n2003 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r2-c5.png",
+    "text": "GT\n2005 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| TREASURE (\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r3-c1.png",
+    "text": "Focus RS\n2009 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r3-c2.png",
+    "text": "Crown Victoria Police Interc...\n2010 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r3-c3.png",
+    "text": "Transit SuperSportVan\n2011 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r3-c4.png",
+    "text": "Mustang Shelby GT500\n2013 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n] rl - — TN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-015-r3-c5.png",
+    "text": "#11 Rockstar F-150 Trophy...\n2014 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r1-c1.png",
+    "text": "FPV Limited Edition Pursuit...\n2014 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r1-c2.png",
+    "text": "Ranger T6 Rally Raid\n2014 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r1-c3.png",
+    "text": "Mustang Shelby GT350R\n2016 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r1-c4.png",
+    "text": "Focus RS\n2017 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r1-c5.png",
+    "text": "GT\n2017 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r2-c1.png",
+    "text": "#14 Rahal Letterman Laniga...\n2017 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r2-c2.png",
+    "text": "#25 'Brocky' Ultra4 Bronco...\n2017 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n~~,\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r2-c3.png",
+    "text": "M-Sport Fiesta RS\n2017 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r2-c4.png",
+    "text": "Mustang RTR Spec 5\n2018 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r2-c5.png",
+    "text": "Super Duty F-450 DRW PLA..\n2020 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| FORZA EDIT\n\n| Aa <r : =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r3-c1.png",
+    "text": "ce Bronco R #2069 |\n2020 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r3-c2.png",
+    "text": "Super Duty F-450 DRW PLA...\n2020 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r3-c3.png",
+    "text": "Mustang Shelby GT500\n2020 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r3-c4.png",
+    "text": "Bronco Raptor\n2022 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-016-r3-c5.png",
+    "text": "Supervan 4\n2022 Ford\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r1-c1.png",
+    "text": "F-150 Lightning\n2022 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r1-c2.png",
+    "text": "Focus ST\n2022 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n} Ea - : = .\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r1-c3.png",
+    "text": "F-150 Raptor R \"Welcome P...\n2023 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r1-c4.png",
+    "text": "Fiesta ST\n2023 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n; | TT a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r1-c5.png",
+    "text": "F-150 Raptor R\n2023 Ford\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r2-c1.png",
+    "text": "Mustang Dark Horse\n2024 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r2-c2.png",
+    "text": "Mustang GT\n2024 Ford\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r2-c3.png",
+    "text": "#98 BMW 325i\n1989 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nA _ ] Sa ;\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r2-c4.png",
+    "text": "#34 Toyota Supra MkIV\n1995 Formula Drift\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r2-c5.png",
+    "text": "#777 Nissan 240SX\n1997 Formula Drift\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r3-c1.png",
+    "text": "#43 Dodge Viper SRT-10 ACR\n2006 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r3-c2.png",
+    "text": "#117 599 GTB Fiorano\n2007 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r3-c3.png",
+    "text": "#99 Mazda RX-8\n2009 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r3-c4.png",
+    "text": "#777 Chevrolet Corvette\n2013 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-017-r3-c5.png",
+    "text": "#13 Ford Mustang\n2015 Formula Drift\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r1-c1.png",
+    "text": "#530 HSV Maloo GEN-F\n2016 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r1-c2.png",
+    "text": "#411 Toyota Corolla Hatchb...\n2019 Formula Drift\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r1-c3.png",
+    "text": "#91 BMW M2\n2020 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\na NK I. “ NB | TONS\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r1-c4.png",
+    "text": "#151 Toyota GR Supra\n2020 Formula Drift\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r1-c5.png",
+    "text": "#64 Forsberg Racing Nissa...\n2023 Formula Drift\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r2-c1.png",
+    "text": "F9\n2018 Funco Motorsports\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r2-c2.png",
+    "text": "G40 Junior\n2019 Ginetta\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nBm\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r2-c3.png",
+    "text": "Jimmy\n1970 GMC\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r2-c4.png",
+    "text": "Syclone\n1991 GMC\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r2-c5.png",
+    "text": "Typhoon\n1992 GMC\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r3-c1.png",
+    "text": "HUMMER EV Pickup\n2022 GMC\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\na\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r3-c2.png",
+    "text": "T.50\n2020 Gordon Murrav Automotive\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r3-c3.png",
+    "text": "GR GT (Prototype)\n2025 GR\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r3-c4.png",
+    "text": "Venom GT\n2012 Hennessev\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-018-r3-c5.png",
+    "text": "Ford F-150 VelociRaptor 6X6\n2019 Hennessev\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r1-c1.png",
+    "text": "Venom F5\n2021 Hennessev\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r1-c2.png",
+    "text": "Monaro GTS 327\n1968 Holden\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r1-c3.png",
+    "text": "Torana A9X\n1977 Holden\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r1-c4.png",
+    "text": "S800\n1970 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r1-c5.png",
+    "text": "N600\n1970 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r2-c1.png",
+    "text": "Z GT\n1972 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r2-c2.png",
+    "text": "Civic RS\n1974 Honda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r2-c3.png",
+    "text": "Civic CRX Mugen\n1984 Honda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r2-c4.png",
+    "text": "City E Ii\n1984 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nNN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r2-c5.png",
+    "text": "Civic Si\n1986 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\nyy \"9\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r3-c1.png",
+    "text": "X WTAC #19 101 Mot\n1990 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r3-c2.png",
+    "text": "CR-X SiR\n1991 Honda\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "|\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r3-c3.png",
+    "text": "Beat\n1991 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r3-c4.png",
+    "text": "NSX-R\n1992 Honda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-019-r3-c5.png",
+    "text": "#21 Hardrace/JDMYard Civi...\n1992 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r1-c1.png",
+    "text": "Prelude Si\n1994 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n- | C= = Noa\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r1-c2.png",
+    "text": "Acty\n1994 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\noll\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r1-c3.png",
+    "text": "Civic Type R\n1997 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r1-c4.png",
+    "text": "Prelude Type SH\n2000 Honda\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r1-c5.png",
+    "text": "#33 BYP Racing Integra WT..\n2001 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r2-c1.png",
+    "text": "$2000\n2003 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r2-c2.png",
+    "text": "Civic Type R\n2004 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r2-c3.png",
+    "text": "#52 Evasive Motorsports S...\n2004 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r2-c4.png",
+    "text": "NSX-R\n2005 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nVS gu\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r2-c5.png",
+    "text": "NSX-R GT\n2005 Honda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| BARN FIND\n\nBina ~~\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r3-c1.png",
+    "text": "Civic Type R\n2007 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\nCC TN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r3-c2.png",
+    "text": "Civic Type R\n2008 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\nEo\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r3-c3.png",
+    "text": "Ridgeline Baja Trophy Truck\n2015 Honda\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r3-c4.png",
+    "text": "Civic Type R\n2015 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-020-r3-c5.png",
+    "text": "Civic Type R\n2018 Honda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r1-c1.png",
+    "text": "e\n2022 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r1-c2.png",
+    "text": "Civic Type R\n2023 Honda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r1-c3.png",
+    "text": "Limited Edition Gen-F GTS...\n2014 HSV\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r1-c4.png",
+    "text": "GEN-F GTS\n2014 HSV\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r1-c5.png",
+    "text": "Veloster N\n2019 Hvundai\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\nEs - = LT Nn\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r2-c1.png",
+    "text": "iON\n2020 Hvundai\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r2-c2.png",
+    "text": "i20N\n2021 Hvundai\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r2-c3.png",
+    "text": "N Vision 74\n2022 Hvundai\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r2-c4.png",
+    "text": "IONIQ5N\n2023 Hvundai\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r2-c5.png",
+    "text": "D-Type\n1956 Jaauar\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r3-c1.png",
+    "text": "E-type\n1961 Jaauar\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r3-c2.png",
+    "text": "Lightweight E-Type\n1964 Jaauar\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r3-c3.png",
+    "text": "XJ-S\n1990 Jaauar\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n— = BE — a sie\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r3-c4.png",
+    "text": "XJ-S Forza Edition\n1990 Jaauar\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-021-r3-c5.png",
+    "text": "Sport XJR-15\n1991 Jaauar\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r1-c1.png",
+    "text": "XJ220\n1993 Jaauar\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r1-c2.png",
+    "text": "XJ220S TWR\n1993 Jaauar\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r1-c3.png",
+    "text": "C-X75\n2010 Jaauar\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r1-c4.png",
+    "text": "XKR-S GT\n2015 Jaauar\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r1-c5.png",
+    "text": "Wrangler Rubicon\n2012 Jeen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r2-c1.png",
+    "text": "Trailcat\n2016 Jeep\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r2-c2.png",
+    "text": "Grand Cherokee Trackhawk\n2018 Jeep\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\na ETE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r2-c3.png",
+    "text": "JT\n2020 Jeep\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r2-c4.png",
+    "text": "#240 Fastball Racing Class...\n2019 Jimeo\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r2-c5.png",
+    "text": "#179 Hammerhead Class 1\n2020 Jimco\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r3-c1.png",
+    "text": "CCGT\n2008 Koeniaseaa\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r3-c2.png",
+    "text": "Agera\n2011 Koeniaseaa\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "]\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r3-c3.png",
+    "text": "One:1\n2015 Koeniaseaa\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r3-c4.png",
+    "text": "Regera\n2016 Koeniaseaa\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-022-r3-c5.png",
+    "text": "Agera RS\n2017 Koeniaseaa\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r1-c1.png",
+    "text": "Jesko\n2020 Koeniaseaa\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r1-c2.png",
+    "text": "Gemera\n2024 Koeniaseaa\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r1-c3.png",
+    "text": "X-Bow GT4\n2018 KTM\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r1-c4.png",
+    "text": "Miura P400\n1967 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r1-c5.png",
+    "text": "Espada 400 GT\n1973 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r2-c1.png",
+    "text": "Countach LP5000 QV\n1988 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r2-c2.png",
+    "text": "Diablo SV\n1997 Lamborahini\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r2-c3.png",
+    "text": "Diablo GTR\n1999 Lamborahini\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r2-c4.png",
+    "text": "Murciélago LP 670-4 SV\n2010 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r2-c5.png",
+    "text": "Sesto Elemento\n2011 Lamborahini\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r3-c1.png",
+    "text": "der Performante Gal\n2012 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nBe .\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r3-c2.png",
+    "text": "Aventador LP700-4\n2012 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n—\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r3-c3.png",
+    "text": "Veneno\n2013 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r3-c4.png",
+    "text": "Huracan LP 610-4\n2014 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nTTT =m\n"
+    }
+  },
+  {
+    "source": "tiles\\page-023-r3-c5.png",
+    "text": "Centenario LP 770-4\n2016 Lamborahini\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r1-c1.png",
+    "text": "Aventador SVJ\n2018 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r1-c2.png",
+    "text": "Urus\n2019 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r1-c3.png",
+    "text": "Sian Roadster\n2020 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r1-c4.png",
+    "text": "Essenza SCV12\n2020 Lamborahini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r1-c5.png",
+    "text": "Huracan STO\n2020 Lamborabhini\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r2-c1.png",
+    "text": "Huracan EVO\n2020 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r2-c2.png",
+    "text": "Aventador LP 780-4 Ultimae\n2021 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\na a = -\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r2-c3.png",
+    "text": "Countach LPI 800-4\n2021 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nBak —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r2-c4.png",
+    "text": "Huracan EVO Spyder\n2022 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r2-c5.png",
+    "text": "Huracan Tecnica\n2022 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\nAE Re a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r3-c1.png",
+    "text": "Huracan Sterrato\n2023 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r3-c2.png",
+    "text": "Temerario\n2024 Lamborahini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r3-c3.png",
+    "text": "Revuelto\n2024 Lamboradhini\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r3-c4.png",
+    "text": "Stratos HF Stradale\n1974 Lancia\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n“ - B ] SE a )\n"
+    }
+  },
+  {
+    "source": "tiles\\page-024-r3-c5.png",
+    "text": "037 Stradale\n1982 Lancia\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r1-c1.png",
+    "text": "Delta S4\n1986 Lancia\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE HB\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r1-c2.png",
+    "text": "Delta HF Integrale EVO\n1992 Lancia\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r1-c3.png",
+    "text": "Range Rover Sport SVR\n2015 Land Rover\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r1-c4.png",
+    "text": "Defender 110 X\n2020 Land Rover\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r1-c5.png",
+    "text": "LFA Forza Edition\n2010 Lexus\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| FORZA EDIT\n\n=\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r2-c1.png",
+    "text": "LFA\n2010 Lexus\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r2-c2.png",
+    "text": "RCF\n2015 Lexus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\ny 4 il . Ee - — = 3\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r2-c3.png",
+    "text": "LC 500\n2021 Lexus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r2-c4.png",
+    "text": "Continental\n1962 Lincoln\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r2-c5.png",
+    "text": "Elise GT1\n1997 Lotus\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r3-c1.png",
+    "text": "Elise Series 1 Sport 190\n1999 Lotus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n#5 i A = § oe A\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r3-c2.png",
+    "text": "Esprit V8\n2002 Lotus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r3-c3.png",
+    "text": "Exige Cup 430\n2018 Lotus\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r3-c4.png",
+    "text": "Scura Motorsports Exige W...\n2018 Lotus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-025-r3-c5.png",
+    "text": "Evija\n2020 Lotus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\nNS TORT ~ Q \\\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r1-c1.png",
+    "text": "Evija Forza Edition\n2020 Lotus\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\n- Dp | - RG |\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r1-c2.png",
+    "text": "Emira\n2023 Lotus\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r1-c3.png",
+    "text": "Air Sapphire\n2024 Lucid\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r1-c4.png",
+    "text": "Ghibli Cup\n1997 Maserati\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r1-c5.png",
+    "text": "MC12\n2004 Maserati\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r2-c1.png",
+    "text": "MC12 Versione Corsa\n2008 Maserati\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r2-c2.png",
+    "text": "MC20\n2022 Maserati\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r2-c3.png",
+    "text": "Cosmo 110S Series li\n1972 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r2-c4.png",
+    "text": "RX-3 Forza Edition\n1973 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\nKE a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r2-c5.png",
+    "text": "RX-3\n1973 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r3-c1.png",
+    "text": "agon 'FURSTY' #123\n1974 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nTe Ta = =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r3-c2.png",
+    "text": "RX-7 GSL-SE\n1985 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n[TN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r3-c3.png",
+    "text": "Savanna RX-7\n1990 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r3-c4.png",
+    "text": "#55 Mazda 787B\n1991 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-026-r3-c5.png",
+    "text": "RX-7 Type R\n1992 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r1-c1.png",
+    "text": "MX-5 Miata Forza Edition\n1994 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r1-c2.png",
+    "text": "MX-5 Miata\n1994 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\nEE = SE ——\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r1-c3.png",
+    "text": "Mazdaspeed MX-5\n2005 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r1-c4.png",
+    "text": "Furai\n2008 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r1-c5.png",
+    "text": "Mazdaspeed 3\n2010 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r2-c1.png",
+    "text": "RX-8 R3\n2011 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE HB\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r2-c2.png",
+    "text": "MX-5\n2013 Mazda\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r2-c3.png",
+    "text": "MX-5\n2016 Mazda\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r2-c4.png",
+    "text": "MX-5 Cup\n2017 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r2-c5.png",
+    "text": "MX-5 Miata RF\n2022 Mazda\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r3-c1.png",
+    "text": "F1\n1993 McLaren\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r3-c2.png",
+    "text": "F1GT\n1997 McLaren\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "|\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r3-c3.png",
+    "text": "12C Coupé\n2011 McLaren\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r3-c4.png",
+    "text": "P1\n2013 McLaren\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-027-r3-c5.png",
+    "text": "6508S Spider\n2014 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r1-c1.png",
+    "text": "570S Coupé\n2015 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r1-c2.png",
+    "text": "600LT Coupé\n2018 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n— BN i i —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r1-c3.png",
+    "text": "Speedtail\n2019 McLaren\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r1-c4.png",
+    "text": "Sabre\n2021 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r1-c5.png",
+    "text": "620R\n2021 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\nBE or oT Ras _— B -— ET\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r2-c1.png",
+    "text": "7165LT Coupé\n2021 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r2-c2.png",
+    "text": "Artura\n2023 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r2-c3.png",
+    "text": "Wi\n2025 McLaren\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r2-c4.png",
+    "text": "GTS\n2015 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\nPe SS Em—— maT A > = = R\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r2-c5.png",
+    "text": "C 63 S Coupé\n2016 Mercedes-AMG\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n= 7 o — - ll he\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r3-c1.png",
+    "text": "GTR\n2017 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r3-c2.png",
+    "text": "EG3S\n2018 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r3-c3.png",
+    "text": "GT 4-Door Coupé\n2018 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r3-c4.png",
+    "text": "GT Black Series \"Welcome P..\n2020 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-028-r3-c5.png",
+    "text": "SLC 43 Final Edition\n2020 Mercedes-AMG\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r1-c1.png",
+    "text": "GT Black Series\n2021 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r1-c2.png",
+    "text": "SL 63\n2021 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\na - I < KE S——\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r1-c3.png",
+    "text": "Mercedes-AMG ONE\n2021 Mercedes-AMG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r1-c4.png",
+    "text": "300 SL Coupé\n1954 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r1-c5.png",
+    "text": "300 SLR\n1955 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r2-c1.png",
+    "text": "AMG Hammer Coupe\n1987 Mercedes-Benz\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r2-c2.png",
+    "text": "190 E 2.5-16 Evolution Il For...\n1990 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r2-c3.png",
+    "text": "190 E 2.5-16 Evolution li\n1990 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r2-c4.png",
+    "text": "AMG CLK GTR\n1998 Mercedes-Benz\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r2-c5.png",
+    "text": "SL 65 AMG Black Series\n2009 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r3-c1.png",
+    "text": "k Series C63 AMGC\n2012 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r3-c2.png",
+    "text": "G 65 AMG\n2013 Mercedes-Benz\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r3-c3.png",
+    "text": "A 45 AMG\n2013 Mercedes-Benz\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r3-c4.png",
+    "text": "Unimog U5023\n2014 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-029-r3-c5.png",
+    "text": "G 63 AMG 6x6\n2014 Mercedes-Benz\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r1-c1.png",
+    "text": "X-Class\n2018 Mercedes-Benz\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r1-c2.png",
+    "text": "Manx\n1971 Mevers\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r1-c3.png",
+    "text": "Manx 2.0\n2023 Mevers\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r1-c4.png",
+    "text": "Metro 6R4\n1986 MG\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r1-c5.png",
+    "text": "Cooper S\n1965 MINI\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r2-c1.png",
+    "text": "John Cooper Works GP\n2012 MINI\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r2-c2.png",
+    "text": "X-Raid All4 Racing Country...\n2013 MINI\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r2-c3.png",
+    "text": "X-Raid John Cooper Works...\n2018 MINI\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r2-c4.png",
+    "text": "John Cooper Works GP\n2021 MINI\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n= “ = ~ oo aE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r2-c5.png",
+    "text": "Starion ESI-R\n1988 Mitsubishi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r3-c1.png",
+    "text": "ock Racing Minicab Time Att:\n1990 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\ni\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r3-c2.png",
+    "text": "Galant VR-4\n1992 Mitsubishi\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "A\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r3-c3.png",
+    "text": "Eclipse GSX\n1995 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r3-c4.png",
+    "text": "Montero Exceed 2800 TD\n1995 Mitsubishi\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-030-r3-c5.png",
+    "text": "Lancer Evolution Ill GSR\n1995 Mitsubishi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| TREASURE C\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r1-c1.png",
+    "text": "Montero Evolution\n1997 Mitsubishi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r1-c2.png",
+    "text": "GTO\n1997 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r1-c3.png",
+    "text": "Lancer Evolution VI GSR TM...\n2001 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r1-c4.png",
+    "text": "Lancer Evolution VIII MR\n2004 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r1-c5.png",
+    "text": "Lancer Evolution VII MR 'W...\n2004 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r2-c1.png",
+    "text": "#1 Sierra Sierra Enterprises...\n2005 Mitsubishi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r2-c2.png",
+    "text": "Lancer Evolution IX MR\n2006 Mitsubishi\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r2-c3.png",
+    "text": "Lancer Evolution X GSR\n2008 Mitsubishi\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r2-c4.png",
+    "text": "Fairlady Z 432\n1969 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r2-c5.png",
+    "text": "Skyline 2000GT-R\n1971 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r3-c1.png",
+    "text": "Patrol\n1972 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r3-c2.png",
+    "text": "Skyline H/T 2000GT-R\n1973 Nissan\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r3-c3.png",
+    "text": "#11 Tomica Skyline Turbo S...\n1983 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n| i n is “oe\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r3-c4.png",
+    "text": "Skyline 2000 Turbo RS\n1983 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-031-r3-c5.png",
+    "text": "Safari Turbo\n1985 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| TREASURE C\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r1-c1.png",
+    "text": "Skyline GTS-R\n1987 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r1-c2.png",
+    "text": "Be-1\n1987 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r1-c3.png",
+    "text": "S-Cargo Forza Edition\n1989 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\n|. N\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r1-c4.png",
+    "text": "SilviaK's\n1989 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r1-c5.png",
+    "text": "PAO\n1989 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "| BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r2-c1.png",
+    "text": "S-Cargo\n1989 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nEs\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r2-c2.png",
+    "text": "#12 Skyline GT-R (BNR32 Gr...\n1990 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r2-c3.png",
+    "text": "Pulsar GTI-R\n1990 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nyf TN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r2-c4.png",
+    "text": "Figaro\n1991 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n>. . bean a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r2-c5.png",
+    "text": "Skyline GT-R\n1992 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r3-c1.png",
+    "text": "240SX\n1993 Nissan\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r3-c2.png",
+    "text": "#32 Skyline WTAC \"Xtreme...\n1993 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nf j PES i Ll = = mt\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r3-c3.png",
+    "text": "SilviaK's\n1994 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r3-c4.png",
+    "text": "Fairlady Z Version S Twin T...\n1994 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n) ) R IR ) > =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-032-r3-c5.png",
+    "text": "NISMO GT-R LM\n1995 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r1-c1.png",
+    "text": "Gloria Gran Turismo\n1995 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r1-c2.png",
+    "text": "Skyline GT-R V-Spec\n1997 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r1-c3.png",
+    "text": "Stagea RS FOUR V\n1997 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r1-c4.png",
+    "text": "Skyline GT-R 40th Annivers...\n1998 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r1-c5.png",
+    "text": "Silvia K's Aero\n1998 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n| = - fo = Ts\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r2-c1.png",
+    "text": "R390 (GT1)\n1998 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n= A —- rm a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r2-c2.png",
+    "text": "#23 Pennzoil NISMO Skylin...\n1998 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r2-c3.png",
+    "text": "#36 Dream Project S15 Silvi...\n2000 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n— he\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r2-c4.png",
+    "text": "Skyline GT-R V-spec II\n2000 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r2-c5.png",
+    "text": "Silvia Spec-R\n2002 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n- r=. BN S\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r3-c1.png",
+    "text": "Fairlady Z\n2003 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r3-c2.png",
+    "text": "370Z\n2010 Nissan\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "|\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r3-c3.png",
+    "text": "GT-R Black Edition (R35) Fo...\n2012 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT]\n\nCo a B | 2 ey i N\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r3-c4.png",
+    "text": "GT-R Black Edition (R35)\n2012 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-033-r3-c5.png",
+    "text": "GT-R (R35)\n2017 Nissan\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r1-c1.png",
+    "text": "370Z Nismo\n2019 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\na - En Eh=g Bs\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r1-c2.png",
+    "text": "GT-R NISMO (R35)\n2020 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r1-c3.png",
+    "text": "GT-R NISMO\n2024 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r1-c4.png",
+    "text": "Z NISMO\n2024 Nissan\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r1-c5.png",
+    "text": "M600\n2010 Noble\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r2-c1.png",
+    "text": "Manta 400\n1984 Onel\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n- a _ A T= N = 5\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r2-c2.png",
+    "text": "Zonda R\n2009 Paaani\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r2-c3.png",
+    "text": "Zonda Cinque Roadster\n2010 Paaani\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r2-c4.png",
+    "text": "Huayra BC Coupe\n2016 Paaani\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r2-c5.png",
+    "text": "HuayraR\n2021 Paaani\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r3-c1.png",
+    "text": "P50\n1962 Peel\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n— | :\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r3-c2.png",
+    "text": "The Cholla\n2011 Penhall\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\nFr.\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r3-c3.png",
+    "text": "205 Turbo 16\n1984 Peuaeot\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\nFy TN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r3-c4.png",
+    "text": "205 Rallye\n1991 Peuaeot\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-034-r3-c5.png",
+    "text": "207 Super 2000\n2007 Peuaeot\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n(3 ag BS § b . — a) |\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r1-c1.png",
+    "text": "Fury\n1958 Plvmouth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r1-c2.png",
+    "text": "Barracuda Formula S\n1968 Plvmouth\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r1-c3.png",
+    "text": "Cuda 426 HEMI\n1971 Plvmouth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r1-c4.png",
+    "text": "RZR Pro XP Ultimate\n2021 Polaris\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\nA  ¥\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r1-c5.png",
+    "text": "RZR Pro XP Factory Racing...\n2021 Polaris\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r2-c1.png",
+    "text": "Firebird Trans Am\n1977 Pontiac\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r2-c2.png",
+    "text": "Firebird Trans Am GTA\n1987 Pontiac\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r2-c3.png",
+    "text": "#3 917 LH\n1970 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r2-c4.png",
+    "text": "#3 917 LH Forza Edition\n1970 Porsche\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\n- —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r2-c5.png",
+    "text": "911 Carrera RS\n1973 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r3-c1.png",
+    "text": "911 Turbo 3.3\n1982 Porsche\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\nFY\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r3-c2.png",
+    "text": "#185 959 Prodrive Rally Raid\n1985 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "i\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r3-c3.png",
+    "text": "959\n1987 Porsche\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "TREASURE C\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r3-c4.png",
+    "text": "911 Carrera Coupe 'Luftauto..\n1987 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n7 — ~ . 2 = BD\n"
+    }
+  },
+  {
+    "source": "tiles\\page-035-r3-c5.png",
+    "text": "#203 Porsche AG 961\n1987 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r1-c1.png",
+    "text": "944 Turbo\n1989 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r1-c2.png",
+    "text": "968 Turbo S\n1993 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r1-c3.png",
+    "text": "928 GTS\n1993 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r1-c4.png",
+    "text": "911 Turbo S Leichtbau\n1993 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nPs - Tie =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r1-c5.png",
+    "text": "911 GT2\n1995 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r2-c1.png",
+    "text": "911 GT1 Strassenversion\n1998 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r2-c2.png",
+    "text": "Carrera GT\n2003 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r2-c3.png",
+    "text": "911 GT3\n2004 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r2-c4.png",
+    "text": "Cayman GT3 WTAC\n2005 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r2-c5.png",
+    "text": "911 GT3 RS 4.0\n2012 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\nAl ~~\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r3-c1.png",
+    "text": "918 Spyder\n2014 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r3-c2.png",
+    "text": "911 GT2 RS\n2018 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r3-c3.png",
+    "text": "Cayenne Turbo\n2018 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n| Co BR —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r3-c4.png",
+    "text": "718 Cayman GTS\n2018 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-036-r3-c5.png",
+    "text": "Macan LPR Rally Raid\n2018 Porsche\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r1-c1.png",
+    "text": "#70 Porsche Motorsport 935\n2019 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r1-c2.png",
+    "text": "911 Carrera S\n2019 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\nSlee\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r1-c3.png",
+    "text": "911 GT3 RS\n2019 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r1-c4.png",
+    "text": "Taycan Turbo S\n2020 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r1-c5.png",
+    "text": "911 GT3\n2021 Porsche\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r2-c1.png",
+    "text": "718 Cayman GT4 RS\n2022 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r2-c2.png",
+    "text": "Mission R\n2022 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n= l ’ ~- - EE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r2-c3.png",
+    "text": "911 GT3 RS\n2023 Porsche\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r2-c4.png",
+    "text": "911 Rallye\n2023 Porsche\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nAle — bY\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r2-c5.png",
+    "text": "911 Turbo S\n2023 Porsche\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r3-c1.png",
+    "text": "RXC Turbo\n2015 Radical\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r3-c2.png",
+    "text": "1500 TRX\n2024 Ram\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r3-c3.png",
+    "text": "Supervan lll\n1972 Reliant\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r3-c4.png",
+    "text": "8 Gordini\n1967 Renault\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-037-r3-c5.png",
+    "text": "5 Turbo\n1980 Renault\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r1-c1.png",
+    "text": "Clio Williams\n1993 Renault\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r1-c2.png",
+    "text": "Sport Spider\n1998 Renault\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n=  . _——\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r1-c3.png",
+    "text": "Mégane R26.R\n2008 Renault\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r1-c4.png",
+    "text": "Megane RS 250\n2010 Renault\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n) 7, Re z = g E\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r1-c5.png",
+    "text": "Megane R.S.\n2018 Renault\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n- >: — =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r2-c1.png",
+    "text": "Nevera\n2021 Rimac\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r2-c2.png",
+    "text": "RIT\n2021 RIVIAN\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r2-c3.png",
+    "text": "#37 Polaris RZR Pro 2 Truck\n2016 RJ Anderson\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r2-c4.png",
+    "text": "#37 Polaris RZR Pro 4 Truck\n2021 RJ Anderson\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r2-c5.png",
+    "text": "S7\n2004 Saleen\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r3-c1.png",
+    "text": "S7LM\n2017 Saleen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r3-c2.png",
+    "text": "962CR\n1993 Schunbnan\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "|\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r3-c3.png",
+    "text": "Cobra Daytona Coupe\n1965 Shelby\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r3-c4.png",
+    "text": "Cobra 427 S/C\n1965 Shelby\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-038-r3-c5.png",
+    "text": "#23 Yokohama ALPHA\n2020 SIERRA Cars\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\npw. oY\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r1-c1.png",
+    "text": "700R\n2021 SIERRA Cars\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nA C= d ote\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r1-c2.png",
+    "text": "RX3\n2021 SIERRA Cars\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r1-c3.png",
+    "text": "Viper GTS\n2013 SRT\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r1-c4.png",
+    "text": "BRAT GL\n1980 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r1-c5.png",
+    "text": "LEGACY RS\n1990 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n— Ty Se = =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r2-c1.png",
+    "text": "Vivio RX-R Forza Edition\n1994 Subaru\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r2-c2.png",
+    "text": "Vivio RX-R\n1994 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r2-c3.png",
+    "text": "SVX\n1996 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\na ) = — = a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r2-c4.png",
+    "text": "Impreza 22B-STi Version\n1998 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r2-c5.png",
+    "text": "IMPREZA WRX STI\n2004 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n) B Nn | - = — bn — 1)\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r3-c1.png",
+    "text": "LEGACY B4 2.0 GT\n2005 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r3-c2.png",
+    "text": "IMPREZA WRX STI\n2005 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n] E - Te ey\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r3-c3.png",
+    "text": "IMPREZA WRX STI\n2008 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r3-c4.png",
+    "text": "WRX STI\n2011 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\ni | - = | « Ce -—I ’\n"
+    }
+  },
+  {
+    "source": "tiles\\page-039-r3-c5.png",
+    "text": "BRZ\n2013 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r1-c1.png",
+    "text": "WRX STI\n2015 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n| a ~~ i: = Eh\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r1-c2.png",
+    "text": "WRX STI ARX Supercar\n2018 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nSN RE N _—\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r1-c3.png",
+    "text": "STI S209\n2019 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r1-c4.png",
+    "text": "BRZ Forza Edition\n2022 Subaru\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r1-c5.png",
+    "text": "BRZ\n2022 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r2-c1.png",
+    "text": "WRX\n2022 Subaru\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nEpra—— i Co - a =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r2-c2.png",
+    "text": "Sports 800\n1965 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\nl Bh } — o AT a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r2-c3.png",
+    "text": "2000GT\n1969 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "BARN FIND\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r2-c4.png",
+    "text": "Celica GT\n1974 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r2-c5.png",
+    "text": "Corolla SR5\n1974 Tovota\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r3-c1.png",
+    "text": "FJ40\n1979 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r3-c2.png",
+    "text": "Sprinter Trueno GT-APEX F...\n1985 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDITI\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r3-c3.png",
+    "text": "Sprinter Trueno GT Apex\n1985 Tovota\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r3-c4.png",
+    "text": "MR2 SC\n1989 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n[ =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-040-r3-c5.png",
+    "text": "Chaser GT Twin Turbo\n1991 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r1-c1.png",
+    "text": "Sera\n1991 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE HB\n\na = Re e—\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r1-c2.png",
+    "text": "Supra 2.0 GT\n1992 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r1-c3.png",
+    "text": "Celica GT-Four RC ST185\n1992 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r1-c4.png",
+    "text": "#1 T1100 Baja Truck\n1993 Tovota\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r1-c5.png",
+    "text": "Celica GT-Four ST205\n1994 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r2-c1.png",
+    "text": "MR2 GT\n1995 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r2-c2.png",
+    "text": "J&J Motorsport Supra WTAC\n1995 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r2-c3.png",
+    "text": "Starlet Glanza V\n1996 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\na = ENR ~~\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r2-c4.png",
+    "text": "Soarer 2.5 GT-T\n1997 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r2-c5.png",
+    "text": "Chaser 2.5 Tourer V\n1997 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r3-c1.png",
+    "text": "Supra RZ\n1998 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\nBN | = - SARE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r3-c2.png",
+    "text": "Altezza RS200 Z EDITION\n1999 Tovota\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": ")\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r3-c3.png",
+    "text": "Celica Sport Specialty II\n2003 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\ni ~ >a x\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r3-c4.png",
+    "text": "Crown Super Deluxe Taxi\n2005 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-041-r3-c5.png",
+    "text": "86\n2013 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\nSE > - TE 3\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r1-c1.png",
+    "text": "86 'Stories'\n2013 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nTT pan\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r1-c2.png",
+    "text": "Land Cruiser Arctic Trucks...\n2016 Tovota\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r1-c3.png",
+    "text": "JPN Taxi\n2017 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r1-c4.png",
+    "text": "Tacoma TRD Pro Forza Editi...\n2019 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "FORZA EDIT\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r1-c5.png",
+    "text": "4Runner TRD Pro\n2019 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r2-c1.png",
+    "text": "Tacoma TRD Pro\n2019 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r2-c2.png",
+    "text": "GR Supra\n2020 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r2-c3.png",
+    "text": "GR Yaris\n2021 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\na ~~ b\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r2-c4.png",
+    "text": "GR86\n2022 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r2-c5.png",
+    "text": "GR Corolla\n2023 Tovota\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r3-c1.png",
+    "text": "Camry TRD\n2023 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r3-c2.png",
+    "text": "Prius Prime XSE Premium\n2024 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\nTom TT _— : =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r3-c3.png",
+    "text": "Land Cruiser\n2025 Tovota\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r3-c4.png",
+    "text": "Cerbera Speed 12\n1998 TVR\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-042-r3-c5.png",
+    "text": "Sagaris\n2005 TVR\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r1-c1.png",
+    "text": "Griffith\n2018 TVR\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r1-c2.png",
+    "text": "Evolution Coupe 1020\n2015 Ultima\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n| } | ey RE\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r1-c3.png",
+    "text": "Astra VXR\n2006 Vauxhall\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r1-c4.png",
+    "text": "Beetle\n1963 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\nAN.\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r1-c5.png",
+    "text": "Type 2 De Luxe\n1963 Volkswaaen\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r2-c1.png",
+    "text": "Class 5/1600 Baja Bug\n1969 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r2-c2.png",
+    "text": "Pickup LX\n1982 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r2-c3.png",
+    "text": "Golf GTI\n1983 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r2-c4.png",
+    "text": "Rallye Golf\n1989 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\nFf 9\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r2-c5.png",
+    "text": "Golf GTi 16v Mk2\n1992 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\nEF 9\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r3-c1.png",
+    "text": "Corrado VR6\n1995 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r3-c2.png",
+    "text": "Golf R\n2010 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE 1\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r3-c3.png",
+    "text": "Scirocco R\n2011 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\na.\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r3-c4.png",
+    "text": "Golf R\n2014 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\nPEN | = ~ r=\n"
+    }
+  },
+  {
+    "source": "tiles\\page-043-r3-c5.png",
+    "text": "#34 Andretti Rally Cross Be..\n2017 Volkswaaen\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n- = - BC - == 30\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r1-c1.png",
+    "text": "595 esseesse\n1968 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\np-——.\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r1-c2.png",
+    "text": "Fiat 131\n1980 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r1-c3.png",
+    "text": "695 Biposto\n2016 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r1-c4.png",
+    "text": "124 Spider\n2017 Abarth\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE J\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r1-c5.png",
+    "text": "Integra Type R\n2001 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| COMMON\n\nne - EY\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r2-c1.png",
+    "text": "RSX Type S\n2002 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n| | E Ee i\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r2-c2.png",
+    "text": "NSX Type S\n2022 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r2-c3.png",
+    "text": "Integra A-Spec\n2023 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\noT oo r— 3 — - = a\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r2-c4.png",
+    "text": "Giulia Sprint GTA Stradale\n1965 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r2-c5.png",
+    "text": "Giulia TZ2\n1965 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r3-c1.png",
+    "text": "Autodelta Tipo 33/2 Daytona\n1968 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r3-c2.png",
+    "text": "33 Stradale\n1968 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r3-c3.png",
+    "text": "SE 048SP\n1990 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r3-c4.png",
+    "text": "155 Q4\n1992 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n|\n"
+    }
+  },
+  {
+    "source": "tiles\\page-044-r3-c5.png",
+    "text": "8C Competizione\n2007 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\nCL Toma\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r1-c1.png",
+    "text": "RSX Type S\n2002 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "COMMON\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r1-c2.png",
+    "text": "NSX Type S\n2022 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r1-c3.png",
+    "text": "Integra A-Spec\n2023 Acura\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n— wt = — - mC = . =\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r1-c4.png",
+    "text": "Giulia Sprint GTA Stradale\n1965 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r1-c5.png",
+    "text": "Giulia TZ2\n1965 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r2-c1.png",
+    "text": "Autodelta Tipo 33/2 Daytona\n1968 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r2-c2.png",
+    "text": "33 Stradale\n1968 Alfa Romeo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r2-c3.png",
+    "text": "SE 048SP\n1990 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r2-c4.png",
+    "text": "155 Q4\n1992 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n|\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r2-c5.png",
+    "text": "8C Competizione\n2007 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r3-c1.png",
+    "text": "4C\n2014 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\ni | B £ . Re 2\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r3-c2.png",
+    "text": "Giulia Quadrifoglio\n2017 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r3-c3.png",
+    "text": "Giulia GTAm\n2021 Alfa Romeo\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE\n\n9\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r3-c4.png",
+    "text": "Class 10 Race Car\n2015 Alumicraft\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-045-r3-c5.png",
+    "text": "#122 Class 1 Buggy\n2021 Alumicraft\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r1-c1.png",
+    "text": "#6165 Trick Truck\n2022 Alumicraft\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r1-c2.png",
+    "text": "M12S Warthog CST\n2554 AMG Transport Dvnamics\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\ns ) ! fi -\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r1-c3.png",
+    "text": "Intensa Emozione\n2019 Apollo\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r1-c4.png",
+    "text": "Atom 500 V8\n2013 Ariel\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nsllis o\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r1-c5.png",
+    "text": "Nomad\n2016 Ariel\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "\noes\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r2-c1.png",
+    "text": "DB5\n1964 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\nES —\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r2-c2.png",
+    "text": "DB7 GT\n2003 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| RARE |B\n\na a R = -2 = = TR\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r2-c3.png",
+    "text": "Vulcan\n2016 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r2-c4.png",
+    "text": "DB11\n2017 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r2-c5.png",
+    "text": "Vulcan AMR Pro\n2017 Aston Martin\n",
+    "ownership": {
+      "status": "unowned",
+      "labelText": "So\n\nJAPAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r3-c1.png",
+    "text": "Valhalla Concept Car\n2019 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "LEGENDARY\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r3-c2.png",
+    "text": "DBS Superleggera\n2019 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r3-c3.png",
+    "text": "Vantage\n2019 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "EPIC\n\n| | i . CATs\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r3-c4.png",
+    "text": "DBX\n2021 Aston Martin\n",
+    "ownership": {
+      "status": "unknown",
+      "labelText": "So\n\nJABAN\n"
+    }
+  },
+  {
+    "source": "tiles\\page-046-r3-c5.png",
+    "text": "Valkyrie AMR Pro\n2022 Aston Martin\n",
+    "ownership": {
+      "status": "owned",
+      "labelText": "| LEGENDARY\n\n"
+    }
+  }
+]

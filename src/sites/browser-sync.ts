@@ -1,45 +1,39 @@
-import { writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
-import { chromium } from "playwright";
-import { applyGaragePlan } from "./apply-plan.ts";
+import { launchSyncBrowser } from "./browser-session.ts";
+import { applyWithPage } from "./browser-apply.ts";
 import type { GarageCar, SiteAdapter } from "./types.ts";
 
 export async function syncWithBrowser(site: SiteAdapter, cars: readonly GarageCar[], directory: string): Promise<void> {
 	if (!cars.length) throw new Error("Owned plan is empty; nothing to sync.");
 	if (!stdin.isTTY) throw new Error("Apply requires an interactive terminal for login and typed confirmation.");
 	const terminal = createInterface({ input: stdin, output: stdout });
-	const resultPath = join(directory, `${site.resultPrefix}-${Date.now()}.json`);
 	try {
-		const browser = await chromium.launch({ channel: "msedge", headless: false });
+		const session = await launchSyncBrowser(site);
 		try {
-			const context = await browser.newContext();
-			const page = await context.newPage();
+			const context = session.context;
+			const page = context.pages()[0] ?? await context.newPage();
 			await page.goto(site.loginUrl, { waitUntil: "domcontentloaded" });
-			console.log(`[+] Log in normally in the Edge window, complete any site verification, and return to ${site.label}. No credentials or cookies are stored by this tool.`);
-			await terminal.question("Press Enter when login is complete and the target account is visible. ");
+			console.log(site.sessionInstructions ??
+				`Log in normally in the Edge window, complete any site verification, and return to ${site.label}. No credentials or cookies are stored by this tool.`);
+			await terminal.question("Press Enter when the target page and starting collection are ready. ");
 			site.assertReady(page.url());
-			const confirmation = await terminal.question(`Confirm the ${site.label} account and reviewed plan. Type APPLY ${cars.length} to mark these cars owned (no removals): `);
+			const confirmation = await terminal.question(`Confirm the ${site.label} destination and reviewed plan. Type APPLY ${cars.length} to mark these cars owned (no removals): `);
 			if (confirmation !== `APPLY ${cars.length}`) {
 				console.log("[+] Cancelled. No account updates sent.");
 				return;
 			}
-			console.log(`[+] Sync results will be saved to: ${resultPath}`);
-			const results = await applyGaragePlan(cars, site.requestDelayMs, {
-				addOwned: async (car) => {
-					site.assertReady(page.url());
-					await site.addOwned(page, car.id);
-				},
-				persist: async (results) => { await writeFile(resultPath, `${JSON.stringify(results, null, 2)}\n`); },
-				onConfirmed: (car) => { console.log(`[+] Confirmed owned: ${car.name} (${car.id})`); },
-				wait: async (milliseconds) => { await new Promise((resolve) => setTimeout(resolve, milliseconds)); },
-			});
-			console.log(`[+] ${results.length} garage additions confirmed by ${site.label}. Results: ${resultPath}`);
-			await page.reload({ waitUntil: "domcontentloaded" });
-			await terminal.question("Inspect the updated garage in Edge, then press Enter to close the temporary session. ");
+			const result = await applyWithPage(site, cars, directory, page,
+				(car) => { console.log(`[+] Confirmed owned: ${car.name} (${car.id})`); },
+				(path) => { console.log(`[+] Sync audit: ${path}`); });
+			console.log(`[+] ${cars.length} garage additions confirmed by ${site.label}. Results: ${result.resultPath}`);
+			if (result.shareUrl) {
+				console.log(`[+] Shareable collection URL: ${result.shareUrl}`);
+				console.log("[+] Open that URL in your regular browser and choose “Load this collection” to transfer the tracker.");
+			}
+			await terminal.question("Inspect the updated garage in Edge, then press Enter to close the sync session. ");
 		} finally {
-			await browser.close();
+			await session.close();
 		}
 	} finally {
 		terminal.close();

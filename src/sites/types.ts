@@ -20,6 +20,9 @@ export interface SiteAdapter extends GaragePlanTarget {
 	resultPrefix: string;
 	loginUrl: string;
 	requestDelayMs: number;
+	sessionInstructions?: string;
 	assertReady(pageUrl: string): void;
 	addOwned(page: Page, carId: string): Promise<void>;
+	loadOwnedIds?(page: Page, carIds: readonly string[]): Promise<Set<string>>;
+	shareCollectionUrl?(page: Page): Promise<string>;
 }

@@ -30,6 +30,7 @@ export function buildOwnedGaragePlan(
 	entries: readonly CatalogEntry[],
 	mapping: CarNameMapping,
 	site: GaragePlanTarget,
+	siteMapping: Readonly<Record<string, string>> = {},
 ): { site: string; owned: GarageCar[]; review: string[] } {
 	const byId = new Map<string, GarageCar>();
 	const review: string[] = [];
@@ -37,6 +38,17 @@ export function buildOwnedGaragePlan(
 		if (car.ownership.status === "unowned") continue;
 		if (car.ownership.status === "unknown") {
 			review.push(`${car.source}: ownership unknown; label OCR ${JSON.stringify(car.ownership.labelText)}`);
+			continue;
+		}
+		const selectedId = siteMapping[car.source];
+		if (selectedId !== undefined) {
+			const selected = entries.filter((entry) => entry.siteIds?.[site.id] === selectedId);
+			if (!site.isValidCarId(selectedId) || selected.length !== 1) {
+				throw new Error(`Invalid manual ${site.label} mapping for "${car.source}".`);
+			}
+			const existing = byId.get(selectedId);
+			if (existing) existing.sources.push(car.source);
+			else byId.set(selectedId, { id: selectedId, name: selected[0]!.name, sources: [car.source] });
 			continue;
 		}
 		const match = matchCarText(car, entries, mapping);

@@ -8,6 +8,7 @@ import type { SyncResult } from "../src/sites/apply-plan.ts";
 import type { GaragePlanTarget } from "../src/sites/types.ts";
 import { getSiteAdapter } from "../src/sites/registry.ts";
 import { kudosPrimeAdapter } from "../src/sites/kudosprime/adapter.ts";
+import { forzaGarageAdapter } from "../src/sites/forzagarage/adapter.ts";
 import { mergeCatalogEntries } from "../src/workflows/export-cars.ts";
 
 const exampleSite: GaragePlanTarget = {
@@ -19,9 +20,10 @@ const exampleSite: GaragePlanTarget = {
 
 test("site selection is explicit and unsupported sites never fall back to KudosPrime", () => {
 	assert.equal(getSiteAdapter("kudosprime"), kudosPrimeAdapter);
-	for (const site of ["", "labsgg", "forzagarage", "fhstats"]) {
+	for (const site of ["", "labsgg", "fhstats"]) {
 		assert.throws(() => getSiteAdapter(site), /Unsupported site/);
 	}
+	assert.equal(getSiteAdapter("forzagarage"), forzaGarageAdapter);
 	assert.doesNotThrow(() => kudosPrimeAdapter.assertReady("https://www.kudosprime.com/fh6/carlist.php"));
 	assert.throws(() => kudosPrimeAdapter.assertReady("https://www.kudosprime.com.example.com/"));
 });
@@ -73,8 +75,9 @@ test("catalog merging retains independent IDs and ordinals without mutating inpu
 	const hdr = { name: "2002 Acura RSX Type-S", ordinal: "422" };
 	const kudos = { name: hdr.name, siteIds: { kudosprime: "4" } };
 	const other = { name: hdr.name, siteIds: { example: "car-acura" } };
-	const merged = mergeCatalogEntries([[hdr], [kudos], [other]]);
-	assert.deepEqual(merged, [{ ...hdr, siteIds: { kudosprime: "4", example: "car-acura" } }]);
+	const forzaGarage = { name: hdr.name, siteIds: { forzagarage: "ACU_RSX_02" } };
+	const merged = mergeCatalogEntries([[hdr], [kudos], [other], [forzaGarage]]);
+	assert.deepEqual(merged, [{ ...hdr, siteIds: { kudosprime: "4", example: "car-acura", forzagarage: "ACU_RSX_02" } }]);
 	assert.deepEqual(kudos.siteIds, { kudosprime: "4" });
 	assert.deepEqual(other.siteIds, { example: "car-acura" });
 	assert.throws(() => mergeCatalogEntries([[hdr], [{ ...hdr, ordinal: "999" }]]), /Conflicting ordinals/);

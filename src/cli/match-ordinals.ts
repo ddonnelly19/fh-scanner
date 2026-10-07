@@ -7,11 +7,18 @@ import { resolveRunDirectory } from "../workflows/run-directory.ts";
 
 async function main(): Promise<void> {
 	const { values } = parseArgs({
-		options: { "run-dir": { type: "string" }, catalog: { type: "string" }, mapping: { type: "string" }, "kudos-catalog": { type: "string" } },
+		options: {
+			"run-dir": { type: "string" },
+			catalog: { type: "string" },
+			mapping: { type: "string" },
+			"kudos-catalog": { type: "string" },
+			"forzagarage-catalog": { type: "string" },
+		},
 	});
 	if (values.catalog !== undefined && !values.catalog.trim()) throw new Error("--catalog must not be empty.");
 	if (values.mapping !== undefined && !values.mapping.trim()) throw new Error("--mapping must not be empty.");
 	if (values["kudos-catalog"] !== undefined && !values["kudos-catalog"].trim()) throw new Error("--kudos-catalog must not be empty.");
+	if (values["forzagarage-catalog"] !== undefined && !values["forzagarage-catalog"].trim()) throw new Error("--forzagarage-catalog must not be empty.");
 	const directory = await resolveRunDirectory(values["run-dir"]);
 	console.log(`[+] Selected run: ${directory}`);
 	const tileDirectory = join(directory, "tiles");
@@ -27,7 +34,12 @@ async function main(): Promise<void> {
 	const result = await exportCarOrdinals(cars, directory, {
 		mappingPath,
 		...(values.catalog !== undefined ? { catalogPath: values.catalog } : {}),
-		...(values["kudos-catalog"] !== undefined ? { siteCatalogPaths: { kudosprime: values["kudos-catalog"] } } : {}),
+		...(values["kudos-catalog"] !== undefined || values["forzagarage-catalog"] !== undefined ? {
+			siteCatalogPaths: {
+				...(values["kudos-catalog"] !== undefined ? { kudosprime: values["kudos-catalog"] } : {}),
+				...(values["forzagarage-catalog"] !== undefined ? { forzagarage: values["forzagarage-catalog"] } : {}),
+			},
+		} : {}),
 	});
 	console.log(`[+] Car name mapping updated: ${mappingPath}`);
 	console.log(`[+] ${result.matched}/${cars.length} captured cars matched; ${result.uniqueNames} unique matched car names written to ${join(directory, "ordinals.txt")}.`);

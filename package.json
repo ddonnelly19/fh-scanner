@@ -7,6 +7,7 @@
     "test": "vitest run --config src\\vitest.config.ts",
     "test:watch": "vitest --config src\\vitest.config.ts",
     "ownership": "node src\\cli\\review-ownership.ts",
+    "review:web": "node src\\cli\\review-web.ts",
     "sync": "node src\\cli\\sync-garage.ts --apply",
     "match": "node --use-system-ca src\\cli\\match-ordinals.ts",
 	"run": "node --use-system-ca src\\cli\\scanner.ts"

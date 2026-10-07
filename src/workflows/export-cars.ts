@@ -13,10 +13,19 @@ export interface ExportOptions {
 }
 
 export function mergeCatalogEntries(catalogs: readonly (readonly CatalogEntry[])[]): CatalogEntry[] {
+	const ambiguousNames = new Set<string>();
+	for (const catalog of catalogs) {
+		const names = new Set<string>();
+		for (const entry of catalog) {
+			if (names.has(entry.name)) ambiguousNames.add(entry.name);
+			names.add(entry.name);
+		}
+	}
 	const entries: CatalogEntry[] = [];
 	for (const catalog of catalogs) {
 		for (const entry of catalog) {
-			const existing = entries.find((candidate) => candidate.name === entry.name);
+			const existing = ambiguousNames.has(entry.name) ? undefined :
+				entries.find((candidate) => candidate.name === entry.name);
 			if (!existing) {
 				entries.push({ ...entry, ...(entry.siteIds ? { siteIds: { ...entry.siteIds } } : {}) });
 				continue;

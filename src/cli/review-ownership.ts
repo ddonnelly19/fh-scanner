@@ -2,13 +2,14 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { defaultCarMappingPath, loadCarNameMapping } from "../collection/car-matching.ts";
-import { loadOrdinalCatalog } from "../catalogs/hdr.ts";
 import { detectTileOwnership } from "../ocr/car-ownership.ts";
 import type { OwnedCarInput } from "../ocr/car-ownership.ts";
 import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { buildOwnedGaragePlan } from "../sites/garage-plan.ts";
 import { getSiteAdapter } from "../sites/registry.ts";
-import { mergeCatalogEntries } from "../workflows/export-cars.ts";
+import { loadOwnershipCatalogs } from "../workflows/ownership-input.ts";
+import { loadSiteMapping } from "../workflows/site-mapping.ts";
+import { applyOwnershipOverrides, loadOwnershipOverrides } from "../workflows/ownership-overrides.ts";
 import { resolveRunDirectory } from "../workflows/run-directory.ts";
 
 async function main(): Promise<void> {
@@ -16,11 +17,9 @@ async function main(): Promise<void> {
 	const site = getSiteAdapter(values.site);
 	const directory = await resolveRunDirectory(values["run-dir"]);
 	console.log(`[+] Selected run: ${directory}`);
-	const entries = mergeCatalogEntries([
-		(await loadOrdinalCatalog(join(directory, "car-ordinals-source.json"))).entries,
-		(await site.catalog.load(join(directory, site.catalog.snapshotFile))).entries,
-	]);
+	const entries = await loadOwnershipCatalogs(directory, site);
 	const mapping = await loadCarNameMapping(defaultCarMappingPath, entries);
+	const siteMapping = await loadSiteMapping(directory, site, entries);
 	const tiles = join(directory, "tiles");
 	const files = (await readdir(tiles)).filter((name) => /^page-\d+-r[1-3]-c[1-5]\.png$/.test(name))
 		.sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
@@ -38,7 +37,8 @@ async function main(): Promise<void> {
 	} finally {
 		await worker.terminate();
 	}
-	const plan = buildOwnedGaragePlan(cars, entries, mapping, site);
+	const overrides = await loadOwnershipOverrides(directory);
+	const plan = buildOwnedGaragePlan(applyOwnershipOverrides(cars, overrides), entries, mapping, site, siteMapping);
 	await writeFile(join(directory, "ownership-evidence.json"), `${JSON.stringify(cars, null, 2)}\n`);
 	await writeFile(join(directory, site.planFile), `${JSON.stringify(plan, null, 2)}\n`);
 	console.log(`[+] Dry run only: ${plan.owned.length} unique verified-owned site IDs; ${plan.review.length} items need review. No account updates sent.`);

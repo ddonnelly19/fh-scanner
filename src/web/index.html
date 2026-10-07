@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="review-token" content="REVIEW_TOKEN">
+  <title>Garage workflow dashboard</title>
+  <link rel="stylesheet" href="/review.css">
+  <script src="/review.js" defer></script>
+</head>
+<body>
+  <header><span class="eyebrow">FH SCANNER / LOCAL DASHBOARD</span><h1>Your garage workflow</h1>
+    <p id="run"></p><p id="summary"></p>
+  </header>
+  <p id="message" role="status" aria-live="polite"></p>
+  <section class="workflow">
+    <div class="selectors">
+      <div><label for="run-select">Saved run</label><select id="run-select"></select></div>
+      <div><label for="site-select">Target site</label><select id="site-select"></select></div>
+      <button id="select-run">Load selection</button><button id="refresh" class="secondary">Reload local files</button>
+    </div>
+    <div class="actions">
+      <button id="job-match" class="secondary">Refresh catalogs &amp; match names</button>
+      <button id="job-ownership" class="secondary">Run ownership OCR</button>
+      <button id="regenerate" class="secondary">Regenerate owned plan</button>
+      <button id="preview">Preview sync plan</button>
+    </div>
+    <p class="hint">Matching refreshes public catalogs and generated name results. Ownership OCR uses saved tiles; manual ownership corrections are preserved. Neither job updates a tracker.</p>
+    <p id="workflow-error"></p>
+    <details id="job-panel"><summary id="job-status">Job progress</summary><pre id="job-log"></pre></details>
+    <section id="plan-panel" hidden>
+      <h2>Sync plan preview</h2><p id="plan-summary"></p>
+      <div id="plan-cars"></div><details><summary>Excluded / review reasons</summary><pre id="plan-review"></pre></details>
+      <button id="sync-open">Open Edge for sync</button>
+      <p class="hint">KudosPrime uses a dedicated local Edge profile that retains login and verification cookies. Your regular browser profile is not used. Site verification may still reject automated sessions.</p>
+    </section>
+    <section id="sync-panel" hidden>
+      <h2>Browser sync</h2><p id="sync-instructions"></p><p id="sync-status"></p>
+      <div id="sync-confirm-panel" hidden>
+        <label class="check"><input id="destination-checked" type="checkbox"> I checked the target account or starting collection in Edge and reviewed the plan.</label>
+        <label for="sync-confirmation" id="sync-confirm-label">Typed confirmation</label><input id="sync-confirmation" autocomplete="off">
+        <div class="actions"><button id="sync-confirm">Apply confirmed plan</button></div>
+      </div>
+      <p id="sync-result"></p><a id="sync-share" hidden target="_blank" rel="noopener noreferrer">Open updated collection share link</a>
+      <p class="hint">ForzaGarage: load any existing share link into Edge first. After completion, open the resulting link in your regular browser and choose Load this collection (replaces that browser's selection).</p>
+      <button id="sync-close" class="secondary">Close Edge / cancel session</button>
+    </section>
+  </section>
+  <main>
+    <aside>
+      <label for="filter">Review queue</label>
+      <select id="filter"><option value="unresolved">Unresolved owned cars</option><option value="owned">All owned cars</option><option value="unknown">Unknown ownership</option><option value="unowned">Unowned cars</option><option value="all">All captured tiles</option><option value="manual">Manually matched</option></select>
+      <label for="queue-search">Find a captured car</label><input id="queue-search" type="search" placeholder="Name or tile filename">
+      <p id="queue-count"></p><div id="queue"></div>
+    </aside>
+    <section id="detail" hidden>
+      <div class="section-heading"><span class="eyebrow">CAPTURED EVIDENCE</span><span id="position"></span></div>
+      <h2 id="car-name"></h2><p id="source"></p>
+      <img id="tile" alt="Captured car tile">
+      <div class="evidence"><div><h3>Name OCR</h3><pre id="ocr"></pre></div><div><h3>Ownership evidence</h3><pre id="ownership"></pre></div></div>
+      <div class="ownership-controls">
+        <label for="ownership-select">Reviewed ownership classification</label>
+        <select id="ownership-select"><option value="owned">Owned</option><option value="unowned">Unowned</option><option value="unknown">Unknown</option></select>
+        <label class="check"><input id="ownership-verified" type="checkbox"> I inspected this tile and verified its ownership.</label>
+        <div class="actions"><button id="ownership-save" class="secondary">Save ownership correction</button><button id="ownership-reset" class="secondary">Restore OCR classification</button></div>
+      </div>
+      <p id="reason"></p><p id="current"></p>
+      <h3>Choose the exact catalog car</h3>
+      <p class="hint">Suggestions are not verified matches. Check the tile, year and variant. Search all cars for year or branding differences.</p>
+      <label for="catalog-search">Search the full catalog</label><input id="catalog-search" type="search" placeholder="e.g. Alfa Romeo 8C">
+      <p id="results-count"></p><div id="candidates"></div>
+      <div class="actions"><button id="save" disabled>Save match &amp; next</button><button id="reset" class="secondary">Remove manual match</button><button id="skip" class="secondary">Skip for now</button></div>
+    </section>
+    <section id="empty" hidden><h2>No cars in this queue</h2><p>Choose another review filter, or run matching and ownership OCR above if this run needs inputs.</p></section>
+  </main>
+  <footer>Local saved-run workflow. Only Apply confirmed plan sends tracker/account additions. Capture new scans using the terminal.</footer>
+</body>
+</html>

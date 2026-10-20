@@ -55,7 +55,84 @@ For names-only export, stop after step 1 or 2; `ordinals.txt` is already
 generated. Ownership and sync are needed only to create and apply an owned-car
 plan.
 
-### Development tools (independent of the scan workflow)
+### Single-car cloud performance capture
+
+Run `npm run capture:cloud -- geforce` (or `xbox`) to open a dedicated Edge
+profile. Log in manually, launch the game, open **My Cars**, select a car,
+and show the left-hand stats panel (press **P** to toggle ratings/details).
+The extractor automatically recognizes either panel. Make the game fill the viewport at 16:9
+without letterboxing or streaming overlays, then press Enter in the terminal.
+The browser closes after capture; OCR runs locally.
+
+To extract from an existing game-only screenshot without opening a browser:
+
+```powershell
+npm run capture:cloud -- geforce --image ".\screenshots\geforce-example.png"
+```
+
+Each capture creates a separate `screenshots\performance-*` directory with
+`car.png` and `performance.json`. The observation includes the highlighted
+tile's name/year/manufacturer, panel type, class/PI and drivetrain. Ratings
+mode reads six ratings and tires; detail mode reads power, torque, weight,
+front weight percentage and displacement as `{ value, unit }` measurements,
+preserving displayed units without conversion. Fields not displayed in the
+selected mode are null, not errors. Only the visible panel is captured per
+run; the script does not automatically press P or merge separate captures.
+The observation also includes
+raw OCR text/confidence, timestamp and provider. The current-car banner is
+not used to identify the selected car. Unreadable fields are null and listed
+in `issues`; low-confidence OCR is also flagged. Review-required results
+exit with code 1 but retain evidence. Layout failures retain the screenshot
+and report an error rather than generating a successful observation.
+
+This initial extractor targets the supplied FH My Cars layout; other layouts
+need calibration. It does not traverse the garage, identify duplicate garage
+copies, read individual tuning settings, or infer upgrades. Observations are
+snapshots of the selected build, not catalog attributes. Dedicated browser
+profiles under `%LOCALAPPDATA%\fh-scanner\browser-profiles` contain login data;
+do not share or commit them.
+
+### Multi-screen cloud recording
+
+```powershell
+npm run capture:cloud -- geforce --record
+```
+
+Use `xbox` instead of `geforce` for Xbox Cloud. Launch the game manually,
+click the stream to focus it, and press Enter in the terminal to save the
+initial screen. Then enter commands, one at a time:
+
+```text
+key p
+capture detail panel
+key ArrowRight
+wait 1500
+capture next car
+done
+```
+
+`key <Playwright key> [hold-ms]` sends a key (default 100 ms, maximum 5000 ms)
+and waits 500 ms for the stream to react. Use lowercase `p` for the detail
+toggle, `Enter`, `Escape`, `ArrowDown`, or combinations such as `Shift+Tab`.
+`wait <ms>` adds a recorded delay (1..30000 ms). `capture [label]` saves a
+viewport screenshot; `help` shows commands; `done` closes the browser.
+
+Each `screenshots\recording-*` run contains numbered screenshots and an
+atomically updated `recording.json` timeline with keys, hold/settle durations,
+labels, timestamps and action status. Pending/failed actions are not claimed
+as successful. A completed key action means Playwright sent input, not that
+the game accepted it: verify the following screenshot and add waits as needed.
+Manual browser/controller inputs are not recorded. Hard termination can leave
+the session marked recording with a pending action; earlier saved files remain.
+Do not enter credentials through recorded key commands. Browser input support
+still needs verification in each provider's live session.
+
+Recording is screen-agnostic: it does not run OCR, navigate automatically,
+or combine cars. To extract a recorded My Cars screen, use the existing
+`--image` mode with the numbered screenshot path. `--record` and `--image`
+cannot be combined.
+
+### Development validation
 
 - `npm test`: run all Vitest tests; no capture, keyboard input or account updates.
 - `npm run test:watch`: run tests in watch mode while developing.

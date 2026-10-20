@@ -10,7 +10,8 @@
     "review:web": "node src\\cli\\review-web.ts",
     "sync": "node src\\cli\\sync-garage.ts --apply",
     "match": "node --use-system-ca src\\cli\\match-ordinals.ts",
-	"run": "node --use-system-ca src\\cli\\scanner.ts"
+	"run": "node --use-system-ca src\\cli\\scanner.ts",
+	"capture:cloud": "node src\\cli\\cloud-capture.ts"
   },
   "keywords": [],
   "author": "",

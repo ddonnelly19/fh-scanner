@@ -101,10 +101,13 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 		throw new Error("My Cars extraction requires a game-only 16:9 screenshot without letterboxing.");
 	}
 	const evidence: Record<string, TextEvidence> = {};
-	async function read(key: string, region: Region, mode: PSM, lightText: boolean, whitelist = ""): Promise<string> {
+	async function read(key: string, region: Region, mode: PSM, lightText: boolean, whitelist = "",
+		scale: { height?: number; threshold?: number } = {}): Promise<string> {
 		let crop = sharp(image).removeAlpha().extract(region)
-			.resize(region.width < 25 ? { height: 120 } : { width: Math.max(region.width * 3, 600) })
-			.grayscale().normalise();
+			.resize(scale.height ? { height: scale.height } : region.width < 25 ? { height: 120 } : { width: Math.max(region.width * 3, 600) })
+			.grayscale();
+		// A threshold isolates white text on a coloured badge, where normalising keeps the badge colour as noise.
+		crop = scale.threshold ? crop.threshold(scale.threshold) : crop.normalise();
 		if (lightText) crop = crop.negate();
 		const prepared = await crop.png().toBuffer();
 		const input = await sharp(prepared).extend({ top: 15, bottom: 15, left: 15, right: 15, background: "white" }).png().toBuffer();
@@ -137,7 +140,7 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 		const firstLabel = await read("panelLabel", region(89, 351, 110, 27), PSM.SINGLE_LINE, true);
 		const normalizedLabel = firstLabel.toLowerCase().replace(/\s/g, "");
 		if (normalizedLabel !== "speed" && normalizedLabel !== "power") {
-			throw new Error(`Cannot recognize My Cars stats panel ("${firstLabel}"). Show ratings or details with P.`);
+			throw new Error(`Cannot recognize My Cars stats panel ("${firstLabel}"). Show ratings or details with L.`);
 		}
 		const panel = normalizedLabel === "speed" ? "ratings" : "details";
 		const ratings: CarPerformance["ratings"] = {
@@ -148,7 +151,8 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 			for (const [index, name] of ratingNames.entries()) {
 				const top = 351 + index * 32;
 				const label = await read(`${name}Label`, region(89, top, 146, 27), PSM.SINGLE_LINE, true);
-				const value = await read(name, region(240, top, 39, 27), PSM.SINGLE_LINE, true);
+				// Width-based upscaling of these small crops made streamed 5s read as 0 or 9; a fixed height reads them reliably.
+				const value = await read(name, region(240, top, 39, 27), PSM.SINGLE_LINE, true, "0123456789.", { height: 100 });
 				ratings[name] = label.toLowerCase().replace(/\s/g, "") === name ? parseRating(value) : null;
 				if (ratings[name] === null) issues.push(`Could not verify ${name} rating (label "${label}", value "${value}").`);
 			}
@@ -176,7 +180,11 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 				if (details[name] === null) issues.push(`Could not verify ${name} measurement (label "${label}", value "${value}").`);
 			}
 		}
-		const performance = parsePerformance(await read("performance", region(92, 597, 74, 24), PSM.SINGLE_LINE, true, "DCBASX0123456789 "));
+		// The class letter is white on a class-coloured badge, so it is read apart from the PI digits beside it.
+		const performanceClass = await read("performanceClass", region(94, 597, 26, 24), PSM.SINGLE_BLOCK, true, "DCBASX12",
+			{ height: 100, threshold: 230 });
+		const performancePI = await read("performance", region(126, 597, 40, 24), PSM.SINGLE_LINE, true, "0123456789", { height: 100 });
+		const performance = parsePerformance(`${performanceClass} ${performancePI}`);
 		if (!performance) issues.push("Could not read class and PI.");
 		const driveText = await read("drivetrain", region(181, 598, 45, 24), PSM.SINGLE_LINE, false);
 		const drivetrain = /^(AWD|RWD|FWD)$/.test(driveText) ? driveText : null;

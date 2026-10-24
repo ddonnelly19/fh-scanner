@@ -8,15 +8,27 @@ import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { extractCarPerformance } from "../ocr/car-performance.ts";
 import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { BrowserRecording, parseRecordingCommand } from "../capture/browser-recording.ts";
+import { defaultGarageWalkKeys, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
+import type { GarageCar } from "../capture/garage-walk.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
 const { values, positionals } = parseArgs({
 	allowPositionals: true,
-	options: { image: { type: "string" }, record: { type: "boolean", default: false } },
+	options: {
+		image: { type: "string" },
+		record: { type: "boolean", default: false },
+		walk: { type: "boolean", default: false },
+		"max-cars": { type: "string", default: "2000" },
+		"settle-ms": { type: "string", default: "1200" },
+	},
 });
 const provider = positionals[0] ?? "geforce";
-if (positionals.length > 1 || values.image?.trim() === "" || (values.record && values.image !== undefined)) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --record]");
+const maxCars = Number(values["max-cars"]);
+const settleMs = Number(values["settle-ms"]);
+if (positionals.length > 1 || values.image?.trim() === "" ||
+	[values.record, values.walk, values.image !== undefined].filter(Boolean).length > 1 ||
+	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --record | --walk [--max-cars n] [--settle-ms 100..10000]]");
 }
 
 const urls: Record<string, string> = {
@@ -37,12 +49,18 @@ async function capture(): Promise<Buffer | undefined> {
 	const context = await chromium.launchPersistentContext(profileDirectory, {
 		channel: "msedge",
 		headless: false,
-		viewport: { width: 1920, height: 1080 },
+		// A fixed viewport larger than the window clips the visible page; full screen keeps the game on screen at 16:9.
+		viewport: null,
+		args: ["--start-fullscreen"],
 	});
 	const prompt = createInterface({ input: stdin, output: stdout });
 	try {
 		const page = context.pages()[0] ?? await context.newPage();
 		await page.goto(url!);
+		if (values.walk) {
+			await walk(page, prompt);
+			return undefined;
+		}
 		if (values.record) {
 			await mkdir(defaultScreenshotsDirectory, { recursive: true });
 			const directory = await mkdtemp(join(defaultScreenshotsDirectory, "recording-"));
@@ -85,12 +103,55 @@ async function capture(): Promise<Buffer | undefined> {
 			console.log(`Recording saved: ${join(directory, "recording.json")}`);
 			return undefined;
 		}
-		await prompt.question("Open My Cars, select a car, show ratings or press P for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
+		await prompt.question("Open My Cars, select a car, show ratings or press L for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
 		return await page.screenshot();
 	} finally {
 		prompt.close();
 		await context.close();
 	}
+}
+
+async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
+	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
+	await mkdir(defaultScreenshotsDirectory, { recursive: true });
+	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "garage-"));
+	console.log(`Garage directory: ${directory}`);
+	const manifest: {
+		schemaVersion: number; provider: string; startedAt: string; finishedAt?: string;
+		status: string; error?: string; cars: GarageCar[];
+	} = { schemaVersion: 1, provider, startedAt: new Date().toISOString(), status: "walking", cars: [] };
+	await saveGarageManifest(directory, manifest);
+	const worker = await createLocalOCRWorker();
+	try {
+		const result = await walkGarage({
+			capture: () => page.screenshot(),
+			press: async (key) => {
+				await page.bringToFront();
+				await page.keyboard.press(key, { delay: 100 });
+			},
+			wait: async (milliseconds) => { await wait(milliseconds); },
+			extract: (image) => extractCarPerformance(image, worker),
+			isSameSelection,
+			selectionTop,
+			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
+			log: (message) => console.log(message),
+		}, { keys: defaultGarageWalkKeys, settleMs, maxCars }, async (car) => {
+			manifest.cars.push(car);
+			await saveGarageManifest(directory, manifest);
+		});
+		manifest.status = result.status;
+		if (result.error !== undefined) manifest.error = result.error;
+	} finally {
+		manifest.finishedAt = new Date().toISOString();
+		if (manifest.status === "walking") manifest.status = "interrupted";
+		await saveGarageManifest(directory, manifest);
+		await worker.terminate();
+	}
+	const flagged = manifest.cars.filter((car) => car.issues.length).length;
+	console.log(`Walk ${manifest.status}: ${manifest.cars.length} cars, ${flagged} need review. Saved ${join(directory, "garage.json")}`);
+	if (manifest.error !== undefined) console.error(`Stopped: ${manifest.error}`);
+	if (flagged || manifest.status !== "completed") process.exitCode = 1;
 }
 
 async function main(): Promise<void> {

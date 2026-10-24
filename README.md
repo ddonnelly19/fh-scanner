@@ -92,6 +92,39 @@ snapshots of the selected build, not catalog attributes. Dedicated browser
 profiles under `%LOCALAPPDATA%\fh-scanner\browser-profiles` contain login data;
 do not share or commit them.
 
+### Garage walk (ratings and details for every car)
+
+```powershell
+npm run capture:cloud -- geforce --walk
+```
+
+Use `xbox` instead of `geforce` for Xbox Cloud. Launch the game, open
+**My Cars**, select the first (top-left) car, click the stream to focus it,
+hide overlays and make the game fill the viewport at 16:9, then press Enter.
+Don't touch the stream while the walk runs.
+
+For each car the walk captures the visible panel, presses **P**, captures the
+other panel and merges both into one record: identity, class/PI, drivetrain,
+tires, the six ratings and the detail measurements. It moves through the grid
+in a serpentine order (Right across a row, Down, Left across the next row) and
+stops when neither the next move nor Down changes the highlighted tile. A move
+or toggle that seems to have been dropped by the stream is retried once.
+
+Each `screenshots\garage-*` directory contains `car-NNNN-1.png`,
+`car-NNNN-2.png` (and `-3` when a toggle was retried) and `garage.json`, which
+is rewritten after every car, so an interrupted walk keeps the cars already
+captured. Fields the panels disagree on (car, class/PI, drivetrain) are null
+and listed in that car's `issues` rather than guessed. The command exits with
+code 1 when any car needs review or the walk didn't complete.
+
+Options: `--max-cars <n>` stops after n cars (useful for a quick test, for
+example `--max-cars 5`), and `--settle-ms <100..10000>` sets how long to wait
+after each key press for the stream to update (default 1200). Raise it if
+captures show the previous car or a half-drawn panel.
+
+The walk visits grid positions, so duplicate copies of the same car each get
+their own record. It doesn't read tuning or upgrades yet.
+
 ### Multi-screen cloud recording
 
 ```powershell

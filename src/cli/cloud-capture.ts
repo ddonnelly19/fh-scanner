@@ -8,7 +8,7 @@ import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { extractCarPerformance } from "../ocr/car-performance.ts";
 import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { BrowserRecording, parseRecordingCommand } from "../capture/browser-recording.ts";
-import { defaultGarageWalkKeys, isSameSelection, saveGarageManifest, walkGarage } from "../capture/garage-walk.ts";
+import { defaultGarageWalkKeys, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
 import type { GarageCar } from "../capture/garage-walk.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
@@ -49,7 +49,9 @@ async function capture(): Promise<Buffer | undefined> {
 	const context = await chromium.launchPersistentContext(profileDirectory, {
 		channel: "msedge",
 		headless: false,
-		viewport: { width: 1920, height: 1080 },
+		// A fixed viewport larger than the window clips the visible page; full screen keeps the game on screen at 16:9.
+		viewport: null,
+		args: ["--start-fullscreen"],
 	});
 	const prompt = createInterface({ input: stdin, output: stdout });
 	try {
@@ -101,7 +103,7 @@ async function capture(): Promise<Buffer | undefined> {
 			console.log(`Recording saved: ${join(directory, "recording.json")}`);
 			return undefined;
 		}
-		await prompt.question("Open My Cars, select a car, show ratings or press P for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
+		await prompt.question("Open My Cars, select a car, show ratings or press L for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
 		return await page.screenshot();
 	} finally {
 		prompt.close();
@@ -110,10 +112,11 @@ async function capture(): Promise<Buffer | undefined> {
 }
 
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
+	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
 	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "garage-"));
 	console.log(`Garage directory: ${directory}`);
-	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
 	const manifest: {
 		schemaVersion: number; provider: string; startedAt: string; finishedAt?: string;
 		status: string; error?: string; cars: GarageCar[];
@@ -130,6 +133,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			extract: (image) => extractCarPerformance(image, worker),
 			isSameSelection,
+			selectionTop,
 			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
 			log: (message) => console.log(message),
 		}, { keys: defaultGarageWalkKeys, settleMs, maxCars }, async (car) => {

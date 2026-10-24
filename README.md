@@ -59,7 +59,7 @@ plan.
 
 Run `npm run capture:cloud -- geforce` (or `xbox`) to open a dedicated Edge
 profile. Log in manually, launch the game, open **My Cars**, select a car,
-and show the left-hand stats panel (press **P** to toggle ratings/details).
+and show the left-hand stats panel (press **L** to toggle ratings/details).
 The extractor automatically recognizes either panel. Make the game fill the viewport at 16:9
 without letterboxing or streaming overlays, then press Enter in the terminal.
 The browser closes after capture; OCR runs locally.
@@ -77,7 +77,7 @@ mode reads six ratings and tires; detail mode reads power, torque, weight,
 front weight percentage and displacement as `{ value, unit }` measurements,
 preserving displayed units without conversion. Fields not displayed in the
 selected mode are null, not errors. Only the visible panel is captured per
-run; the script does not automatically press P or merge separate captures.
+run; the script does not automatically press L or merge separate captures.
 The observation also includes
 raw OCR text/confidence, timestamp and provider. The current-car banner is
 not used to identify the selected car. Unreadable fields are null and listed
@@ -98,17 +98,19 @@ do not share or commit them.
 npm run capture:cloud -- geforce --walk
 ```
 
-Use `xbox` instead of `geforce` for Xbox Cloud. Launch the game, open
-**My Cars**, select the first (top-left) car, click the stream to focus it,
-hide overlays and make the game fill the viewport at 16:9, then press Enter.
-Don't touch the stream while the walk runs.
+Use `xbox` instead of `geforce` for Xbox Cloud. Edge opens full screen (press
+F11 if it doesn't) on a 16:9 monitor. Launch the game, open **My Cars**,
+select the first (top-left) car, click the stream to focus it, hide overlays,
+then press Enter. Don't touch the stream while the walk runs.
 
-For each car the walk captures the visible panel, presses **P**, captures the
-other panel and merges both into one record: identity, class/PI, drivetrain,
-tires, the six ratings and the detail measurements. It moves through the grid
-in a serpentine order (Right across a row, Down, Left across the next row) and
-stops when neither the next move nor Down changes the highlighted tile. A move
-or toggle that seems to have been dropped by the stream is retried once.
+For each car the walk captures the visible stats panel, presses **L** (Toggle
+Stats; P only toggles the tile icons), captures the other panel and merges
+both into one record: identity, class/PI, drivetrain, tires, the six ratings
+and the detail measurements. My Cars groups cars into manufacturer columns
+that scroll horizontally, so the walk goes Down each column, then Right to the
+next column, climbing Up to its top first if Right landed on a lower row. It
+stops when neither Down nor Right changes the highlighted tile. A move or
+toggle that seems to have been dropped by the stream is retried once.
 
 Each `screenshots\garage-*` directory contains `car-NNNN-1.png`,
 `car-NNNN-2.png` (and `-3` when a toggle was retried) and `garage.json`, which

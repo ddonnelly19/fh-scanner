@@ -7,12 +7,13 @@ import type { CarPerformance } from "../ocr/car-performance.ts";
 
 export interface GarageWalkKeys {
 	toggle: string;
-	forward: string;
-	back: string;
+	right: string;
 	down: string;
+	up: string;
 }
 
-export const defaultGarageWalkKeys: GarageWalkKeys = { toggle: "p", forward: "ArrowRight", back: "ArrowLeft", down: "ArrowDown" };
+// P only toggles the tile icons; L switches the stats panel between ratings and details.
+export const defaultGarageWalkKeys: GarageWalkKeys = { toggle: "l", right: "ArrowRight", down: "ArrowDown", up: "ArrowUp" };
 
 export interface GarageWalkActions {
 	capture(): Promise<Buffer>;
@@ -20,6 +21,8 @@ export interface GarageWalkActions {
 	wait(milliseconds: number): Promise<void>;
 	extract(image: Buffer): Promise<CarPerformance>;
 	isSameSelection(previous: Buffer, current: Buffer): Promise<boolean>;
+	/** Top of the highlighted tile as a fraction of the screen height. */
+	selectionTop(image: Buffer): Promise<number>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
 	log(message: string): void;
 }
@@ -120,8 +123,14 @@ export async function isSameSelection(previous: Buffer, current: Buffer): Promis
 	return totalDifference / beforePixels.length <= 6 && changedPixels / beforePixels.length <= 0.02;
 }
 
+export async function selectionTop(image: Buffer): Promise<number> {
+	const [tile, { height }] = await Promise.all([findSelectedTile(image), sharp(image).metadata()]);
+	return tile.top / height!;
+}
+
 /**
- * Visits every car in the My Cars grid in a serpentine order: across a row, down, back across the next row.
+ * Visits every car in the My Cars grid column by column. Cars are grouped by manufacturer into columns
+ * that scroll horizontally, so the walk goes down each column, then right to the top of the next one.
  * At each car it captures the visible panel, toggles to the other panel and captures again.
  * A move that leaves the selection unchanged is retried once before it counts as the edge of the grid.
  */
@@ -172,28 +181,25 @@ export async function walkGarage(
 	}
 	try {
 		let current = await recordCar(await actions.capture());
-		let direction: "forward" | "back" = "forward";
+		// The walk starts on the top-left car, so its tile marks the top row.
+		const topRow = await actions.selectionTop(current);
 		while (true) {
 			if (cars.length >= options.maxCars) return { status: "limit", cars };
-			const across = await move(options.keys[direction], current);
-			if (across) {
-				current = await recordCar(across);
+			const below = await move(options.keys.down, current);
+			if (below) {
+				current = await recordCar(below);
 				continue;
 			}
-			// End of a row: go down. A shorter last row can make Down fail from the outer columns,
-			// so step back along the visited row (without recording) and try Down again.
-			let below = await move(options.keys.down, current);
-			const opposite: "forward" | "back" = direction === "forward" ? "back" : "forward";
-			for (let stepsBack = 0; !below; stepsBack++) {
-				// A wide grid row never needs more steps; this also bounds menus that wrap between rows.
-				if (stepsBack >= 12) return { status: "completed", cars };
-				const stepped = await move(options.keys[opposite], current);
-				if (!stepped) return { status: "completed", cars };
-				current = stepped;
-				below = await move(options.keys.down, current);
+			const right = await move(options.keys.right, current);
+			if (!right) return { status: "completed", cars };
+			current = right;
+			// Right can land on a lower row of the next column; climb to its top before recording.
+			while (Math.abs(await actions.selectionTop(current) - topRow) > 0.05) {
+				const above = await move(options.keys.up, current);
+				if (!above) break;
+				current = above;
 			}
-			current = await recordCar(below);
-			direction = opposite;
+			current = await recordCar(current);
 		}
 	} catch (error) {
 		return { status: "interrupted", cars, error: error instanceof Error ? error.message : String(error) };

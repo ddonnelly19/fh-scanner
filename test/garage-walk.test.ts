@@ -24,50 +24,56 @@ function observation(name: string, panel: CarPerformance["panel"], overrides: Pa
 	};
 }
 
-/** A fake My Cars grid: `columns` wide, `count` cars, row-major. Screens are JSON of the visible state. */
-function simulateGarage(count: number, columns: number, dropPresses: Set<number> = new Set()) {
-	const state = { index: 0, panel: "ratings" as CarPerformance["panel"], presses: 0 };
+/**
+ * A fake My Cars grid of manufacturer columns with the given heights. Right keeps the row when the next column
+ * is tall enough and otherwise lands on its last car. Screens are JSON of the visible state.
+ */
+function simulateGarage(heights: number[], dropPresses: Set<number> = new Set()) {
+	const state = { column: 0, row: 0, panel: "ratings" as CarPerformance["panel"], presses: 0 };
 	const pressed: string[] = [];
 	const saved: string[] = [];
-	const at = (row: number, column: number) => row * columns + column;
+	const number = (column: number, row: number) => heights.slice(0, column).reduce((sum, height) => sum + height, 0) + row + 1;
+	const screen = () => Buffer.from(JSON.stringify({ car: number(state.column, state.row), row: state.row, panel: state.panel }));
 	return {
 		pressed, saved,
 		actions: {
-			capture: async () => Buffer.from(JSON.stringify({ index: state.index, panel: state.panel })),
+			capture: async () => screen(),
 			press: async (key: string) => {
 				pressed.push(key);
 				if (dropPresses.has(++state.presses)) return;
-				const row = Math.floor(state.index / columns);
-				const column = state.index % columns;
-				let next = state.index;
-				if (key === "p") state.panel = state.panel === "ratings" ? "details" : "ratings";
-				else if (key === "ArrowRight" && column + 1 < columns) next = at(row, column + 1);
-				else if (key === "ArrowLeft" && column > 0) next = at(row, column - 1);
-				else if (key === "ArrowDown") next = at(row + 1, column);
-				if (next < count) state.index = next;
+				if (key === "l") state.panel = state.panel === "ratings" ? "details" : "ratings";
+				else if (key === "ArrowDown" && state.row + 1 < heights[state.column]!) state.row++;
+				else if (key === "ArrowUp" && state.row > 0) state.row--;
+				else if (key === "ArrowRight" && state.column + 1 < heights.length) {
+					state.column++;
+					state.row = Math.min(state.row, heights[state.column]! - 1);
+				}
 			},
 			wait: async () => {},
 			extract: async (image: Buffer) => {
-				const screen = JSON.parse(image.toString()) as { index: number; panel: CarPerformance["panel"] };
-				return observation(`CAR ${screen.index + 1}`, screen.panel);
+				const visible = JSON.parse(image.toString()) as { car: number; panel: CarPerformance["panel"] };
+				return observation(`CAR ${visible.car}`, visible.panel);
 			},
 			isSameSelection: async (previous: Buffer, current: Buffer) =>
-				JSON.parse(previous.toString()).index === JSON.parse(current.toString()).index,
+				JSON.parse(previous.toString()).car === JSON.parse(current.toString()).car,
+			selectionTop: async (image: Buffer) => 0.2 + 0.23 * (JSON.parse(image.toString()) as { row: number }).row,
 			saveScreenshot: async (name: string) => { saved.push(name); },
 			log: () => {},
 		},
 	};
 }
 
+const walkOptions = { keys: defaultGarageWalkKeys, settleMs: 0, maxCars: 100 };
+const names = (cars: GarageCar[]) => cars.map((car) => car.car?.name);
+const numbered = (count: number) => Array.from({ length: count }, (_, index) => `CAR ${index + 1}`);
+
 describe("garage walk", () => {
-	it("visits every car once in serpentine order, including a short last row", async () => {
-		const garage = simulateGarage(11, 4);
+	it("visits every car once, column by column", async () => {
+		const garage = simulateGarage([1, 3, 1, 3, 2]);
 		const streamed: GarageCar[] = [];
-		const result = await walkGarage(garage.actions, { keys: defaultGarageWalkKeys, settleMs: 0, maxCars: 100 },
-			async (car) => { streamed.push(car); });
+		const result = await walkGarage(garage.actions, walkOptions, async (car) => { streamed.push(car); });
 		expect(result.status).toBe("completed");
-		expect(result.cars.map((car) => car.car?.name)).toEqual(
-			[1, 2, 3, 4, 8, 7, 6, 5, 9, 10, 11].map((number) => `CAR ${number}`));
+		expect(names(result.cars)).toEqual(numbered(10));
 		expect(streamed).toEqual(result.cars);
 		for (const car of result.cars) {
 			expect(car.issues).toEqual([]);
@@ -76,15 +82,16 @@ describe("garage walk", () => {
 			expect(car.tires).toBe("Sport Tires");
 		}
 	});
-	it("reaches a short last row that is offset from the end of the previous row", async () => {
-		const garage = simulateGarage(9, 4);
-		const result = await walkGarage(garage.actions, { keys: defaultGarageWalkKeys, settleMs: 0, maxCars: 100 }, async () => {});
-		expect(result.cars.map((car) => car.car?.name)).toEqual([1, 2, 3, 4, 8, 7, 6, 5, 9].map((number) => `CAR ${number}`));
+	it("climbs to the top of a column that Right enters on a lower row", async () => {
+		const garage = simulateGarage([3, 3]);
+		const result = await walkGarage(garage.actions, walkOptions, async () => {});
+		expect(names(result.cars)).toEqual(numbered(6));
+		expect(garage.pressed.filter((key) => key === "ArrowUp")).toHaveLength(2);
 	});
 	it("retries a dropped toggle and a dropped move", async () => {
-		// Press 1 is the first toggle; press 4 is the first move after the retried toggle.
-		const garage = simulateGarage(2, 2, new Set([1, 4]));
-		const result = await walkGarage(garage.actions, { keys: defaultGarageWalkKeys, settleMs: 0, maxCars: 100 }, async () => {});
+		// Press 1 is the first toggle; presses 3-4 find the column end; press 5 is the first Right.
+		const garage = simulateGarage([1, 1], new Set([1, 5]));
+		const result = await walkGarage(garage.actions, walkOptions, async () => {});
 		expect(result.status).toBe("completed");
 		expect(result.cars.map((car) => [car.car?.name, car.issues])).toEqual([["CAR 1", []], ["CAR 2", []]]);
 		expect(result.cars[0]!.screenshots).toEqual({
@@ -93,13 +100,13 @@ describe("garage walk", () => {
 		expect(garage.saved.slice(0, 3)).toEqual(["car-0001-1.png", "car-0001-2.png", "car-0001-3.png"]);
 	});
 	it("stops at the car limit", async () => {
-		const garage = simulateGarage(20, 5);
-		const result = await walkGarage(garage.actions, { keys: defaultGarageWalkKeys, settleMs: 0, maxCars: 3 }, async () => {});
+		const garage = simulateGarage([3, 3, 3]);
+		const result = await walkGarage(garage.actions, { ...walkOptions, maxCars: 3 }, async () => {});
 		expect(result.status).toBe("limit");
 		expect(result.cars).toHaveLength(3);
 	});
 	it("keeps cars already walked when navigation fails", async () => {
-		const garage = simulateGarage(5, 5);
+		const garage = simulateGarage([5]);
 		let compares = 0;
 		const result = await walkGarage({
 			...garage.actions,
@@ -107,7 +114,7 @@ describe("garage walk", () => {
 				if (++compares === 2) throw new Error("Cannot locate the highlighted My Cars tile.");
 				return garage.actions.isSameSelection(previous, current);
 			},
-		}, { keys: defaultGarageWalkKeys, settleMs: 0, maxCars: 100 }, async () => {});
+		}, walkOptions, async () => {});
 		expect(result.status).toBe("interrupted");
 		expect(result.error).toContain("highlighted");
 		expect(result.cars).toHaveLength(2);

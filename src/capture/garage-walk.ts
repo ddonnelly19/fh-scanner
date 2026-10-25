@@ -23,6 +23,8 @@ export interface GarageWalkActions {
 	isSameSelection(previous: Buffer, current: Buffer): Promise<boolean>;
 	/** True when the highlight moved one tile down the same column, leaving the previous car in place. */
 	isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean>;
+	/** True when the grid has a car directly below the highlighted one. */
+	hasTileBelow(image: Buffer): Promise<boolean>;
 	/** Top of the highlighted tile as a fraction of the screen height. */
 	selectionTop(image: Buffer): Promise<number>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
@@ -130,8 +132,8 @@ export async function isSameSelection(previous: Buffer, current: Buffer): Promis
 }
 
 /**
- * True when the highlight moved down within the same column. Down at the bottom of a short column instead
- * jumps to a lower car in the column to the left, which scrolls the grid so the previous tile changes.
+ * True when the highlight moved down within the same column. A Down that jumps into a neighbouring column
+ * scrolls the grid, so the previous tile changes.
  */
 export async function isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean> {
 	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
@@ -141,6 +143,21 @@ export async function isDirectlyBelow(previous: Buffer, current: Buffer): Promis
 	return sameTileContents(previous, current, {
 		left: before.left + inset, top: before.top + inset, width: before.width - 2 * inset, height: before.height - 2 * inset,
 	});
+}
+
+/**
+ * True when a car tile sits directly below the highlighted one. Tiles have a white name strip at the top and
+ * empty slots are dark, so the strip of the slot below is sampled. Below the third row is the hint bar.
+ */
+export async function hasTileBelow(image: Buffer): Promise<boolean> {
+	const [tile, { height }] = await Promise.all([findSelectedTile(image), sharp(image).metadata()]);
+	const top = tile.top + Math.round(tile.height * 1.1);
+	const bottom = tile.top + Math.round(tile.height * 1.22);
+	if (bottom > height! * 0.9) return false;
+	const pixels = await sharp(image).removeAlpha().extract({
+		left: tile.left + Math.round(tile.width * 0.2), top, width: Math.round(tile.width * 0.6), height: bottom - top,
+	}).grayscale().raw().toBuffer();
+	return pixels.reduce((sum, value) => sum + value, 0) / pixels.length > 110;
 }
 
 export async function selectionTop(image: Buffer): Promise<number> {
@@ -199,32 +216,22 @@ export async function walkGarage(
 		await onCar(car);
 		return toggled;
 	}
-	/** Recovers from Down jumping to the column on the left: Right returns to the bottom of the column just walked. */
-	async function returnTo(previous: Buffer): Promise<Buffer> {
-		for (let attempt = 0; attempt < 2; attempt++) {
-			await actions.press(options.keys.right);
-			await actions.wait(options.settleMs);
-			const current = await actions.capture();
-			if (await actions.isSameSelection(previous, current)) return current;
-		}
-		throw new Error("Lost the place in the My Cars grid after Down jumped to another column.");
-	}
 	try {
 		let current = await recordCar(await actions.capture());
 		// The walk starts on the top-left car, so its tile marks the top row.
 		const topRow = await actions.selectionTop(current);
 		while (true) {
 			if (cars.length >= options.maxCars) return { status: "limit", cars };
-			const below = await move(options.keys.down, current);
-			if (below && await actions.isDirectlyBelow(current, below)) {
+			// Down at the bottom of a column jumps diagonally into a neighbouring column, so it is only pressed
+			// when a car is visible below; otherwise the column is finished.
+			if (await actions.hasTileBelow(current)) {
+				const below = await move(options.keys.down, current);
+				if (!below) throw new Error("Down did not move to the car below the highlighted one.");
+				if (!await actions.isDirectlyBelow(current, below)) {
+					throw new Error("Down left the column; stopping instead of revisiting cars.");
+				}
 				current = await recordCar(below);
 				continue;
-			}
-			if (below) {
-				if (await actions.selectionTop(below) <= await actions.selectionTop(current)) {
-					throw new Error("Down moved the highlight somewhere unexpected; stopping instead of revisiting cars.");
-				}
-				current = await returnTo(current);
 			}
 			const right = await move(options.keys.right, current);
 			if (!right) return { status: "completed", cars };

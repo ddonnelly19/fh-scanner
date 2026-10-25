@@ -109,9 +109,10 @@ both into one record: identity, class/PI, drivetrain, tires, the six ratings
 and the detail measurements. My Cars groups cars into manufacturer columns
 that scroll horizontally, so the walk goes Down each column, then Right to the
 next column, climbing Up to its top first if Right landed on a lower row. At
-the bottom of a short column the game's Down jumps to a lower car in the column
-on the left; the walk detects that (the car above the new highlight is not the
-one it just left) and presses Right to get back before moving on. It
+the bottom of a short column the game's Down jumps diagonally into a
+neighbouring column, so the walk only presses Down when it sees a car tile
+directly below the highlight, and stops (rather than revisiting cars) if Down
+still leaves the column. It
 stops when neither Down nor Right changes the highlighted tile. A move or
 toggle that seems to have been dropped by the stream is retried once.
 

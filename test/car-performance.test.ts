@@ -69,11 +69,13 @@ describe("performance observations", () => {
 	it("parses class and PI", () => {
 		expect(parsePerformance("S2 900")).toEqual({ class: "S2", pi: 900 });
 		expect(parsePerformance("B600")).toEqual({ class: "B", pi: 600 });
+		expect(parsePerformance("R 998")).toEqual({ class: "R", pi: 998 });
 		for (const text of ["S3 900", "S2", "S2 1000", "A 99"]) expect(parsePerformance(text)).toBeNull();
 	});
 	it("reads identity from tile lines, including multiline names", () => {
 		expect(parseCarIdentity("SPEEDTAIL\n2019 MCLAREN")).toEqual({ name: "SPEEDTAIL", year: 2019, manufacturer: "MCLAREN" });
 		expect(parseCarIdentity("INTEGRA\nA-SPEC\n2023 ACURA")?.name).toBe("INTEGRA A-SPEC");
+		expect(parseCarIdentity("M12S WARTHOG CST\n2554 AMG TRANSPORT DYNA...")?.year).toBe(2554);
 		expect(parseCarIdentity("SPEEDTAIL")).toBeNull();
 	});
 	it("locates a selection border without using the current-car banner", async () => {

@@ -119,6 +119,19 @@ still leaves the column. It
 stops when neither Down nor Right changes the highlighted tile. A move or
 toggle that seems to have been dropped by the stream is retried once.
 
+If the browser window isn't 16:9 (for example on a different monitor), the
+stream adds black bars; captures are cropped to the centred 16:9 game area
+before anything is saved or read. The walk and the page scan check the first
+capture and stop straight away, before creating a run folder, if the game
+still isn't 16:9 or no highlighted car is visible.
+
+Navigation and the toggle check only compare images, so the walk saves each
+car's screenshots and moves on (about 3 s per car) while OCR reads them in the
+background, one car at a time and in walk order. OCR is slower than the walk,
+so the console's "Captured car N" lines run ahead of the "Car N: ..." lines,
+and the command finishes once every captured car has been read. You can leave
+the stream as soon as the last car is captured.
+
 Each `screenshots\garage-*` directory contains `car-NNNN-1.png`,
 `car-NNNN-2.png` (and `-3` when a toggle was retried) and `garage.json`, which
 is rewritten after every car, so an interrupted walk keeps the cars already
@@ -133,6 +146,57 @@ captures show the previous car or a half-drawn panel.
 
 The walk visits grid positions, so duplicate copies of the same car each get
 their own record. It doesn't read tuning or upgrades yet.
+
+### Garage pages (every card, one screenshot per screen)
+
+```powershell
+npm run capture:cloud -- geforce --pages
+```
+
+A faster survey of the whole garage than the walk: instead of opening each
+car's stats, it screenshots each screen of the My Cars grid and reads every
+card on it, giving each car's name, year, manufacturer, rarity, class/PI,
+drivetrain and tires. It doesn't read ratings or detail measurements; use
+`--walk` for those. Set up the stream as for the walk and select the first
+(top-left) car before pressing Enter.
+
+Right moves the highlight one column and the game scrolls the grid to keep it
+leftmost, so after each screenshot paging presses Right once per fully
+visible column (about four), landing on the column that was cut off at the
+right edge. It stops when Right no longer changes the screen, capturing the
+final screen if it shows columns not yet captured. A Right that seems to have
+been dropped is retried once. As with the walk, cards are read in the
+background from the saved screenshots while paging moves on.
+
+Each `screenshots\pages-*` directory contains `page-NNN.png` and
+`garage-pages.json`, rewritten after every page. Cars are listed by grid
+column and row, counted from where paging started; a car seen on two pages is
+kept once, and a conflicting second reading is listed in that car's `issues`.
+Fields that couldn't be read are null and listed in `issues`, including:
+
+- names cut off with an ellipsis on the card (the readable part is kept) and
+  the highlighted card's name, which scrolls when it is long;
+- drivetrain and tire icons that don't match a known icon. Icons are matched
+  against small templates in `src\ocr\card-icons`, never guessed from a
+  near match. Rebuild them after a walk that includes cars with other tires
+  (for example off-road) or drivetrain icons:
+
+  ```powershell
+  node src\cli\card-icon-templates.ts            # every screenshots\garage-* walk
+  node src\cli\card-icon-templates.ts .\screenshots\garage-abc123
+  ```
+
+  The walk's `garage.json` labels the highlighted card on each walk
+  screenshot. Only the icon crops are written.
+
+To check the card reader against walks, run
+`node src\cli\validate-card-pages.ts .\screenshots\garage-abc123`. It reads
+every card on each walk screenshot, matches cards to walked cars and prints
+per-field accuracy and every mismatch.
+
+Options: `--max-pages <n>` stops after n screens, and `--settle-ms` works as
+for the walk. The command exits with code 1 when any car needs review or
+paging didn't complete.
 
 ### Multi-screen cloud recording
 
@@ -179,6 +243,7 @@ cannot be combined.
 - `npm test`: run all Vitest tests; no capture, keyboard input or account updates.
 - `npm run test:watch`: run tests in watch mode while developing.
 - `npx tsc --noEmit`: check TypeScript types without generating output.
+- `node src\cli\validate-card-pages.ts <garage directory>`: check the My Cars card reader against a garage walk (OCR only, no capture).
 
 ## Code organization and site integrations
 

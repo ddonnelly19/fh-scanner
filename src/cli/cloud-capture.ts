@@ -8,8 +8,12 @@ import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { extractCarPerformance } from "../ocr/car-performance.ts";
 import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { BrowserRecording, parseRecordingCommand } from "../capture/browser-recording.ts";
-import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
+import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSamePanel, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
 import type { GarageCar } from "../capture/garage-walk.ts";
+import { isSameScreen, pageGarage, saveGaragePagesManifest } from "../capture/garage-pages.ts";
+import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
+import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
+import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
 const { values, positionals } = parseArgs({
@@ -18,17 +22,20 @@ const { values, positionals } = parseArgs({
 		image: { type: "string" },
 		record: { type: "boolean", default: false },
 		walk: { type: "boolean", default: false },
+		pages: { type: "boolean", default: false },
+		"max-pages": { type: "string", default: "1000" },
 		"max-cars": { type: "string", default: "2000" },
 		"settle-ms": { type: "string", default: "1200" },
 	},
 });
 const provider = positionals[0] ?? "geforce";
 const maxCars = Number(values["max-cars"]);
+const maxPages = Number(values["max-pages"]);
 const settleMs = Number(values["settle-ms"]);
 if (positionals.length > 1 || values.image?.trim() === "" ||
-	[values.record, values.walk, values.image !== undefined].filter(Boolean).length > 1 ||
-	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --record | --walk [--max-cars n] [--settle-ms 100..10000]]");
+	[values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
+	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000]]");
 }
 
 const urls: Record<string, string> = {
@@ -59,6 +66,10 @@ async function capture(): Promise<Buffer | undefined> {
 		await page.goto(url!);
 		if (values.walk) {
 			await walk(page, prompt);
+			return undefined;
+		}
+		if (values.pages) {
+			await pages(page, prompt);
 			return undefined;
 		}
 		if (values.record) {
@@ -104,7 +115,7 @@ async function capture(): Promise<Buffer | undefined> {
 			return undefined;
 		}
 		await prompt.question("Open My Cars, select a car, show ratings or press L for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
-		return await page.screenshot();
+		return await cropToGame(await page.screenshot());
 	} finally {
 		prompt.close();
 		await context.close();
@@ -113,6 +124,7 @@ async function capture(): Promise<Buffer | undefined> {
 
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
 	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	await checkGameFrame(await cropToGame(await page.screenshot()));
 	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
 	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "garage-"));
@@ -125,18 +137,20 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await walkGarage({
-			capture: () => page.screenshot(),
+			capture: async () => cropToGame(await page.screenshot()),
 			press: async (key) => {
 				await page.bringToFront();
 				await page.keyboard.press(key, { delay: 100 });
 			},
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			extract: (image) => extractCarPerformance(image, worker, shapeWorker),
+			isSamePanel,
 			isSameSelection,
 			isDirectlyBelow,
 			hasTileBelow,
 			selectionTop,
 			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
+			loadScreenshot: (name) => readFile(join(directory, name)),
 			log: (message) => console.log(message),
 		}, { keys: defaultGarageWalkKeys, settleMs, maxCars }, async (car) => {
 			manifest.cars.push(car);
@@ -152,6 +166,55 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 	}
 	const flagged = manifest.cars.filter((car) => car.issues.length).length;
 	console.log(`Walk ${manifest.status}: ${manifest.cars.length} cars, ${flagged} need review. Saved ${join(directory, "garage.json")}`);
+	if (manifest.error !== undefined) console.error(`Stopped: ${manifest.error}`);
+	if (flagged || manifest.status !== "completed") process.exitCode = 1;
+}
+
+async function pages(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
+	// Loaded before the prompt so missing templates fail before the game is set up.
+	const templates = await loadIconTemplates();
+	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
+	await checkGameFrame(await cropToGame(await page.screenshot()));
+	await mkdir(defaultScreenshotsDirectory, { recursive: true });
+	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "pages-"));
+	console.log(`Pages directory: ${directory}`);
+	const manifest: {
+		schemaVersion: number; provider: string; startedAt: string; finishedAt?: string;
+		status: string; error?: string; pages: GaragePage[]; cars: GarageCard[];
+	} = { schemaVersion: 1, provider, startedAt: new Date().toISOString(), status: "paging", pages: [], cars: [] };
+	await saveGaragePagesManifest(directory, manifest);
+	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
+	try {
+		const result = await pageGarage({
+			capture: async () => cropToGame(await page.screenshot()),
+			press: async (key) => {
+				await page.bringToFront();
+				await page.keyboard.press(key, { delay: 100 });
+			},
+			wait: async (milliseconds) => { await wait(milliseconds); },
+			layout: findCards,
+			isSameScreen,
+			read: async (image) => (await readCardPage(image, worker, shapeWorker, templates)).cards,
+			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
+			loadScreenshot: (name) => readFile(join(directory, name)),
+			log: (message) => console.log(message),
+		}, { right: defaultGarageWalkKeys.right, settleMs, maxPages }, async (progress) => {
+			manifest.pages = progress.pages;
+			manifest.cars = progress.cars;
+			await saveGaragePagesManifest(directory, manifest);
+		});
+		manifest.pages = result.pages;
+		manifest.cars = result.cars;
+		manifest.status = result.status;
+		if (result.error !== undefined) manifest.error = result.error;
+	} finally {
+		manifest.finishedAt = new Date().toISOString();
+		if (manifest.status === "paging") manifest.status = "interrupted";
+		await saveGaragePagesManifest(directory, manifest);
+		await Promise.all([worker.terminate(), shapeWorker.terminate()]);
+	}
+	const flagged = manifest.cars.filter((car) => car.issues.length).length;
+	console.log(`Paging ${manifest.status}: ${manifest.pages.length} pages, ${manifest.cars.length} cars, ${flagged} need review. Saved ${join(directory, "garage-pages.json")}`);
 	if (manifest.error !== undefined) console.error(`Stopped: ${manifest.error}`);
 	if (flagged || manifest.status !== "completed") process.exitCode = 1;
 }

@@ -103,7 +103,7 @@ export function parseRating(text: string): number | null {
 }
 
 export function parsePerformance(text: string): CarPerformance["performance"] {
-	const match = /^(D|C|B|A|S1|S2|X)\s*(\d{3,4})$/.exec(text.trim().toUpperCase());
+	const match = /^(D|C|B|A|S1|S2|R|X)\s*(\d{3,4})$/.exec(text.trim().toUpperCase());
 	if (!match) return null;
 	const pi = Number(match[2]);
 	if (pi < 100 || pi > 999) return null;
@@ -118,7 +118,19 @@ export function parseCarIdentity(text: string): CarPerformance["car"] {
 	return { name: lines.slice(0, -1).join(" "), year: Number(details[1]), manufacturer: details[2]! };
 }
 
-export async function findSelectedTile(image: Buffer): Promise<Region> {
+// The walk asks several questions of each capture; locating the highlight once per buffer saves scanning 4K frames repeatedly.
+const selectedTiles = new WeakMap<Buffer, Promise<Region>>();
+
+export function findSelectedTile(image: Buffer): Promise<Region> {
+	let tile = selectedTiles.get(image);
+	if (!tile) {
+		tile = locateSelectedTile(image);
+		selectedTiles.set(image, tile);
+	}
+	return tile;
+}
+
+async function locateSelectedTile(image: Buffer): Promise<Region> {
 	const { data, info } = await sharp(image).removeAlpha().raw().toBuffer({ resolveWithObject: true });
 	const runs: Array<{ left: number; top: number; width: number }> = [];
 	for (let y = Math.floor(info.height * 0.18); y < info.height * 0.9; y++) {
@@ -235,7 +247,7 @@ export async function extractCarPerformance(image: Buffer, worker: Worker, shape
 			}
 		}
 		// The class letter is white on a class-coloured badge, so it is read apart from the PI digits beside it.
-		const performanceClass = await read("performanceClass", region(94, 597, 26, 24), PSM.SINGLE_BLOCK, true, "DCBASX12",
+		const performanceClass = await read("performanceClass", region(94, 597, 26, 24), PSM.SINGLE_BLOCK, true, "DCBASRX12",
 			{ height: 100, threshold: 230 });
 		const performancePI = await read("performance", region(126, 597, 40, 24), PSM.SINGLE_LINE, true, "0123456789", { height: 100 });
 		const performance = parsePerformance(`${performanceClass} ${performancePI}`);

@@ -74,6 +74,18 @@ function editDistance(a: string, b: string): number {
 	return previous[b.length]!;
 }
 
+/** Same year and manufacturer, and one name contains a long run of the other: a long title scrolling across the tile. */
+function isScrolledName(a: NonNullable<CarPerformance["car"]>, b: NonNullable<CarPerformance["car"]>): boolean {
+	if (a.year !== b.year || a.manufacturer !== b.manufacturer) return false;
+	const [shorter, longer] = a.name.length <= b.name.length ? [a.name, b.name] : [b.name, a.name];
+	for (let length = shorter.length; length >= 4; length--) {
+		for (let start = 0; start + length <= shorter.length; start++) {
+			if (longer.includes(shorter.slice(start, start + length))) return true;
+		}
+	}
+	return false;
+}
+
 /** Same year, and name plus manufacturer differ by at most two characters in total. */
 function isOCRTypo(a: NonNullable<CarPerformance["car"]>, b: NonNullable<CarPerformance["car"]>): boolean {
 	return a.year === b.year && editDistance(a.name, b.name) + editDistance(a.manufacturer, b.manufacturer) <= 2;
@@ -112,6 +124,11 @@ export function mergeCarPanels(index: number, captures: Array<{ screenshot: stri
 		car = (confidence(identities[1]!) > confidence(identities[0]!) ? identities[1]! : identities[0]!).car;
 		issues.push(`Kept the more confident car reading: ${JSON.stringify(car)}.`);
 	}
+	// Names too long for the tile scroll sideways, so each panel can catch a different part of the title.
+	if (car === null && identities.length === 2 && isScrolledName(identities[0]!.car!, identities[1]!.car!)) {
+		car = identities.map((observation) => observation.car!).reduce((a, b) => b.name.length > a.name.length ? b : a);
+		issues.push(`Car name scrolls on the tile and may be cut off; kept the longest reading: ${JSON.stringify(car)}.`);
+	}
 	const performance = shared("class/PI", observations.map((observation) => observation.performance),
 		(a, b) => a!.class === b!.class && a!.pi === b!.pi);
 	const drivetrain = shared("drivetrain", observations.map((observation) => observation.drivetrain), (a, b) => a === b);
@@ -128,6 +145,12 @@ export function mergeCarPanels(index: number, captures: Array<{ screenshot: stri
 		},
 		issues,
 	};
+}
+
+/** The part of a tile below its name, which scrolls sideways on the highlighted tile when the name is long. */
+function belowTitle(tile: Region): Region {
+	const title = Math.round(tile.height * 0.3);
+	return { left: tile.left, top: tile.top + title, width: tile.width, height: tile.height - title };
 }
 
 async function tileSample(image: Buffer, tile: Region): Promise<Buffer> {
@@ -156,7 +179,7 @@ async function sameTileContents(previous: Buffer, current: Buffer, tile: Region)
 export async function isSameSelection(previous: Buffer, current: Buffer): Promise<boolean> {
 	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
 	if (Math.abs(before.left - after.left) > 6 || Math.abs(before.top - after.top) > 6) return false;
-	return sameTileContents(previous, current, before);
+	return sameTileContents(previous, current, belowTitle(before));
 }
 
 /**
@@ -168,9 +191,9 @@ export async function isDirectlyBelow(previous: Buffer, current: Buffer): Promis
 	if (Math.abs(before.left - after.left) > 6 || after.top - before.top < before.height * 0.5) return false;
 	// The highlight border disappears from the previous tile, so only its inside is compared.
 	const inset = Math.round(before.width * 0.06);
-	return sameTileContents(previous, current, {
+	return sameTileContents(previous, current, belowTitle({
 		left: before.left + inset, top: before.top + inset, width: before.width - 2 * inset, height: before.height - 2 * inset,
-	});
+	}));
 }
 
 /**
@@ -294,6 +317,9 @@ export async function walkGarage(
 				const below = await move(options.keys.down, current);
 				if (!below) throw new Error("Down did not move to the car below the highlighted one.");
 				if (!await actions.isDirectlyBelow(current, below)) {
+					// Kept for diagnosis: move() doesn't save its captures.
+					await actions.saveScreenshot(`car-${String(captured).padStart(4, "0")}-down-before.png`, current);
+					await actions.saveScreenshot(`car-${String(captured).padStart(4, "0")}-down-after.png`, below);
 					throw new Error("Down left the column; stopping instead of revisiting cars.");
 				}
 				current = await recordCar(below);

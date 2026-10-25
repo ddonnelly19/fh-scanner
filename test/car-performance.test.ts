@@ -69,6 +69,7 @@ describe("performance observations", () => {
 	it("parses class and PI", () => {
 		expect(parsePerformance("S2 900")).toEqual({ class: "S2", pi: 900 });
 		expect(parsePerformance("B600")).toEqual({ class: "B", pi: 600 });
+		expect(parsePerformance("R 998")).toEqual({ class: "R", pi: 998 });
 		for (const text of ["S3 900", "S2", "S2 1000", "A 99"]) expect(parsePerformance(text)).toBeNull();
 	});
 	it("reads identity from tile lines, including multiline names", () => {

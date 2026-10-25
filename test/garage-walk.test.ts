@@ -185,6 +185,20 @@ describe("garage walk", () => {
 });
 
 describe("panel merge", () => {
+	it("keeps the longest reading of a name that scrolls on the tile", () => {
+		const car = (name: string) => ({ name, year: 1968, manufacturer: "ALFA ROMEO" });
+		const merged = mergeCarPanels(15, [
+			{ screenshot: "a.png", observation: observation("x", "ratings", { car: car("TODELTA TIPO 33/2 DAYT") }) },
+			{ screenshot: "b.png", observation: observation("x", "details", { car: car("33/2 DAYTONA A") }) },
+		]);
+		expect(merged.car).toEqual(car("TODELTA TIPO 33/2 DAYT"));
+		expect(merged.issues).toEqual([expect.stringContaining("disagree on car"), expect.stringContaining("scrolls on the tile")]);
+		const different = mergeCarPanels(16, [
+			{ screenshot: "a.png", observation: observation("x", "ratings", { car: car("GIULIA GTAM") }) },
+			{ screenshot: "b.png", observation: observation("x", "details", { car: car("4C") }) },
+		]);
+		expect(different.car).toBeNull();
+	});
 	it("reports disagreements and missing panels instead of choosing a value", () => {
 		const car = mergeCarPanels(1, [
 			{ screenshot: "a.png", observation: observation("ONE", "ratings") },
@@ -240,19 +254,22 @@ describe("panel comparison", () => {
 });
 
 describe("selection comparison", () => {
-	async function screen(tileLeft: number, label: string): Promise<Buffer> {
+	// The name sits at the top of a tile (and scrolls when it is long); the car picture fills the rest.
+	async function screen(tileLeft: number, picture: string, name = "NAME", nameShift = 0): Promise<Buffer> {
 		return sharp(Buffer.from(
 			'<svg width="1365" height="768"><rect width="100%" height="100%" fill="black"/>' +
 			`<rect x="${tileLeft}" y="150" width="230" height="175" fill="white" stroke="#caff00" stroke-width="3"/>` +
-			`<text x="${tileLeft + 115}" y="180" font-family="Arial" font-size="20" text-anchor="middle">${label}</text></svg>`,
+			`<text x="${tileLeft + 115 - nameShift}" y="175" font-family="Arial" font-size="20" text-anchor="middle">${name}</text>` +
+			`<text x="${tileLeft + 115}" y="260" font-family="Arial" font-size="28" text-anchor="middle">${picture}</text></svg>`,
 		)).png().toBuffer();
 	}
-	it("detects a moved highlight and a scrolled tile but not compression noise", async () => {
-		const base = await screen(535, "SPEEDTAIL");
+	it("detects a moved highlight and a scrolled grid but not compression noise or a scrolling name", async () => {
+		const base = await screen(535, "SPEEDTAIL", "AUTODELTA TIPO 33/2");
 		const noisy = await sharp(base).jpeg({ quality: 40 }).toBuffer();
 		expect(await isSameSelection(base, await sharp(noisy).png().toBuffer())).toBe(true);
-		expect(await isSameSelection(base, await screen(780, "SPEEDTAIL"))).toBe(false);
-		expect(await isSameSelection(base, await screen(535, "CHIRON"))).toBe(false);
+		expect(await isSameSelection(base, await screen(535, "SPEEDTAIL", "TODELTA TIPO 33/2 DAYT", 40))).toBe(true);
+		expect(await isSameSelection(base, await screen(780, "SPEEDTAIL", "AUTODELTA TIPO 33/2"))).toBe(false);
+		expect(await isSameSelection(base, await screen(535, "CHIRON", "AUTODELTA TIPO 33/2"))).toBe(false);
 	});
 	it("tells a move down the column from a jump into the column on the left", async () => {
 		const grid = (tiles: Array<[number, number, string]>, selected: [number, number]) => sharp(Buffer.from(

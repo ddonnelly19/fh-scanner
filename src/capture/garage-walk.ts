@@ -21,6 +21,8 @@ export interface GarageWalkActions {
 	wait(milliseconds: number): Promise<void>;
 	extract(image: Buffer): Promise<CarPerformance>;
 	isSameSelection(previous: Buffer, current: Buffer): Promise<boolean>;
+	/** True when the highlight moved one tile down the same column, leaving the previous car in place. */
+	isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean>;
 	/** Top of the highlighted tile as a fraction of the screen height. */
 	selectionTop(image: Buffer): Promise<number>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
@@ -103,15 +105,9 @@ async function tileSample(image: Buffer, tile: Region): Promise<Buffer> {
 		.grayscale().blur(0.8).raw().toBuffer();
 }
 
-/**
- * True when the highlighted tile has not moved and still shows the same car.
- * Scrolling can keep the highlight in place, so the tile contents are compared too.
- */
-export async function isSameSelection(previous: Buffer, current: Buffer): Promise<boolean> {
-	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
-	if (Math.abs(before.left - after.left) > 6 || Math.abs(before.top - after.top) > 6) return false;
+async function sameTileContents(previous: Buffer, current: Buffer, tile: Region): Promise<boolean> {
 	// Compression can shift the detected border by a few pixels, so both samples use the same region.
-	const [beforePixels, afterPixels] = await Promise.all([tileSample(previous, before), tileSample(current, before)]);
+	const [beforePixels, afterPixels] = await Promise.all([tileSample(previous, tile), tileSample(current, tile)]);
 	let totalDifference = 0;
 	let changedPixels = 0;
 	for (let pixel = 0; pixel < beforePixels.length; pixel++) {
@@ -121,6 +117,30 @@ export async function isSameSelection(previous: Buffer, current: Buffer): Promis
 	}
 	// Streamed video adds compression noise, so the threshold is looser than for local captures.
 	return totalDifference / beforePixels.length <= 6 && changedPixels / beforePixels.length <= 0.02;
+}
+
+/**
+ * True when the highlighted tile has not moved and still shows the same car.
+ * Scrolling can keep the highlight in place, so the tile contents are compared too.
+ */
+export async function isSameSelection(previous: Buffer, current: Buffer): Promise<boolean> {
+	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
+	if (Math.abs(before.left - after.left) > 6 || Math.abs(before.top - after.top) > 6) return false;
+	return sameTileContents(previous, current, before);
+}
+
+/**
+ * True when the highlight moved down within the same column. Down at the bottom of a short column instead
+ * jumps to a lower car in the column to the left, which scrolls the grid so the previous tile changes.
+ */
+export async function isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean> {
+	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
+	if (Math.abs(before.left - after.left) > 6 || after.top - before.top < before.height * 0.5) return false;
+	// The highlight border disappears from the previous tile, so only its inside is compared.
+	const inset = Math.round(before.width * 0.06);
+	return sameTileContents(previous, current, {
+		left: before.left + inset, top: before.top + inset, width: before.width - 2 * inset, height: before.height - 2 * inset,
+	});
 }
 
 export async function selectionTop(image: Buffer): Promise<number> {
@@ -179,6 +199,16 @@ export async function walkGarage(
 		await onCar(car);
 		return toggled;
 	}
+	/** Recovers from Down jumping to the column on the left: Right returns to the bottom of the column just walked. */
+	async function returnTo(previous: Buffer): Promise<Buffer> {
+		for (let attempt = 0; attempt < 2; attempt++) {
+			await actions.press(options.keys.right);
+			await actions.wait(options.settleMs);
+			const current = await actions.capture();
+			if (await actions.isSameSelection(previous, current)) return current;
+		}
+		throw new Error("Lost the place in the My Cars grid after Down jumped to another column.");
+	}
 	try {
 		let current = await recordCar(await actions.capture());
 		// The walk starts on the top-left car, so its tile marks the top row.
@@ -186,9 +216,15 @@ export async function walkGarage(
 		while (true) {
 			if (cars.length >= options.maxCars) return { status: "limit", cars };
 			const below = await move(options.keys.down, current);
-			if (below) {
+			if (below && await actions.isDirectlyBelow(current, below)) {
 				current = await recordCar(below);
 				continue;
+			}
+			if (below) {
+				if (await actions.selectionTop(below) <= await actions.selectionTop(current)) {
+					throw new Error("Down moved the highlight somewhere unexpected; stopping instead of revisiting cars.");
+				}
+				current = await returnTo(current);
 			}
 			const right = await move(options.keys.right, current);
 			if (!right) return { status: "completed", cars };

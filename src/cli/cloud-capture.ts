@@ -8,7 +8,7 @@ import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { extractCarPerformance } from "../ocr/car-performance.ts";
 import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { BrowserRecording, parseRecordingCommand } from "../capture/browser-recording.ts";
-import { defaultGarageWalkKeys, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
+import { defaultGarageWalkKeys, isDirectlyBelow, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
 import type { GarageCar } from "../capture/garage-walk.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
@@ -133,6 +133,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			extract: (image) => extractCarPerformance(image, worker),
 			isSameSelection,
+			isDirectlyBelow,
 			selectionTop,
 			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
 			log: (message) => console.log(message),

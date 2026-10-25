@@ -20,6 +20,8 @@ export interface GarageWalkActions {
 	press(key: string): Promise<void>;
 	wait(milliseconds: number): Promise<void>;
 	extract(image: Buffer): Promise<CarPerformance>;
+	/** True when both screens show the same stats panel (ratings or details). */
+	isSamePanel(previous: Buffer, current: Buffer): Promise<boolean>;
 	isSameSelection(previous: Buffer, current: Buffer): Promise<boolean>;
 	/** True when the highlight moved one tile down the same column, leaving the previous car in place. */
 	isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean>;
@@ -28,6 +30,7 @@ export interface GarageWalkActions {
 	/** Top of the highlighted tile as a fraction of the screen height. */
 	selectionTop(image: Buffer): Promise<number>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
+	loadScreenshot(name: string): Promise<Buffer>;
 	log(message: string): void;
 }
 
@@ -185,6 +188,19 @@ export async function hasTileBelow(image: Buffer): Promise<boolean> {
 	return pixels.reduce((sum, value) => sum + value, 0) / pixels.length > 110;
 }
 
+/**
+ * True when both screens show the same stats panel. The label column (Speed, Handling... or Power, Torque...)
+ * differs completely between the two panels, so a dropped toggle shows up as an unchanged label column.
+ */
+export async function isSamePanel(previous: Buffer, current: Buffer): Promise<boolean> {
+	const { width, height } = await sharp(previous).metadata();
+	const labels: Region = {
+		left: Math.round(89 / 1365 * width!), top: Math.round(351 / 768 * height!),
+		width: Math.round(110 / 1365 * width!), height: Math.round(155 / 768 * height!),
+	};
+	return sameTileContents(previous, current, labels);
+}
+
 export async function selectionTop(image: Buffer): Promise<number> {
 	const [tile, { height }] = await Promise.all([findSelectedTile(image), sharp(image).metadata()]);
 	return tile.top / height!;
@@ -195,6 +211,8 @@ export async function selectionTop(image: Buffer): Promise<number> {
  * that scroll horizontally, so the walk goes down each column, then right to the top of the next one.
  * At each car it captures the visible panel, toggles to the other panel and captures again.
  * A move that leaves the selection unchanged is retried once before it counts as the edge of the grid.
+ * Navigation only compares images, so OCR runs in the background from the saved screenshots while the walk
+ * moves on; cars are reported in order as their reads finish, and the walk returns once every read is done.
  */
 export async function walkGarage(
 	actions: GarageWalkActions,
@@ -202,6 +220,9 @@ export async function walkGarage(
 	onCar: (car: GarageCar) => Promise<void>,
 ): Promise<GarageWalkResult> {
 	const cars: GarageCar[] = [];
+	let captured = 0;
+	let reads: Promise<void> = Promise.resolve();
+	let readError: unknown;
 	const name = (index: number, capture: number) => `car-${String(index).padStart(4, "0")}-${capture}.png`;
 	async function move(key: string, from: Buffer): Promise<Buffer | null> {
 		for (let attempt = 0; attempt < 2; attempt++) {
@@ -212,41 +233,61 @@ export async function walkGarage(
 		}
 		return null;
 	}
-	async function observe(image: Buffer, screenshot: string) {
-		await actions.saveScreenshot(screenshot, image);
+	async function observe(screenshot: string) {
 		try {
-			return { screenshot, observation: await actions.extract(image) };
+			// Reloaded from disk so a backlog of reads doesn't hold full-size captures in memory.
+			return { screenshot, observation: await actions.extract(await actions.loadScreenshot(screenshot)) };
 		} catch (error) {
 			return { screenshot, observation: null, error: error instanceof Error ? error.message : String(error) };
 		}
 	}
-	async function recordCar(image: Buffer): Promise<Buffer> {
-		const index = cars.length + 1;
-		const first = await observe(image, name(index, 1));
-		await actions.press(options.keys.toggle);
-		await actions.wait(options.settleMs);
-		let toggled = await actions.capture();
-		let second = await observe(toggled, name(index, 2));
-		// Streams occasionally drop a key press; retry the toggle once if the same panel is still showing.
-		if (first.observation && second.observation && first.observation.panel === second.observation.panel) {
-			await actions.press(options.keys.toggle);
-			await actions.wait(options.settleMs);
-			toggled = await actions.capture();
-			second = await observe(toggled, name(index, 3));
-		}
-		const car = mergeCarPanels(index, [first, second]);
+	async function read(index: number, screenshots: string[]): Promise<void> {
+		const observations = [];
+		for (const screenshot of screenshots) observations.push(await observe(screenshot));
+		const car = mergeCarPanels(index, observations);
 		cars.push(car);
 		actions.log(`Car ${index}: ${car.car ? `${car.car.year} ${car.car.manufacturer} ${car.car.name}` : "unidentified"}` +
 			(car.issues.length ? ` (${car.issues.length} issue${car.issues.length === 1 ? "" : "s"})` : ""));
 		await onCar(car);
+	}
+	async function recordCar(image: Buffer): Promise<Buffer> {
+		const index = ++captured;
+		const screenshots = [name(index, 1)];
+		await actions.saveScreenshot(screenshots[0]!, image);
+		await actions.press(options.keys.toggle);
+		await actions.wait(options.settleMs);
+		let toggled = await actions.capture();
+		await actions.saveScreenshot(name(index, 2), toggled);
+		// Streams occasionally drop a key press; retry the toggle once if the same panel is still showing.
+		if (await actions.isSamePanel(image, toggled)) {
+			await actions.press(options.keys.toggle);
+			await actions.wait(options.settleMs);
+			toggled = await actions.capture();
+			await actions.saveScreenshot(name(index, 3), toggled);
+			screenshots.push(name(index, 3));
+		} else {
+			screenshots.push(name(index, 2));
+		}
+		actions.log(`Captured car ${index}.`);
+		// Chained so reads stay in walk order and only one runs at a time.
+		// A failed report is kept for the result rather than left as an unhandled rejection mid-walk.
+		reads = reads.then(() => readError === undefined ? read(index, screenshots) : undefined)
+			.catch((error: unknown) => { readError = error; });
 		return toggled;
+	}
+	async function finish(result: Omit<GarageWalkResult, "cars">): Promise<GarageWalkResult> {
+		await reads;
+		if (readError !== undefined && result.status !== "interrupted") {
+			return { status: "interrupted", cars, error: readError instanceof Error ? readError.message : String(readError) };
+		}
+		return { ...result, cars };
 	}
 	try {
 		let current = await recordCar(await actions.capture());
 		// The walk starts on the top-left car, so its tile marks the top row.
 		const topRow = await actions.selectionTop(current);
 		while (true) {
-			if (cars.length >= options.maxCars) return { status: "limit", cars };
+			if (captured >= options.maxCars) return await finish({ status: "limit" });
 			// Down at the bottom of a column jumps diagonally into a neighbouring column, so it is only pressed
 			// when a car is visible below; otherwise the column is finished.
 			if (await actions.hasTileBelow(current)) {
@@ -259,7 +300,7 @@ export async function walkGarage(
 				continue;
 			}
 			const right = await move(options.keys.right, current);
-			if (!right) return { status: "completed", cars };
+			if (!right) return await finish({ status: "completed" });
 			current = right;
 			// Right can land on a lower row of the next column; climb to its top before recording.
 			while (Math.abs(await actions.selectionTop(current) - topRow) > 0.05) {
@@ -270,7 +311,8 @@ export async function walkGarage(
 			current = await recordCar(current);
 		}
 	} catch (error) {
-		return { status: "interrupted", cars, error: error instanceof Error ? error.message : String(error) };
+		// Cars captured before the failure are still read and reported.
+		return await finish({ status: "interrupted", error: error instanceof Error ? error.message : String(error) });
 	}
 }
 

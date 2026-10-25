@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSameSelection, mergeCarPanels, walkGarage } from "../src/capture/garage-walk.ts";
+import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSamePanel, isSameSelection, mergeCarPanels, walkGarage } from "../src/capture/garage-walk.ts";
 import type { GarageCar } from "../src/capture/garage-walk.ts";
 import type { CarPerformance } from "../src/ocr/car-performance.ts";
 
@@ -33,6 +33,7 @@ function simulateGarage(heights: number[], dropPresses: Set<number> = new Set())
 	const state = { column: 0, row: 0, panel: "ratings" as CarPerformance["panel"], presses: 0 };
 	const pressed: string[] = [];
 	const saved: string[] = [];
+	const files = new Map<string, Buffer>();
 	const number = (column: number, row: number) => heights.slice(0, column).reduce((sum, height) => sum + height, 0) + row + 1;
 	const screen = () => Buffer.from(JSON.stringify({
 		car: number(state.column, state.row), column: state.column, row: state.row, panel: state.panel,
@@ -70,7 +71,10 @@ function simulateGarage(heights: number[], dropPresses: Set<number> = new Set())
 				parse(previous).column === parse(current).column && parse(current).row === parse(previous).row + 1,
 			hasTileBelow: async (image: Buffer) => parse(image).row + 1 < heights[parse(image).column]!,
 			selectionTop: async (image: Buffer) => 0.2 + 0.23 * parse(image).row,
-			saveScreenshot: async (name: string) => { saved.push(name); },
+			isSamePanel: async (previous: Buffer, current: Buffer) =>
+				(JSON.parse(previous.toString()) as { panel: string }).panel === (JSON.parse(current.toString()) as { panel: string }).panel,
+			saveScreenshot: async (name: string, image: Buffer) => { saved.push(name); files.set(name, image); },
+			loadScreenshot: async (name: string) => files.get(name)!,
 			log: () => {},
 		},
 	};
@@ -126,6 +130,37 @@ describe("garage walk", () => {
 			ratings: "car-0001-1.png", details: "car-0001-3.png", captures: ["car-0001-1.png", "car-0001-3.png"],
 		});
 		expect(garage.saved.slice(0, 3)).toEqual(["car-0001-1.png", "car-0001-2.png", "car-0001-3.png"]);
+	});
+	it("moves on without waiting for OCR, then reports every car in walk order", async () => {
+		const garage = simulateGarage([1, 3, 2]);
+		let release!: () => void;
+		const gate = new Promise<void>((resolve) => { release = resolve; });
+		let pressesWhenFirstRead = -1;
+		const walking = walkGarage({
+			...garage.actions,
+			extract: async (image) => {
+				if (pressesWhenFirstRead < 0) pressesWhenFirstRead = garage.pressed.length;
+				await gate;
+				return garage.actions.extract(image);
+			},
+		}, walkOptions, async () => {});
+		// Let the walk run as far as it can while the first read is blocked.
+		for (let tick = 0; tick < 200; tick++) await Promise.resolve();
+		const pressedWhileBlocked = garage.pressed.length;
+		release();
+		const result = await walking;
+		expect(pressesWhenFirstRead).toBe(1);
+		expect(pressedWhileBlocked).toBe(garage.pressed.length);
+		expect(names(result.cars)).toEqual(numbered(6));
+	});
+	it("reports a failure to save a car as an interrupted walk", async () => {
+		const garage = simulateGarage([2, 2]);
+		const result = await walkGarage(garage.actions, walkOptions, async (car) => {
+			if (car.index === 2) throw new Error("disk full");
+		});
+		expect(result.status).toBe("interrupted");
+		expect(result.error).toBe("disk full");
+		expect(names(result.cars)).toEqual(["CAR 1", "CAR 2"]);
 	});
 	it("stops at the car limit", async () => {
 		const garage = simulateGarage([3, 3, 3]);
@@ -185,6 +220,22 @@ describe("panel merge", () => {
 		]);
 		expect(different.car).toBeNull();
 		expect(different.issues).toEqual([expect.stringContaining("disagree on car")]);
+	});
+});
+
+describe("panel comparison", () => {
+	const panel = (labels: string[], values: string[]) => sharp(Buffer.from(
+		'<svg width="1365" height="768"><rect width="100%" height="100%" fill="black"/>' +
+		labels.map((label, index) => `<text x="92" y="${370 + index * 32}" font-family="Arial" font-size="16" fill="white">${label}</text>` +
+			`<text x="250" y="${370 + index * 32}" font-family="Arial" font-size="16" fill="white">${values[index]}</text>`).join("") +
+		"</svg>",
+	)).png().toBuffer();
+	it("tells ratings from details by the label column", async () => {
+		const ratings = await panel(["Speed", "Handling", "Acceleration", "Launch", "Braking"], ["5.6", "4.9", "4.4", "4.0", "5.5"]);
+		const otherCar = await panel(["Speed", "Handling", "Acceleration", "Launch", "Braking"], ["7.7", "6.1", "8.0", "7.7", "6.3"]);
+		const details = await panel(["Power", "Torque", "Weight", "Front", "Displacement"], ["195 hp", "130 ft-lb", "2,627 lb", "62%", "1.80 l"]);
+		expect(await isSamePanel(ratings, otherCar)).toBe(true);
+		expect(await isSamePanel(ratings, details)).toBe(false);
 	});
 });
 

@@ -119,6 +119,13 @@ still leaves the column. It
 stops when neither Down nor Right changes the highlighted tile. A move or
 toggle that seems to have been dropped by the stream is retried once.
 
+Navigation and the toggle check only compare images, so the walk saves each
+car's screenshots and moves on (about 3 s per car) while OCR reads them in the
+background, one car at a time and in walk order. OCR is slower than the walk,
+so the console's "Captured car N" lines run ahead of the "Car N: ..." lines,
+and the command finishes once every captured car has been read. You can leave
+the stream as soon as the last car is captured.
+
 Each `screenshots\garage-*` directory contains `car-NNNN-1.png`,
 `car-NNNN-2.png` (and `-3` when a toggle was retried) and `garage.json`, which
 is rewritten after every car, so an interrupted walk keeps the cars already

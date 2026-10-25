@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { extractCarPerformance, findSelectedTile, parseCarIdentity, parseMeasurement, parsePerformance, parseRating } from "../src/ocr/car-performance.ts";
+import {
+	confirmsNumber, extractCarPerformance, findSelectedTile, isCrossCheck, mergeLineSpacing, normalizeUnitGlyphs,
+	parseCarIdentity, parseMeasurement, parsePerformance, parseRating, parseSeparatedMeasurement,
+} from "../src/ocr/car-performance.ts";
 import { createLocalOCRWorker } from "../src/ocr/ocr.ts";
 
 describe("performance observations", () => {
@@ -19,6 +22,43 @@ describe("performance observations", () => {
 		}
 		expect(parseMeasurement("front", "101%")).toBeNull();
 		expect(parseMeasurement("displacement", "3.991")).toBeNull();
+	});
+	it("normalizes letter-shaped glyphs only inside an isolated unit token", () => {
+		expect(normalizeUnitGlyphs("I")).toBe("l");
+		expect(normalizeUnitGlyphs("|")).toBe("l");
+		expect(normalizeUnitGlyphs("Ib")).toBe("lb");
+		expect(normalizeUnitGlyphs("1b")).toBe("lb");
+		for (const text of ["ft:lb", "ft'lb", "ft-Ib", "ft·lb", "ftlb"]) expect(normalizeUnitGlyphs(text)).toBe("ft-lb");
+		for (const text of ["hp", "%", "kg", "11", "ft:lbs"]) expect(normalizeUnitGlyphs(text)).toBe(text);
+	});
+	it("keeps a unit misread as a digit out of the number", () => {
+		expect(parseSeparatedMeasurement("displacement", "7.21 I")).toEqual({ value: 7.21, unit: "l" });
+		expect(parseSeparatedMeasurement("displacement", "1.80 |")).toEqual({ value: 1.8, unit: "l" });
+		expect(parseSeparatedMeasurement("weight", "2,763 Ib")).toEqual({ value: 2763, unit: "lb" });
+		expect(parseSeparatedMeasurement("torque", "65 ft:lb")).toEqual({ value: 65, unit: "ft-lb" });
+		expect(parseSeparatedMeasurement("torque", "282 ft'lb")).toEqual({ value: 282, unit: "ft-lb" });
+		expect(parseSeparatedMeasurement("power", "251hp")).toEqual({ value: 251, unit: "hp" });
+		expect(parseSeparatedMeasurement("front", "62%")).toEqual({ value: 62, unit: "%" });
+		// Without a gap the trailing 1 could be the unit or a digit, so these stay unread.
+		for (const text of ["7.211", "1.80I", "2,7631b", "7.21 1 l"]) expect(parseSeparatedMeasurement("displacement", text)).toBeNull();
+	});
+	it("confirms a number from a second reading that misread the unit, but not a different number", () => {
+		expect(confirmsNumber("1.80", "l", "1.801")).toBe(true);
+		expect(confirmsNumber("1.37", "l", "1.37 |")).toBe(true);
+		expect(confirmsNumber("2,149", "lb", "2,149 1b")).toBe(true);
+		expect(confirmsNumber("62", "%", "62%")).toBe(true);
+		expect(confirmsNumber("7.21", "l", "1.211")).toBe(false);
+		expect(confirmsNumber("2,763", "lb", "2,163 1b")).toBe(false);
+		expect(confirmsNumber("1.8", "l", "1.801")).toBe(false);
+		expect(confirmsNumber("62", "%", "621%")).toBe(false);
+		expect(confirmsNumber("", "hp", "195 hp")).toBe(false);
+	});
+	it("restores word breaks one reading dropped without taking its characters", () => {
+		expect(mergeLineSpacing("INTEGRA TYPER\n2001 ACURA", "INTEGRA TYPE R\n2001ACURA")).toBe("INTEGRA TYPE R\n2001 ACURA");
+		expect(mergeLineSpacing("NSX TYPE S\n2022 ACURA", "NSX TYPE 8\n2022 ACURA")).toBe("NSX TYPE S\n2022 ACURA");
+		expect(mergeLineSpacing("4C\n2014 ALFA ROMEO", "4C")).toBe("4C\n2014 ALFA ROMEO");
+		expect(isCrossCheck("launchCheck")).toBe(true);
+		expect(isCrossCheck("launch")).toBe(false);
 	});
 	it("parses bounded ratings without guessing missing decimal points", () => {
 		expect(parseRating("7.9")).toBe(7.9);
@@ -72,9 +112,9 @@ describe("performance observations", () => {
 			'<text x="650" y="173" font-size="20">SPEEDTAIL</text>' +
 			'<text x="650" y="191" font-size="17">2019 MCLAREN</text></g></svg>',
 		)).png().toBuffer();
-		const worker = await createLocalOCRWorker();
+		const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 		try {
-			const result = await extractCarPerformance(image, worker);
+			const result = await extractCarPerformance(image, worker, shapeWorker);
 			expect(result.car).toEqual({ name: "SPEEDTAIL", year: 2019, manufacturer: "MCLAREN" });
 			expect(result.panel).toBe(panel);
 			if (panel === "ratings") {
@@ -93,10 +133,10 @@ describe("performance observations", () => {
 			expect(result.performance).toEqual({ class: "S2", pi: 900 });
 			expect(result.drivetrain).toBe("AWD");
 			expect(result.issues).toEqual(Object.entries(result.evidence)
-				.filter(([, evidence]) => evidence.confidence < 60)
+				.filter(([field, evidence]) => evidence.confidence < 60 && !isCrossCheck(field))
 				.map(([field, evidence]) => `Low OCR confidence for ${field}: ${evidence.confidence.toFixed(1)}.`));
 		} finally {
-			await worker.terminate();
+			await Promise.all([worker.terminate(), shapeWorker.terminate()]);
 		}
-	}, 30000);
+	}, 60000);
 });

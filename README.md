@@ -81,7 +81,10 @@ run; the script does not automatically press L or merge separate captures.
 The observation also includes
 raw OCR text/confidence, timestamp and provider. The current-car banner is
 not used to identify the selected car. Unreadable fields are null and listed
-in `issues`; low-confidence OCR is also flagged. Review-required results
+in `issues`; low-confidence OCR is also flagged. Ratings and detail numbers
+are read by Tesseract's shape-based legacy engine and cross-checked by the
+LSTM engine, which can misread a streamed 7 as 1; any disagreement is listed
+in `issues` with both readings. Review-required results
 exit with code 1 but retain evidence. Layout failures retain the screenshot
 and report an error rather than generating a successful observation.
 
@@ -108,7 +111,11 @@ Stats; P only toggles the tile icons), captures the other panel and merges
 both into one record: identity, class/PI, drivetrain, tires, the six ratings
 and the detail measurements. My Cars groups cars into manufacturer columns
 that scroll horizontally, so the walk goes Down each column, then Right to the
-next column, climbing Up to its top first if Right landed on a lower row. It
+next column, climbing Up to its top first if Right landed on a lower row. At
+the bottom of a short column the game's Down jumps diagonally into a
+neighbouring column, so the walk only presses Down when it sees a car tile
+directly below the highlight, and stops (rather than revisiting cars) if Down
+still leaves the column. It
 stops when neither Down nor Right changes the highlighted tile. A move or
 toggle that seems to have been dropped by the stream is retried once.
 

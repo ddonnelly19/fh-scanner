@@ -21,6 +21,10 @@ export interface GarageWalkActions {
 	wait(milliseconds: number): Promise<void>;
 	extract(image: Buffer): Promise<CarPerformance>;
 	isSameSelection(previous: Buffer, current: Buffer): Promise<boolean>;
+	/** True when the highlight moved one tile down the same column, leaving the previous car in place. */
+	isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean>;
+	/** True when the grid has a car directly below the highlighted one. */
+	hasTileBelow(image: Buffer): Promise<boolean>;
 	/** Top of the highlighted tile as a fraction of the screen height. */
 	selectionTop(image: Buffer): Promise<number>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
@@ -55,6 +59,23 @@ function sameIdentity(a: CarPerformance["car"], b: CarPerformance["car"]): boole
 	return a !== null && b !== null && a.name === b.name && a.year === b.year && a.manufacturer === b.manufacturer;
 }
 
+function editDistance(a: string, b: string): number {
+	let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+	for (let i = 1; i <= a.length; i++) {
+		const current = [i];
+		for (let j = 1; j <= b.length; j++) {
+			current[j] = Math.min(previous[j]! + 1, current[j - 1]! + 1, previous[j - 1]! + (a[i - 1] === b[j - 1] ? 0 : 1));
+		}
+		previous = current;
+	}
+	return previous[b.length]!;
+}
+
+/** Same year, and name plus manufacturer differ by at most two characters in total. */
+function isOCRTypo(a: NonNullable<CarPerformance["car"]>, b: NonNullable<CarPerformance["car"]>): boolean {
+	return a.year === b.year && editDistance(a.name, b.name) + editDistance(a.manufacturer, b.manufacturer) <= 2;
+}
+
 /**
  * Merges the two My Cars panels of one car. Panel-specific fields come only from that panel;
  * shared fields must agree, otherwise the conflict is reported instead of picking one.
@@ -79,7 +100,15 @@ export function mergeCarPanels(index: number, captures: Array<{ screenshot: stri
 		}
 		return known[0]!;
 	}
-	const car = shared("car", observations.map((observation) => observation.car), sameIdentity);
+	let car = shared("car", observations.map((observation) => observation.car), sameIdentity);
+	// Both panels show the same tile, so identities a character or two apart are one OCR typo (ROMEQ vs ROMEO):
+	// keep the more confident reading. The disagreement was already reported above.
+	const identities = observations.filter((observation) => observation.car !== null);
+	if (car === null && identities.length === 2 && isOCRTypo(identities[0]!.car!, identities[1]!.car!)) {
+		const confidence = (observation: CarPerformance) => observation.evidence.car?.confidence ?? 0;
+		car = (confidence(identities[1]!) > confidence(identities[0]!) ? identities[1]! : identities[0]!).car;
+		issues.push(`Kept the more confident car reading: ${JSON.stringify(car)}.`);
+	}
 	const performance = shared("class/PI", observations.map((observation) => observation.performance),
 		(a, b) => a!.class === b!.class && a!.pi === b!.pi);
 	const drivetrain = shared("drivetrain", observations.map((observation) => observation.drivetrain), (a, b) => a === b);
@@ -103,15 +132,9 @@ async function tileSample(image: Buffer, tile: Region): Promise<Buffer> {
 		.grayscale().blur(0.8).raw().toBuffer();
 }
 
-/**
- * True when the highlighted tile has not moved and still shows the same car.
- * Scrolling can keep the highlight in place, so the tile contents are compared too.
- */
-export async function isSameSelection(previous: Buffer, current: Buffer): Promise<boolean> {
-	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
-	if (Math.abs(before.left - after.left) > 6 || Math.abs(before.top - after.top) > 6) return false;
+async function sameTileContents(previous: Buffer, current: Buffer, tile: Region): Promise<boolean> {
 	// Compression can shift the detected border by a few pixels, so both samples use the same region.
-	const [beforePixels, afterPixels] = await Promise.all([tileSample(previous, before), tileSample(current, before)]);
+	const [beforePixels, afterPixels] = await Promise.all([tileSample(previous, tile), tileSample(current, tile)]);
 	let totalDifference = 0;
 	let changedPixels = 0;
 	for (let pixel = 0; pixel < beforePixels.length; pixel++) {
@@ -121,6 +144,45 @@ export async function isSameSelection(previous: Buffer, current: Buffer): Promis
 	}
 	// Streamed video adds compression noise, so the threshold is looser than for local captures.
 	return totalDifference / beforePixels.length <= 6 && changedPixels / beforePixels.length <= 0.02;
+}
+
+/**
+ * True when the highlighted tile has not moved and still shows the same car.
+ * Scrolling can keep the highlight in place, so the tile contents are compared too.
+ */
+export async function isSameSelection(previous: Buffer, current: Buffer): Promise<boolean> {
+	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
+	if (Math.abs(before.left - after.left) > 6 || Math.abs(before.top - after.top) > 6) return false;
+	return sameTileContents(previous, current, before);
+}
+
+/**
+ * True when the highlight moved down within the same column. A Down that jumps into a neighbouring column
+ * scrolls the grid, so the previous tile changes.
+ */
+export async function isDirectlyBelow(previous: Buffer, current: Buffer): Promise<boolean> {
+	const [before, after] = await Promise.all([findSelectedTile(previous), findSelectedTile(current)]);
+	if (Math.abs(before.left - after.left) > 6 || after.top - before.top < before.height * 0.5) return false;
+	// The highlight border disappears from the previous tile, so only its inside is compared.
+	const inset = Math.round(before.width * 0.06);
+	return sameTileContents(previous, current, {
+		left: before.left + inset, top: before.top + inset, width: before.width - 2 * inset, height: before.height - 2 * inset,
+	});
+}
+
+/**
+ * True when a car tile sits directly below the highlighted one. Tiles have a white name strip at the top and
+ * empty slots are dark, so the strip of the slot below is sampled. Below the third row is the hint bar.
+ */
+export async function hasTileBelow(image: Buffer): Promise<boolean> {
+	const [tile, { height }] = await Promise.all([findSelectedTile(image), sharp(image).metadata()]);
+	const top = tile.top + Math.round(tile.height * 1.1);
+	const bottom = tile.top + Math.round(tile.height * 1.22);
+	if (bottom > height! * 0.9) return false;
+	const pixels = await sharp(image).removeAlpha().extract({
+		left: tile.left + Math.round(tile.width * 0.2), top, width: Math.round(tile.width * 0.6), height: bottom - top,
+	}).grayscale().raw().toBuffer();
+	return pixels.reduce((sum, value) => sum + value, 0) / pixels.length > 110;
 }
 
 export async function selectionTop(image: Buffer): Promise<number> {
@@ -185,8 +247,14 @@ export async function walkGarage(
 		const topRow = await actions.selectionTop(current);
 		while (true) {
 			if (cars.length >= options.maxCars) return { status: "limit", cars };
-			const below = await move(options.keys.down, current);
-			if (below) {
+			// Down at the bottom of a column jumps diagonally into a neighbouring column, so it is only pressed
+			// when a car is visible below; otherwise the column is finished.
+			if (await actions.hasTileBelow(current)) {
+				const below = await move(options.keys.down, current);
+				if (!below) throw new Error("Down did not move to the car below the highlighted one.");
+				if (!await actions.isDirectlyBelow(current, below)) {
+					throw new Error("Down left the column; stopping instead of revisiting cars.");
+				}
 				current = await recordCar(below);
 				continue;
 			}

@@ -113,7 +113,8 @@ export function parsePerformance(text: string): CarPerformance["performance"] {
 export function parseCarIdentity(text: string): CarPerformance["car"] {
 	const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
 	if (lines.length < 2) return null;
-	const details = /^(19\d{2}|20\d{2})\s+(.+)$/.exec(lines.at(-1)!);
+	// Years run from the 1900s to fictional cars such as the 2554 Warthog.
+	const details = /^(19\d{2}|2\d{3})\s+(.+)$/.exec(lines.at(-1)!);
 	if (!details) return null;
 	return { name: lines.slice(0, -1).join(" "), year: Number(details[1]), manufacturer: details[2]! };
 }

@@ -75,6 +75,7 @@ describe("performance observations", () => {
 	it("reads identity from tile lines, including multiline names", () => {
 		expect(parseCarIdentity("SPEEDTAIL\n2019 MCLAREN")).toEqual({ name: "SPEEDTAIL", year: 2019, manufacturer: "MCLAREN" });
 		expect(parseCarIdentity("INTEGRA\nA-SPEC\n2023 ACURA")?.name).toBe("INTEGRA A-SPEC");
+		expect(parseCarIdentity("M12S WARTHOG CST\n2554 AMG TRANSPORT DYNA...")?.year).toBe(2554);
 		expect(parseCarIdentity("SPEEDTAIL")).toBeNull();
 	});
 	it("locates a selection border without using the current-car banner", async () => {

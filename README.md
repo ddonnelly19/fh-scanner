@@ -141,6 +141,57 @@ captures show the previous car or a half-drawn panel.
 The walk visits grid positions, so duplicate copies of the same car each get
 their own record. It doesn't read tuning or upgrades yet.
 
+### Garage pages (every card, one screenshot per screen)
+
+```powershell
+npm run capture:cloud -- geforce --pages
+```
+
+A faster survey of the whole garage than the walk: instead of opening each
+car's stats, it screenshots each screen of the My Cars grid and reads every
+card on it, giving each car's name, year, manufacturer, rarity, class/PI,
+drivetrain and tires. It doesn't read ratings or detail measurements; use
+`--walk` for those. Set up the stream as for the walk and select the first
+(top-left) car before pressing Enter.
+
+Right moves the highlight one column and the game scrolls the grid to keep it
+leftmost, so after each screenshot paging presses Right once per fully
+visible column (about four), landing on the column that was cut off at the
+right edge. It stops when Right no longer changes the screen, capturing the
+final screen if it shows columns not yet captured. A Right that seems to have
+been dropped is retried once. As with the walk, cards are read in the
+background from the saved screenshots while paging moves on.
+
+Each `screenshots\pages-*` directory contains `page-NNN.png` and
+`garage-pages.json`, rewritten after every page. Cars are listed by grid
+column and row, counted from where paging started; a car seen on two pages is
+kept once, and a conflicting second reading is listed in that car's `issues`.
+Fields that couldn't be read are null and listed in `issues`, including:
+
+- names cut off with an ellipsis on the card (the readable part is kept) and
+  the highlighted card's name, which scrolls when it is long;
+- drivetrain and tire icons that don't match a known icon. Icons are matched
+  against small templates in `src\ocr\card-icons`, never guessed from a
+  near match. Rebuild them after a walk that includes cars with other tires
+  (for example off-road) or drivetrain icons:
+
+  ```powershell
+  node src\cli\card-icon-templates.ts            # every screenshots\garage-* walk
+  node src\cli\card-icon-templates.ts .\screenshots\garage-abc123
+  ```
+
+  The walk's `garage.json` labels the highlighted card on each walk
+  screenshot. Only the icon crops are written.
+
+To check the card reader against walks, run
+`node src\cli\validate-card-pages.ts .\screenshots\garage-abc123`. It reads
+every card on each walk screenshot, matches cards to walked cars and prints
+per-field accuracy and every mismatch.
+
+Options: `--max-pages <n>` stops after n screens, and `--settle-ms` works as
+for the walk. The command exits with code 1 when any car needs review or
+paging didn't complete.
+
 ### Multi-screen cloud recording
 
 ```powershell
@@ -186,6 +237,7 @@ cannot be combined.
 - `npm test`: run all Vitest tests; no capture, keyboard input or account updates.
 - `npm run test:watch`: run tests in watch mode while developing.
 - `npx tsc --noEmit`: check TypeScript types without generating output.
+- `node src\cli\validate-card-pages.ts <garage directory>`: check the My Cars card reader against a garage walk (OCR only, no capture).
 
 ## Code organization and site integrations
 

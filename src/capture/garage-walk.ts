@@ -158,7 +158,7 @@ async function tileSample(image: Buffer, tile: Region): Promise<Buffer> {
 		.grayscale().blur(0.8).raw().toBuffer();
 }
 
-async function sameTileContents(previous: Buffer, current: Buffer, tile: Region): Promise<boolean> {
+export async function sameTileContents(previous: Buffer, current: Buffer, tile: Region): Promise<boolean> {
 	// Compression can shift the detected border by a few pixels, so both samples use the same region.
 	const [beforePixels, afterPixels] = await Promise.all([tileSample(previous, tile), tileSample(current, tile)]);
 	let totalDifference = 0;

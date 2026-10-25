@@ -13,6 +13,7 @@ import type { GarageCar } from "../capture/garage-walk.ts";
 import { isSameScreen, pageGarage, saveGaragePagesManifest } from "../capture/garage-pages.ts";
 import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
+import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
 const { values, positionals } = parseArgs({
@@ -114,7 +115,7 @@ async function capture(): Promise<Buffer | undefined> {
 			return undefined;
 		}
 		await prompt.question("Open My Cars, select a car, show ratings or press L for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
-		return await page.screenshot();
+		return await cropToGame(await page.screenshot());
 	} finally {
 		prompt.close();
 		await context.close();
@@ -123,6 +124,7 @@ async function capture(): Promise<Buffer | undefined> {
 
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
 	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	await checkGameFrame(await cropToGame(await page.screenshot()));
 	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
 	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "garage-"));
@@ -135,7 +137,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await walkGarage({
-			capture: () => page.screenshot(),
+			capture: async () => cropToGame(await page.screenshot()),
 			press: async (key) => {
 				await page.bringToFront();
 				await page.keyboard.press(key, { delay: 100 });
@@ -172,6 +174,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	// Loaded before the prompt so missing templates fail before the game is set up.
 	const templates = await loadIconTemplates();
 	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
+	await checkGameFrame(await cropToGame(await page.screenshot()));
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
 	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "pages-"));
 	console.log(`Pages directory: ${directory}`);
@@ -183,7 +186,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await pageGarage({
-			capture: () => page.screenshot(),
+			capture: async () => cropToGame(await page.screenshot()),
 			press: async (key) => {
 				await page.bringToFront();
 				await page.keyboard.press(key, { delay: 100 });

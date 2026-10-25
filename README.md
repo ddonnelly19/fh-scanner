@@ -119,6 +119,12 @@ still leaves the column. It
 stops when neither Down nor Right changes the highlighted tile. A move or
 toggle that seems to have been dropped by the stream is retried once.
 
+If the browser window isn't 16:9 (for example on a different monitor), the
+stream adds black bars; captures are cropped to the centred 16:9 game area
+before anything is saved or read. The walk and the page scan check the first
+capture and stop straight away, before creating a run folder, if the game
+still isn't 16:9 or no highlighted car is visible.
+
 Navigation and the toggle check only compare images, so the walk saves each
 car's screenshots and moves on (about 3 s per car) while OCR reads them in the
 background, one car at a time and in walk order. OCR is slower than the walk,

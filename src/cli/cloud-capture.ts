@@ -122,7 +122,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 		status: string; error?: string; cars: GarageCar[];
 	} = { schemaVersion: 1, provider, startedAt: new Date().toISOString(), status: "walking", cars: [] };
 	await saveGarageManifest(directory, manifest);
-	const worker = await createLocalOCRWorker();
+	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await walkGarage({
 			capture: () => page.screenshot(),
@@ -131,7 +131,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 				await page.keyboard.press(key, { delay: 100 });
 			},
 			wait: async (milliseconds) => { await wait(milliseconds); },
-			extract: (image) => extractCarPerformance(image, worker),
+			extract: (image) => extractCarPerformance(image, worker, shapeWorker),
 			isSameSelection,
 			isDirectlyBelow,
 			hasTileBelow,
@@ -148,7 +148,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 		manifest.finishedAt = new Date().toISOString();
 		if (manifest.status === "walking") manifest.status = "interrupted";
 		await saveGarageManifest(directory, manifest);
-		await worker.terminate();
+		await Promise.all([worker.terminate(), shapeWorker.terminate()]);
 	}
 	const flagged = manifest.cars.filter((car) => car.issues.length).length;
 	console.log(`Walk ${manifest.status}: ${manifest.cars.length} cars, ${flagged} need review. Saved ${join(directory, "garage.json")}`);
@@ -165,9 +165,9 @@ async function main(): Promise<void> {
 	const screenshotPath = join(directory, "car.png");
 	await writeFile(screenshotPath, image);
 	console.log(`Screenshot saved: ${screenshotPath}`);
-	const worker = await createLocalOCRWorker();
+	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
-		const observation = await extractCarPerformance(image, worker);
+		const observation = await extractCarPerformance(image, worker, shapeWorker);
 		const outputPath = join(directory, "performance.json");
 		await writeFile(outputPath, JSON.stringify({
 			schemaVersion: 1,
@@ -188,7 +188,7 @@ async function main(): Promise<void> {
 				drivetrain: observation.drivetrain, tires: observation.tires }, null, 2));
 		}
 	} finally {
-		await worker.terminate();
+		await Promise.all([worker.terminate(), shapeWorker.terminate()]);
 	}
 }
 

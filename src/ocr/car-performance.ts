@@ -47,6 +47,54 @@ export function parseMeasurement(field: DetailName, text: string): Measurement |
 	return { value, unit };
 }
 
+/**
+ * Fixes letter-shaped glyphs in an isolated unit token, never in numeric text: an l can only be read as
+ * I, | or 1 there, and the middle dot of ft·lb as : ' . or -.
+ */
+export function normalizeUnitGlyphs(unit: string): string {
+	const trimmed = unit.trim();
+	if (/^ft\s*[·.:'’`-]?\s*[Il|1]b$/i.test(trimmed)) return "ft-lb";
+	return trimmed.replace(/^[Il|1](bs?)?$/, "l$1");
+}
+
+/**
+ * Reads a measurement whose number and unit OCR kept apart. A unit starting with l (or a glyph l reads as)
+ * must be separated by whitespace, so a unit misread as a digit can never be absorbed into the number.
+ */
+export function parseSeparatedMeasurement(field: DetailName, text: string): Measurement | null {
+	const match = /^(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?:\s+(\S.*)|([^\s\dIl|].*))$/.exec(text.trim());
+	if (!match) return null;
+	return parseMeasurement(field, `${match[1]} ${normalizeUnitGlyphs(match[2] ?? match[3]!)}`);
+}
+
+/**
+ * True when a second OCR reading of the same crop starts with the same number. Only the first glyph
+ * after the number may be a digit, and only when it stands for the l that starts the unit (l or lb).
+ */
+export function confirmsNumber(numberText: string, unit: Measurement["unit"], otherText: string): boolean {
+	const compact = otherText.replace(/\s/g, "");
+	if (!numberText || !compact.startsWith(numberText)) return false;
+	const rest = compact.slice(numberText.length);
+	return !/^[\d.,]/.test(rest) || (unit.startsWith("l") && /^[1|I](?![\d.,])/.test(rest));
+}
+
+/** Keeps the line with more word breaks when two readings differ only in spacing; OCR drops narrow gaps. */
+export function mergeLineSpacing(primary: string, secondary: string): string {
+	const primaryLines = primary.split("\n").map((line) => line.trim()).filter(Boolean);
+	const secondaryLines = secondary.split("\n").map((line) => line.trim()).filter(Boolean);
+	if (primaryLines.length !== secondaryLines.length) return primaryLines.join("\n");
+	const words = (line: string) => line.split(/\s+/).length;
+	return primaryLines.map((line, index) => {
+		const other = secondaryLines[index]!;
+		return line.replace(/\s/g, "") === other.replace(/\s/g, "") && words(other) > words(line) ? other : line;
+	}).join("\n");
+}
+
+/** Evidence keys of readings that only confirm another reading of the same crop. */
+export function isCrossCheck(field: string): boolean {
+	return field.endsWith("Check") || field === "carSpacing";
+}
+
 export function parseRating(text: string): number | null {
 	const normalized = text.trim().replace(",", ".");
 	if (!/^(?:\d(?:\.\d)?|10(?:\.0)?)$/.test(normalized)) return null;
@@ -95,14 +143,19 @@ export async function findSelectedTile(image: Buffer): Promise<Region> {
 	throw new Error("Cannot locate the highlighted My Cars tile. Select a car and hide streaming overlays.");
 }
 
-export async function extractCarPerformance(image: Buffer, worker: Worker): Promise<CarPerformance> {
+/**
+ * Reads the My Cars panel. `worker` is the LSTM recognizer and `shapeWorker` the legacy one (see OCREngine):
+ * the LSTM model can rewrite a streamed 7 as 1 with high confidence, so numbers come from the shape
+ * classifier and the LSTM reading only cross-checks them; any disagreement is reported as an issue.
+ */
+export async function extractCarPerformance(image: Buffer, worker: Worker, shapeWorker: Worker): Promise<CarPerformance> {
 	const { width, height } = await sharp(image).metadata();
 	if (!width || !height || Math.abs(width / height - 16 / 9) > 0.03) {
 		throw new Error("My Cars extraction requires a game-only 16:9 screenshot without letterboxing.");
 	}
 	const evidence: Record<string, TextEvidence> = {};
 	async function read(key: string, region: Region, mode: PSM, lightText: boolean, whitelist = "",
-		scale: { height?: number; threshold?: number } = {}): Promise<string> {
+		scale: { height?: number; threshold?: number } = {}, engine: Worker = worker): Promise<string> {
 		let crop = sharp(image).removeAlpha().extract(region)
 			.resize(scale.height ? { height: scale.height } : region.width < 25 ? { height: 120 } : { width: Math.max(region.width * 3, 600) })
 			.grayscale();
@@ -111,8 +164,8 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 		if (lightText) crop = crop.negate();
 		const prepared = await crop.png().toBuffer();
 		const input = await sharp(prepared).extend({ top: 15, bottom: 15, left: 15, right: 15, background: "white" }).png().toBuffer();
-		await worker.setParameters({ tessedit_pageseg_mode: mode, tessedit_char_whitelist: whitelist });
-		const { data } = await worker.recognize(input);
+		await engine.setParameters({ tessedit_pageseg_mode: mode, tessedit_char_whitelist: whitelist });
+		const { data } = await engine.recognize(input);
 		evidence[key] = { text: data.text.trim(), confidence: data.confidence };
 		return data.text.trim();
 	}
@@ -128,14 +181,18 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 		const title = await read("screen", region(98, 76, 91, 24), PSM.SINGLE_LINE, true);
 		if (!/^mycars$/i.test(title.replace(/\s/g, ""))) throw new Error(`Expected My Cars screen; OCR read "${title}".`);
 		const tile = await findSelectedTile(image);
-		const identity = await read("car", {
+		const identityRegion = {
 			left: tile.left + Math.round(tile.width * 0.04),
 			top: tile.top + Math.round(tile.height * 0.04),
 			width: Math.round(tile.width * 0.92),
 			height: Math.round(tile.height * 0.24),
-		}, PSM.SINGLE_BLOCK, false);
+		};
+		// Width-based upscaling read a streamed 595 as 995; a fixed height reads both name lines reliably.
+		const identity = await read("car", identityRegion, PSM.SINGLE_BLOCK, false, "", { height: 150 });
+		// The shape classifier confuses S with 8, so it only contributes word breaks the LSTM reading dropped.
+		const identitySpacing = await read("carSpacing", identityRegion, PSM.SINGLE_BLOCK, false, "", {}, shapeWorker);
 		const issues: string[] = [];
-		const car = parseCarIdentity(identity);
+		const car = parseCarIdentity(mergeLineSpacing(identity, identitySpacing));
 		if (!car) issues.push("Could not read the selected car's name, year and manufacturer.");
 		const firstLabel = await read("panelLabel", region(89, 351, 110, 27), PSM.SINGLE_LINE, true);
 		const normalizedLabel = firstLabel.toLowerCase().replace(/\s/g, "");
@@ -152,30 +209,27 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 				const top = 351 + index * 32;
 				const label = await read(`${name}Label`, region(89, top, 146, 27), PSM.SINGLE_LINE, true);
 				// Width-based upscaling of these small crops made streamed 5s read as 0 or 9; a fixed height reads them reliably.
-				const value = await read(name, region(240, top, 39, 27), PSM.SINGLE_LINE, true, "0123456789.", { height: 100 });
+				const value = await read(name, region(240, top, 39, 27), PSM.SINGLE_LINE, true, "0123456789.", { height: 100 }, shapeWorker);
+				const check = await read(`${name}Check`, region(240, top, 39, 27), PSM.SINGLE_LINE, true, "0123456789.", { height: 100 });
 				ratings[name] = label.toLowerCase().replace(/\s/g, "") === name ? parseRating(value) : null;
 				if (ratings[name] === null) issues.push(`Could not verify ${name} rating (label "${label}", value "${value}").`);
+				else if (parseRating(check) !== ratings[name]) {
+					issues.push(`OCR engines disagree on ${name} rating ("${value}" vs "${check}"); kept the shape-based reading.`);
+				}
 			}
 		} else {
 			details = { power: null, torque: null, weight: null, front: null, displacement: null };
 			for (const [index, name] of detailNames.entries()) {
 				const top = 351 + index * 32;
 				const label = await read(`${name}Label`, region(89, top, 110, 27), PSM.SINGLE_LINE, true);
-				const value = await read(name, region(201, top, 78, 27), PSM.SINGLE_LINE, true);
-				details[name] = label.toLowerCase().replace(/\s/g, "") === name ? parseMeasurement(name, value) : null;
-				// Narrow unit glyphs can resemble digits; re-read them separately rather than substituting characters.
-				if (details[name] === null && label.toLowerCase().replace(/\s/g, "") === name &&
-					(name === "weight" || name === "displacement")) {
-					const unitLeft = name === "weight" ? 261 : 270;
-					const unitText = await read(`${name}Unit`, region(unitLeft, top, 279 - unitLeft, 27),
-						name === "weight" ? PSM.SINGLE_LINE : PSM.SINGLE_CHAR, true);
-					// Only normalize letter-shaped unit glyphs in the isolated unit crop, never numeric text.
-					const unit = unitText.replace(/^[I|](?=b?$)/, "l");
-					if (unit === (name === "weight" ? "lb" : "l")) {
-						const number = await read(`${name}Value`, region(201, top, unitLeft - 202, 27),
-							PSM.SINGLE_LINE, true, "0123456789.,");
-						details[name] = parseMeasurement(name, `${number} ${unit}`);
-					}
+				// The shape classifier keeps a space before the unit, so unit glyphs that look like digits stay out of the number.
+				const value = await read(name, region(201, top, 78, 27), PSM.SINGLE_LINE, true,
+					name === "front" ? "0123456789%" : "", {}, shapeWorker);
+				const check = await read(`${name}Check`, region(201, top, 78, 27), PSM.SINGLE_LINE, true);
+				details[name] = label.toLowerCase().replace(/\s/g, "") === name ? parseSeparatedMeasurement(name, value) : null;
+				const measured = details[name];
+				if (measured && !confirmsNumber(/^[\d.,]+/.exec(value.trim())![0], measured.unit, check)) {
+					issues.push(`OCR engines disagree on ${name} ("${value}" vs "${check}"); kept the shape-based reading.`);
 				}
 				if (details[name] === null) issues.push(`Could not verify ${name} measurement (label "${label}", value "${value}").`);
 			}
@@ -196,10 +250,13 @@ export async function extractCarPerformance(image: Buffer, worker: Worker): Prom
 			if (!tires) issues.push(`Could not read tire description ("${tireText}").`);
 		}
 		for (const [field, item] of Object.entries(evidence)) {
-			if (item.confidence < 60) issues.push(`Low OCR confidence for ${field}: ${item.confidence.toFixed(1)}.`);
+			// Cross-check readings only matter when they disagree, which is reported above.
+			if (item.confidence < 60 && !isCrossCheck(field)) issues.push(`Low OCR confidence for ${field}: ${item.confidence.toFixed(1)}.`);
 		}
 		return { screen: "my-cars", panel, car, ratings, details, performance, drivetrain, tires, evidence, issues };
 	} finally {
-		await worker.setParameters({ tessedit_pageseg_mode: PSM.AUTO, tessedit_char_whitelist: "" });
+		for (const engine of [worker, shapeWorker]) {
+			await engine.setParameters({ tessedit_pageseg_mode: PSM.AUTO, tessedit_char_whitelist: "" });
+		}
 	}
 }

@@ -81,7 +81,10 @@ run; the script does not automatically press L or merge separate captures.
 The observation also includes
 raw OCR text/confidence, timestamp and provider. The current-car banner is
 not used to identify the selected car. Unreadable fields are null and listed
-in `issues`; low-confidence OCR is also flagged. Review-required results
+in `issues`; low-confidence OCR is also flagged. Ratings and detail numbers
+are read by Tesseract's shape-based legacy engine and cross-checked by the
+LSTM engine, which can misread a streamed 7 as 1; any disagreement is listed
+in `issues` with both readings. Review-required results
 exit with code 1 but retain evidence. Layout failures retain the screenshot
 and report an error rather than generating a successful observation.
 

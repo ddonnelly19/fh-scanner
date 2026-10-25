@@ -168,6 +168,24 @@ describe("panel merge", () => {
 			"b.png: Expected My Cars screen", "Details panel was not captured.", "ratings: Could not read class and PI.",
 		]);
 	});
+	it("keeps the more confident identity when the panels differ by an OCR typo, and still reports it", () => {
+		const typo = (manufacturer: string, confidence: number) => ({
+			car: { name: "8C COMPETIZIONE", year: 2007, manufacturer },
+			evidence: { car: { text: "", confidence } },
+		});
+		const car = mergeCarPanels(1, [
+			{ screenshot: "a.png", observation: observation("8C COMPETIZIONE", "details", typo("ALFA ROMEQ", 90)) },
+			{ screenshot: "b.png", observation: observation("8C COMPETIZIONE", "ratings", typo("ALFA ROMEO", 93)) },
+		]);
+		expect(car.car).toEqual({ name: "8C COMPETIZIONE", year: 2007, manufacturer: "ALFA ROMEO" });
+		expect(car.issues).toEqual([expect.stringContaining("disagree on car"), expect.stringContaining("more confident")]);
+		const different = mergeCarPanels(2, [
+			{ screenshot: "a.png", observation: observation("SPEEDTAIL", "ratings") },
+			{ screenshot: "b.png", observation: observation("SENNA", "details") },
+		]);
+		expect(different.car).toBeNull();
+		expect(different.issues).toEqual([expect.stringContaining("disagree on car")]);
+	});
 });
 
 describe("selection comparison", () => {

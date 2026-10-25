@@ -59,6 +59,23 @@ function sameIdentity(a: CarPerformance["car"], b: CarPerformance["car"]): boole
 	return a !== null && b !== null && a.name === b.name && a.year === b.year && a.manufacturer === b.manufacturer;
 }
 
+function editDistance(a: string, b: string): number {
+	let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+	for (let i = 1; i <= a.length; i++) {
+		const current = [i];
+		for (let j = 1; j <= b.length; j++) {
+			current[j] = Math.min(previous[j]! + 1, current[j - 1]! + 1, previous[j - 1]! + (a[i - 1] === b[j - 1] ? 0 : 1));
+		}
+		previous = current;
+	}
+	return previous[b.length]!;
+}
+
+/** Same year, and name plus manufacturer differ by at most two characters in total. */
+function isOCRTypo(a: NonNullable<CarPerformance["car"]>, b: NonNullable<CarPerformance["car"]>): boolean {
+	return a.year === b.year && editDistance(a.name, b.name) + editDistance(a.manufacturer, b.manufacturer) <= 2;
+}
+
 /**
  * Merges the two My Cars panels of one car. Panel-specific fields come only from that panel;
  * shared fields must agree, otherwise the conflict is reported instead of picking one.
@@ -83,7 +100,15 @@ export function mergeCarPanels(index: number, captures: Array<{ screenshot: stri
 		}
 		return known[0]!;
 	}
-	const car = shared("car", observations.map((observation) => observation.car), sameIdentity);
+	let car = shared("car", observations.map((observation) => observation.car), sameIdentity);
+	// Both panels show the same tile, so identities a character or two apart are one OCR typo (ROMEQ vs ROMEO):
+	// keep the more confident reading. The disagreement was already reported above.
+	const identities = observations.filter((observation) => observation.car !== null);
+	if (car === null && identities.length === 2 && isOCRTypo(identities[0]!.car!, identities[1]!.car!)) {
+		const confidence = (observation: CarPerformance) => observation.evidence.car?.confidence ?? 0;
+		car = (confidence(identities[1]!) > confidence(identities[0]!) ? identities[1]! : identities[0]!).car;
+		issues.push(`Kept the more confident car reading: ${JSON.stringify(car)}.`);
+	}
 	const performance = shared("class/PI", observations.map((observation) => observation.performance),
 		(a, b) => a!.class === b!.class && a!.pi === b!.pi);
 	const drivetrain = shared("drivetrain", observations.map((observation) => observation.drivetrain), (a, b) => a === b);

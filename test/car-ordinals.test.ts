@@ -5,7 +5,6 @@ import { join } from "node:path";
 import { test } from "vitest";
 import { formatOrdinalResults, loadCarNameMapping, matchCarText, parseCarNameMapping, parseCarText } from "../src/collection/car-matching.ts";
 import { parseOrdinalCatalog } from "../src/catalogs/hdr.ts";
-import { parseKudosCatalog } from "../src/sites/kudosprime/catalog.ts";
 import { exportCarOrdinals } from "../src/workflows/export-cars.ts";
 
 const entries = parseOrdinalCatalog({
@@ -188,62 +187,6 @@ test("candidate suggestions are filtered by source year before similarity rankin
 	assert.deepEqual(match.candidates, [{ name: "1964 Aston Martin DB5 Vantage", ordinal: "1105" }]);
 });
 
-	test("KudosPrime JavaScript is parsed as data with separate site IDs", () => {
-		const entries = parseKudosCatalog('if(typeof(fh6) === "undefined") fh6 = new Object;fh6.cars = new Object(); fh6.cars=[{"id":"1","text":"1968 ABARTH 595 ESSEESSE"}];');
-		assert.deepEqual(entries, [{ name: "1968 ABARTH 595 ESSEESSE", siteIds: { kudosprime: "1" } }]);
-		const match = matchCarText({ source: "tile.txt", text: "595 esseesse\n1968 Abarth" }, entries);
-		assert.equal(match.status, "matched");
-		const formatted = formatOrdinalResults([match]);
-		assert.equal(formatted.ordinals, "1968 ABARTH 595 ESSEESSE\n");
-		assert.match(formatted.matched, /^kudosprime:1\t/);
-		for (const content of [
-			"throw new Error('must never execute');",
-			'fh6.cars=[];',
-			'fh6.cars=[{"id":"1","text":"Car"},{"id":"1","text":"Other"}];',
-			'fh6.cars=[{"id":1,"text":"Car"}];',
-			'fh6.cars=[{"id":"1","text":"Car"}]; console.log("not allowed");',
-		]) assert.throws(() => parseKudosCatalog(content));
-	});
-
-	test("combines offline sources, fills new exact Kudos matches, and preserves manual selections", async () => {
-		const directory = await mkdtemp(join(tmpdir(), "fh-scanner-kudos-"));
-		try {
-			const catalogPath = join(directory, "hdr.json");
-			const kudosPath = join(directory, "kudos.js");
-			const mappingPath = join(directory, "mapping.json");
-			await writeFile(catalogPath, JSON.stringify({
-				"2002 Acura RSX Type-S": "422",
-				"1980 Fiat 131 Abarth Stradale": "1124",
-			}));
-			const kudosContent = 'fh6.cars=[{"id":"4","text":"2002 ACURA RSX TYPE-S"},{"id":"1","text":"1968 ABARTH 595 ESSEESSE"},{"id":"2","text":"1980 ABARTH FIAT 131"}];';
-			await writeFile(kudosPath, kudosContent);
-			await writeFile(mappingPath, JSON.stringify({
-				"1968 Abarth 595 esseesse": { selected: null, candidates: [] },
-				"1980 Abarth Fiat 131": "1980 Fiat 131 Abarth Stradale",
-			}));
-			const cars = [
-				{ source: "abarth.txt", text: "595 esseesse\n1968 Abarth" },
-				{ source: "fiat.txt", text: "Fiat 131\n1980 Abarth" },
-				{ source: "acura.txt", text: "RSX Type S\n2002 Acura" },
-			];
-			const result = await exportCarOrdinals(cars, directory, { catalogPath, mappingPath, siteCatalogPaths: { kudosprime: kudosPath } });
-			assert.deepEqual(result, { matched: 3, unresolved: 0, uniqueNames: 3 });
-			assert.equal(await readFile(join(directory, "ordinals.txt"), "utf8"),
-				"1968 ABARTH 595 ESSEESSE\n1980 Fiat 131 Abarth Stradale\n2002 Acura RSX Type-S\n");
-			const audit = await readFile(join(directory, "ordinal-matches.txt"), "utf8");
-			assert.match(audit, /kudosprime:1\t1968 ABARTH/);
-			assert.match(audit, /422\t2002 Acura/);
-			assert.match(audit, /1124\t1980 Fiat/);
-			assert.equal(await readFile(join(directory, "kudosprime-source.js"), "utf8"), kudosContent);
-			const mapping: unknown = JSON.parse(await readFile(mappingPath, "utf8"));
-			const parsed = parseCarNameMapping(mapping, [...parseOrdinalCatalog(JSON.parse(await readFile(catalogPath, "utf8"))), ...parseKudosCatalog(kudosContent)]);
-			assert.equal(parsed["1980 Abarth Fiat 131"], "1980 Fiat 131 Abarth Stradale");
-			assert.deepEqual(parsed["1968 Abarth 595 esseesse"], { selected: "1968 ABARTH 595 ESSEESSE", candidates: [] });
-			await assert.rejects(exportCarOrdinals(cars, directory, { catalogPath, mappingPath, siteCatalogPaths: { kudosprime: join(directory, "missing.js") } }), /ENOENT/);
-		} finally {
-			await rm(directory, { recursive: true });
-		}
-	});
 test("refreshes legacy cross-year suggestions without modifying manual selections", async () => {
 	const directory = await mkdtemp(join(tmpdir(), "fh-scanner-year-"));
 	try {

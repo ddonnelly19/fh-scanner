@@ -36,7 +36,44 @@ export function parseCarNameMapping(value: unknown, entries: readonly CatalogEnt
 	return mapping;
 }
 
-export async function loadCarNameMapping(path: string, entries: readonly CatalogEntry[]): Promise<CarNameMapping> {
+/**
+ * Points mapping targets that are no longer catalog names at current ones. A stale target is renamed
+ * when `rename` gives a catalog name for it (an older spelling of the same car); otherwise a stale
+ * selection goes back to null for review and stale candidates are dropped.
+ */
+export function migrateCarNameMapping(value: unknown, entries: readonly CatalogEntry[], rename: (name: string) => string | undefined): unknown {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
+	const names = new Set(entries.map((entry) => entry.name));
+	const ordinalNames = new Set(entries.filter((entry) => entry.ordinal !== undefined).map((entry) => entry.name));
+	const current = (target: unknown): unknown => {
+		if (typeof target !== "string" || ordinalNames.has(target)) return target;
+		// A site-only spelling (e.g. KudosPrime's upper case) moves to the ordinal catalog's name when there is one.
+		const renamed = rename(target);
+		if (renamed !== undefined && ordinalNames.has(renamed)) return renamed;
+		return names.has(target) ? target : undefined;
+	};
+	const migrated: Record<string, unknown> = {};
+	for (const [capturedName, target] of Object.entries(value)) {
+		let next: unknown = target;
+		if (typeof target === "object" && target !== null && !Array.isArray(target) && "selected" in target && "candidates" in target) {
+			const candidates = Array.isArray(target.candidates)
+				? [...new Set((target.candidates as unknown[]).map(current).filter((candidate) => candidate !== undefined))]
+				: target.candidates;
+			next = { selected: current(target.selected) ?? null, candidates };
+		} else if (typeof target === "string") {
+			const renamed = current(target);
+			next = renamed ?? { selected: null, candidates: [] };
+		}
+		Object.defineProperty(migrated, capturedName, { value: next, enumerable: true, writable: true, configurable: true });
+	}
+	return migrated;
+}
+
+export async function loadCarNameMapping(
+	path: string,
+	entries: readonly CatalogEntry[],
+	rename?: (name: string) => string | undefined,
+): Promise<CarNameMapping> {
 	let content: string;
 	try {
 		content = await readFile(path, "utf8");
@@ -45,7 +82,7 @@ export async function loadCarNameMapping(path: string, entries: readonly Catalog
 		throw error;
 	}
 	const value: unknown = JSON.parse(content);
-	return parseCarNameMapping(value, entries);
+	return parseCarNameMapping(rename ? migrateCarNameMapping(value, entries, rename) : value, entries);
 }
 
 export interface CapturedCarText {

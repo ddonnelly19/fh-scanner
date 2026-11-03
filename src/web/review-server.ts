@@ -2,11 +2,10 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { randomBytes, timingSafeEqual } from "node:crypto";
-import type { SiteAdapter } from "../sites/types.ts";
 import { createWorkflow } from "./workflow.ts";
 
-export async function createReviewServer(directory: string, site: SiteAdapter, mappingPath?: string) {
-	const workflow = await createWorkflow(directory, site, mappingPath);
+export async function createReviewServer(directory: string, mappingPath?: string) {
+	const workflow = await createWorkflow(directory, mappingPath);
 	const token = randomBytes(32).toString("hex");
 	let busy = false;
 	const server = createServer(async (request, response) => {
@@ -22,7 +21,6 @@ export async function createReviewServer(directory: string, site: SiteAdapter, m
 			const url = new URL(request.url ?? "/", `http://${host}`);
 			if (request.method === "GET" && url.pathname === "/api/state") { json(await workflow.state()); return; }
 			if (request.method === "GET" && url.pathname === "/api/review") { json(workflow.review.snapshot()); return; }
-			if (request.method === "GET" && url.pathname === "/api/plan") { json(await workflow.preview()); return; }
 			if (request.method === "POST" && url.pathname.startsWith("/api/")) {
 				const provided = request.headers["x-review-token"];
 				if (request.headers.origin !== `http://${host}` || typeof provided !== "string" ||
@@ -39,18 +37,12 @@ export async function createReviewServer(directory: string, site: SiteAdapter, m
 					}
 					const input: unknown = JSON.parse(body);
 					if (typeof input !== "object" || input === null || Array.isArray(input)) throw new Error("Invalid request.");
-					workflow.assertRevision("revision" in input ? input.revision : undefined);
-					if (url.pathname === "/api/sync/close") {
-						await workflow.closeSync();
-					} else if (url.pathname === "/api/sync/confirm") {
-						if (!("confirmation" in input) || typeof input.confirmation !== "string") throw new Error("Missing confirmation.");
-						await workflow.confirmSync(input.confirmation, "destinationChecked" in input && input.destinationChecked === true);
-					} else {
+					{
 						workflow.assertEditable("revision" in input ? input.revision : undefined);
 						switch (url.pathname) {
 							case "/api/select":
-								if (!("run" in input) || typeof input.run !== "string" || !("site" in input) || typeof input.site !== "string") throw new Error("Invalid run selection.");
-								await workflow.select(input.run, input.site);
+								if (!("run" in input) || typeof input.run !== "string") throw new Error("Invalid run selection.");
+								await workflow.select(input.run);
 								break;
 							case "/api/refresh": await workflow.refresh(); break;
 							case "/api/job":
@@ -70,9 +62,6 @@ export async function createReviewServer(directory: string, site: SiteAdapter, m
 								finally { workflow.changed(); }
 								break;
 							case "/api/regenerate": await workflow.review.regenerate(); workflow.changed(); break;
-							case "/api/sync/open":
-								if (!("hash" in input) || typeof input.hash !== "string") throw new Error("Preview the plan first.");
-								await workflow.openSync(input.hash); break;
 							default: response.writeHead(404).end("Unknown operation."); return;
 						}
 					}

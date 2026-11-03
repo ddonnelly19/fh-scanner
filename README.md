@@ -2,21 +2,22 @@
 
 ## Tool run order
 
-Install dependencies once with `npm install`, then follow this order:
+Install dependencies once with `npm install`. The sibling
+[forzagarage](../forzagarage) repo must be checked out next to this one: matching
+reads its `car-ids` map, and its `collection-sync` command does all site updates.
 
 | Step | Command | Purpose / required input |
 | --- | --- | --- |
-| 1 | `npm run run` | Start with the game collection on its first page. Creates a new run, captures all pages, saves tiles, performs name OCR, and matches against HDR, KudosPrime and ForzaGarage catalogs automatically. |
-| 2 (optional) | `npm run match` | Re-match saved tile OCR after reviewing unresolved names and editing `car-name-mapping.json`. No capture or OCR is repeated. Skip this if step 1's matches need no changes. |
-| 3 | `npm run ownership` | Uses saved tile images, OCR text, catalog snapshots and current mapping to classify ownership and generate the selected site's owned-car plan. No site updates. |
-| 4 | `npm run sync` | Preview the owned-car plan. Requires step 3. No browser login or account updates. |
-| 5 (optional) | `npm run sync -- --apply` | After reviewing evidence and the preview, use Edge and type the requested confirmation to apply the selected site's owned-car plan. |
+| 1 | `npm run run` | Start with the game collection on its first page. Creates a new run, captures all pages, saves tiles, performs name OCR, and matches names to FH6 ordinals from car-ids. |
+| 2 (optional) | `npm run match` | Re-match saved tile OCR after reviewing unresolved names and editing `car-name-mapping.json`. No capture or OCR is repeated. |
+| 3 | `npm run ownership` | Classifies each saved tile as owned, unowned or unknown and writes `owned-cars.json`: the owned cars as FH6 ordinals. |
+| 4 | in forzagarage: `npm run collection-sync -- <run>\owned-cars.json --site forzalabs` | Previews which owned cars map to the site. Add `--apply` to log in and add the missing cars. Sites: `forzalabs`, `forzagarage`, `kudosprime`. |
 
 Before step 3, inspect `ordinal-review.txt` and resolve any car-name mappings
-you want included. Before step 5, inspect `ownership-evidence.json` and the selected site's
-owned-plan file: unknown ownership and unresolved site identities
-are excluded, so the plan may be incomplete. Sync does not generate a missing
-plan or run ownership OCR for you.
+you want included. Before step 4, inspect `ownership-evidence.json` and
+`owned-cars.json`: unknown ownership and unidentified cars are left out and
+listed under `review`, so the list may be incomplete. The local dashboard
+(`npm run review:web`) is the quickest way to fix both.
 
 For the newest saved run, a typical session is:
 
@@ -25,35 +26,27 @@ npm run run
 # Review ordinal-review.txt and edit car-name-mapping.json if needed.
 npm run match     # Optional: step 1 already performed matching.
 npm run ownership
-# Review ownership-evidence.json and the selected site's owned-plan file.
-npm run sync
-# Only after approving the preview:
-npm run sync -- --apply
+# Review ownership-evidence.json and owned-cars.json.
+cd ..\forzagarage
+npm run collection-sync -- "..\fh-scanner\screenshots\scan-YFrlNh\owned-cars.json" --site forzalabs
+npm run collection-sync -- "..\fh-scanner\screenshots\scan-YFrlNh\owned-cars.json" --site forzalabs --apply
 ```
 
-`match`, `ownership` and `sync` independently select the newest `scan-*`
-directory by creation time unless `--run-dir` is supplied. To keep all steps
-on a specific run, especially if another capture is created in between, pin
-the same directory for each command:
+`match` and `ownership` select the newest `scan-*` directory by creation time
+unless `--run-dir` is supplied. To keep both steps on a specific run, pin it:
 
 ```powershell
 $run = ".\screenshots\scan-YFrlNh"
 npm run match -- --run-dir "$run"
-npm run ownership -- --run-dir "$run" --site kudosprime
-npm run sync -- --run-dir "$run" --site kudosprime
-npm run sync -- --run-dir "$run" --site kudosprime --apply
+npm run ownership -- --run-dir "$run"
 ```
 
-If you already have a complete saved run, skip capture and start at step 2
-(if mappings need changes) or step 3. After changing mappings or refreshing
-catalogs with `match`, rerun `ownership` and preview again before applying:
-an existing owned plan is not automatically refreshed. If capture stops before
-tile OCR finishes, matching and ownership require the missing tile/text inputs
-to be completed first.
+After changing mappings with `match`, rerun `ownership` (or use the dashboard)
+so `owned-cars.json` is rewritten. If capture stops before tile OCR finishes,
+matching and ownership require the missing tile/text inputs to be completed first.
 
 For names-only export, stop after step 1 or 2; `ordinals.txt` is already
-generated. Ownership and sync are needed only to create and apply an owned-car
-plan.
+generated.
 
 ### Single-car cloud performance capture
 
@@ -180,89 +173,40 @@ cannot be combined.
 - `npm run test:watch`: run tests in watch mode while developing.
 - `npx tsc --noEmit`: check TypeScript types without generating output.
 
-## Code organization and site integrations
+## Code organization
 
 All application TypeScript lives under `src`; npm commands run the entrypoints
-in `src\cli` directly. Tests remain under `test`. Root script wrappers have
-been removed; use the npm commands or the direct paths shown below.
+in `src\cli` directly. Tests remain under `test`.
 
 ```text
 src\
   capture\       Windows capture, paging/end detection, tile extraction
   ocr\           Local Tesseract and ownership-label recognition
   collection\    Shared car-name parsing, normalization, matching and aliases
-  catalogs\      Catalog types, loading, and HDR ordinal source
-  workflows\     Catalog merging and matching/export orchestration
-  sites\
-    kudosprime\  KudosPrime catalog parser, endpoint and response validation
-    forzagarage\ ForzaGarage catalog parser and local tracker adapter
-    types.ts     Site adapter contract and site-specific garage IDs
-    registry.ts  Supported site adapters
-    garage-plan.ts  Verified-owned filtering and site-bound plan validation
-    apply-plan.ts  Sequential updates, audit persistence and failure handling
-    browser-sync.ts  Edge session and explicit user confirmation
-  cli\           Scanner, matching, ownership-review and sync commands
+  catalogs\      Catalog types and the car-ids ordinal source
+  workflows\     Matching/export, ownership inputs and the owned-cars list
+  web\           Local saved-run dashboard
+  cli\           Scanner, matching, ownership-review and dashboard commands
 test\            Offline unit tests and local OCR smoke tests
 ```
 
-The editable `car-name-mapping.json` remains in the project root. Saved runs,
-catalog snapshot filenames, names-only output and existing commands are
-unchanged. Catalog entries now carry `siteIds`, keyed by adapter ID, separately
-from Forza `ordinal` values. IDs are never assumed interchangeable across sites.
-Generated garage plans include a `site` tag; sync rejects a plan targeting a
-different adapter. Old untagged KudosPrime plans are still accepted only by
-the KudosPrime adapter.
+The editable `car-name-mapping.json` remains in the project root.
 
-Select the target explicitly when reviewing or syncing:
+### Updating tracker sites
 
-```powershell
-npm run ownership -- --run-dir ".\screenshots\scan-YFrlNh" --site kudosprime
-npm run sync -- --run-dir ".\screenshots\scan-YFrlNh" --site kudosprime
-# Or use ForzaGarage:
-npm run ownership -- --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage
-npm run sync -- --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage
-```
-
-Omitting `--site` keeps KudosPrime as the default. Unknown/unsupported sites
-fail explicitly; they do not silently use KudosPrime.
-
-### Adding another site
-
-ForzaGarage is implemented as a local-only tracker adapter. Forza LabsGG and
-FHStats remain future integrations; their catalogs, supported game versions,
-login requirements, APIs and automation policies must be verified before
-implementing writes.
-
-1. Add a folder under `src\sites` containing that site's catalog parser/loader
-   and adapter, following [the adapter contract](src/sites/types.ts).
-2. Give it a unique adapter ID, catalog snapshot and plan/result filenames.
-   Parse catalog data into `{ name, siteIds: { [adapterId]: id } }`; keep
-   site-specific ID validation in the adapter.
-3. Implement its login destination, readiness checks and `addOwned` operation.
-   A successful operation must be positively acknowledged by that site's
-   response/readback, not just an HTTP 200. Never infer another site's API
-   from KudosPrime's request format.
-4. Register it in [the site registry](src/sites/registry.ts). The matching
-   workflow consumes registered catalogs; ownership planning resolves only
-   exact names for the selected site's IDs. Ambiguity requires review.
-5. Add catalog, request/response, site-ID isolation and failure tests before
-   enabling updates.
-
-The shared browser/sync runner handles preview separation, typed confirmation,
-sequential additions, per-adapter delays, audit results and stopping on failure.
-ForzaGarage checks are made through its tracker UI and confirmed in browser
-storage; a shareable collection URL is saved after applying the plan. Its
-progress is local to each browser, so load an existing share link into the
-temporary Edge session first to preserve that starting collection. Opening the
-resulting share link in another browser requires choosing “Load this collection”,
-which replaces that browser's current tracker selection. Capture and OCR do
-not depend on any site's authentication or update endpoint.
-No credentials, OAuth codes, HAR replay or persistent login profiles belong in
-adapters.
+fh-scanner stops at `owned-cars.json` and never contacts a tracker site. The
+file is `{ "format": "fh-owned-cars", "version": 1, "cars": [{ "ordinal", "name",
+"sources" }], "review": [...] }`. forzagarage's `collection-sync` package maps the
+ordinals to each site's ids through car-ids and adds the missing cars: ForzaLabs
+through its API with the saved login, KudosPrime and ForzaGarage through Edge.
+See `collection-sync/README.md` in that repo for login, confirmation and audit
+details. Earlier runs' `kudos-owned-plan.json`, `forzagarage-owned-plan.json`
+and `<site>-car-mapping.json` files are no longer read; rerun `npm run ownership`
+on those runs to get `owned-cars.json`.
 
 ### Ownership review (no account updates)
 
-Before syncing any garage, review ownership using the saved tiles:
+Review ownership using the saved tiles:
 
 ```powershell
 npm run ownership
@@ -270,101 +214,18 @@ npm run ownership
 npm run ownership -- --run-dir ".\screenshots\scan-YFrlNh"
 ```
 
-Without `--run-dir`, ownership review uses the same newest-run selection as
-sync: the newest `scan-*` folder under the project's `screenshots` directory
-by creation time. The selected path is logged before OCR starts. Use
-`--run-dir` for older runs or custom screenshot locations.
+Without `--run-dir`, ownership review uses the newest `scan-*` folder under the
+project's `screenshots` directory by creation time. The selected path is logged
+before OCR starts.
 
-This offline pass uses all available saved catalog snapshots to validate the
-shared name mapping, but only the selected site's IDs enter its plan. Its
-snapshot is required; if missing, refresh the run's catalogs with matching.
-Based on the confirmed
-collection-screen rule, a recognized COMMON/RARE/EPIC/LEGENDARY label means
-owned, a DISCOVER/JAPAN placeholder means unowned, and missing evidence is
-unknown (never assumed owned). OCR evidence is saved in
-`ownership-evidence.json`. The selected adapter's plan file contains
-deduplicated site IDs (tagged with its site ID) for positively owned, exactly
-matched cars and review reasons for uncertain ownership or missing site
-mappings. Review the evidence and plan before any sync. This command never
-updates a site and does not accept or store authentication cookies. Ownership
-is not inferred from the names-only output.
-
-### Browser login and garage sync
-
-The authentication capture shows Google OAuth via KudosPrime's HybridAuth.
-Log in interactively rather than replaying OAuth codes or copying cookies.
-HAR captures can contain credentials/tokens: do not share or commit them
-and invalidate exposed sessions. HAR files are excluded by `.gitignore`;
-the sync tool does not read them.
-
-First run ownership review and inspect `ownership-evidence.json` and
-`kudos-owned-plan.json`. Unknown ownership and cars without an exact site ID
-are excluded. If needed, update the name mapping and regenerate the plan.
-Preview the reviewed plan without logging in or sending requests:
-
-```powershell
-npm run sync -- --run-dir ".\screenshots\scan-YFrlNh"
-```
-
-With no `--run-dir`, `npm run sync` selects the newest `scan-*` directory
-under the project's `screenshots` folder by directory creation time and logs
-the selected path. Editing an older run does not make it the newest run.
-If the selected run has no ownership plan, sync stops with the exact
-`npm run ownership` command to generate it. It never falls back to an older
-plan or assumes matched names are owned. Review the generated evidence and
-plan before rerunning sync. For a custom screenshots location, specify
-`--run-dir` explicitly.
-
-To apply the reviewed plan:
-
-```powershell
-npm run sync -- --run-dir ".\screenshots\scan-YFrlNh" --apply
-```
-
-This requires Microsoft Edge installed. A visible dedicated reusable Edge session
-opens the car list. Log in normally, complete site verification, return to
-the FH6 car list, and press Enter in the terminal. Check the account and
-preview, then type the requested `APPLY <count>` confirmation. Closing or
-cancelling before confirmation sends no updates.
-
-Only additions are sent, sequentially, using `garage.set` with `action=add`,
-`set=1`, and the reviewed KudosPrime car ID. No cars are removed.
-Before posting, sync reads the account's owned (`garage=y`) and missing
-(`garage=n`) FH6 car lists through the authenticated browser session; the
-visible page and its filters do not matter. Cars already owned are confirmed
-without sending another addition (KudosPrime rejects duplicate adds with
-`garage.saveFailed`). If either list cannot be read (for example login or
-verification is required), the lists overlap, or a planned car is in neither or
-both lists, sync stops before sending any additions.
-API failures include the site's error code and message when available.
-Cookies and browser data remain in the dedicated local KudosPrime profile
-described below; no cookies are copied from your regular browser or exported
-into the run. The tool requires HTTP success and JSON `success: true` for each
-addition, stops on the first error, and writes a timestamped sync result
-file containing only car names/IDs and confirmed/uncertain statuses.
-Network timeouts may occur after the server applied an update; inspect the
-account before retrying uncertain entries. No retries are automatic.
-Live API behavior must be verified with your account; mock tests do not
-prove end-to-end garage updates.
-
-### ForzaGarage tracker sync
-
-ForzaGarage has no account or server-side garage API: its Car Tracker stores
-unlocked car IDs in the current browser's local storage. Generate and preview
-its plan with:
-
-```powershell
-npm run ownership -- --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage
-npm run sync -- --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage
-npm run sync -- --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage --apply
-```
-
-Runs created before this adapter was added need a ForzaGarage catalog snapshot.
-Rerun matching before ownership review to download the registered catalogs.
-If PowerShell strips npm options, invoke the CLI directly:
-`node --use-system-ca .\src\cli\match-ordinals.ts --run-dir ".\screenshots\scan-YFrlNh"`.
-Distinct tracker IDs with identical display names remain ambiguous and are
-excluded from the owned plan for manual review.
+This offline pass reads the run's saved `car-ordinals-source.json`, so run
+matching first. Based on the confirmed collection-screen rule, a recognized
+COMMON/RARE/EPIC/LEGENDARY label means owned, a DISCOVER/JAPAN placeholder means
+unowned, and missing evidence is unknown (never assumed owned). OCR evidence is
+saved in `ownership-evidence.json`. `owned-cars.json` lists each positively
+owned, identified car once by ordinal, with the tiles it came from, plus review
+reasons for unknown ownership or unidentified cars. Ownership is not inferred
+from the names-only output.
 
 ### Local saved-run dashboard
 
@@ -372,82 +233,42 @@ Start the local interface for an existing run (matching/ownership inputs can
 be generated from the dashboard if they are missing):
 
 ```powershell
-node .\src\cli\review-web.ts --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage
-# Or: npm.cmd run review:web -- --run-dir ".\screenshots\scan-YFrlNh" --site forzagarage
+node .\src\cli\review-web.ts --run-dir ".\screenshots\scan-YFrlNh"
+# Or: npm.cmd run review:web -- --run-dir ".\screenshots\scan-YFrlNh"
 ```
 
 Open `http://127.0.0.1:4173` (use `--port` to choose another port).
 
-- **Load selection** switches between saved `scan-*` runs and supported sites.
-- **Refresh catalogs & match names** downloads the registered public catalogs,
-  updates the shared name mapping's suggestions and writes the matching outputs.
+- **Load selection** switches between saved `scan-*` runs.
+- **Match names to ordinals** updates the shared name mapping's suggestions and
+  writes the matching outputs.
 - **Run ownership OCR** processes existing tiles with progress in the job log.
   Both jobs run sequentially; inputs/selection are locked while a job is running.
 - Review filters show unresolved owned cars, owned, unknown, unowned, all tiles
   or manually matched tiles. Each tile displays its image and original OCR.
 - **Save ownership correction** requires inspecting the tile and checking the
   verification box. Corrections are recorded in `ownership-overrides.json`;
-  the original OCR evidence is retained. Corrections apply across sites for
-  this run and survive subsequent OCR passes. **Restore OCR classification**
-  removes a correction.
-- **Save match & next** confirms an exact site ID. Suggested catalog cars are
+  the original OCR evidence is retained and corrections survive later OCR
+  passes. **Restore OCR classification** removes a correction.
+- **Save match & next** pins the tile to a car by ordinal. Suggested cars are
   not automatically accepted; search all cars when years or branding differ.
-- **Regenerate owned plan** rebuilds the selected site's plan from evidence,
-  ownership corrections and mappings, without OCR.
-- **Preview sync plan** lists the actual saved additions and excluded reasons.
-  Regenerate if another site's plan is stale after ownership changes.
-- **Open Edge for sync** opens a dedicated reusable KudosPrime session or a
-  temporary ForzaGarage session, but sends no additions.
-  Verify login/starting collection, check the destination confirmation box,
-  type `APPLY <count>` exactly, then choose **Apply confirmed plan**. The
-  dashboard shows sequential progress, audit path, errors and the collection
-  share link where supported. **Close Edge / cancel session** is available
-  before applying and after completion/failure, not during active updates.
+- **Rewrite owned-cars.json** rebuilds the list from evidence, ownership
+  corrections and matches, without OCR.
 
-Each save records the exact site ID in the run's `forzagarage-car-mapping.json`
-and regenerates `forzagarage-owned-plan.json` from saved ownership evidence
-without rerunning OCR. This handles duplicate display names by selecting an
-explicit ID. Matches apply to individual tiles, do not edit the shared
-`car-name-mapping.json`, and are also honored by subsequent ownership review.
-Unknown/unowned tiles are excluded until you explicitly verify and save an
-owned correction.
-**Remove manual match** restores normal matching; **Skip for now** saves nothing.
+Each save records the tile's ordinal in the run's `car-matches.json` and
+rewrites `owned-cars.json` without rerunning OCR. Matches apply to individual
+tiles, do not edit the shared `car-name-mapping.json`, and are also honored by
+later ownership review. Unknown/unowned tiles are left out until you explicitly
+verify and save an owned correction. **Remove manual match** restores normal
+matching; **Skip for now** saves nothing.
 
-The server binds only to loopback; screenshots and OCR stay local. No tracker
-updates are sent without explicit sync confirmation. Stale dashboard edits
-and changed plans are rejected. Use **Reload local files** after external
-edits to evidence, catalogs or mappings. Failed syncs stop immediately and
-retain the Edge window for inspection; inspect audit results and the
-destination before retrying uncertain entries. No retries are automatic.
-Close the sync browser after copying any share link. Ctrl+C stops the server.
-New capture/keyboard automation stays in the terminal (`npm run run`).
+The server binds only to loopback; screenshots and OCR stay local and nothing
+is sent to a tracker site. Stale dashboard edits are rejected. Use **Reload
+local files** after external edits to evidence, catalogs or mappings. Ctrl+C
+stops the server. New capture/keyboard automation stays in the terminal
+(`npm run run`).
 
-KudosPrime sync (dashboard and CLI) uses a dedicated reusable Edge profile at
-`%LOCALAPPDATA%\fh-scanner\browser-profiles\kudosprime`, outside the project and
-OneDrive. Login, verification cookies and other browser data persist locally
-after closing Edge. Your regular Edge profile is never opened or copied.
-Only one scanner session can use this profile at a time. Always check the
-logged-in account before confirming a sync. To reset the login/browser data,
-close all scanner sync sessions, then delete only that dedicated profile folder.
-KudosPrime also uses experimental automation-flag compatibility settings:
-it omits `--enable-automation`, sets
-`--disable-blink-features=AutomationControlled`, and initializes
-`navigator.webdriver` to `undefined` in new documents. These settings do not
-solve interactive challenges or guarantee the site accepts automated browsers.
-No `--no-sandbox` argument is added. ForzaGarage does not use these settings.
-If verification keeps looping, close the sync session without applying.
-
-ForzaGarage sync opens a temporary Edge session. If you already have ForzaGarage
-progress, open its existing “Share my garage” link in that window and choose
-“Load this collection” before confirming the plan; otherwise the temporary
-session starts with an empty collection. The adapter marks cars through the
-tracker UI and verifies the browser-storage update. It does not contact an
-account API or remove cars. Afterward, the shareable collection URL is written
-to a timestamped `forzagarage-sync-*.url.txt` file in the run directory. Open
-that URL in your regular browser and choose “Load this collection” to transfer
-the updated list. Loading a share link replaces the current selection in that
-browser, so preserve any existing progress first. The selected car IDs are
-encoded in the URL fragment and are not sent to ForzaGarage's server.
+### Collection capture details
 
 Install dependencies with `npm install`, then run `npm run run` with
 the streaming window open and positioned on the first page of cars.
@@ -477,9 +298,9 @@ The scanner runs in four phases:
 3. Initialize OCR and process each tile's model/year/manufacturer text area,
    using grayscale, normalization, thresholding, enlargement, and white padding. Raw OCR text is
    printed and saved alongside each tile.
-4. Match OCR text against the [HDR ordinal catalog](https://gist.github.com/HDR/fe980cb41c64bdc264dca7bd8c9cdfdc)
-   and [KudosPrime FH6 names](https://www.kudosprime.com/fh6/fh6_cars_id_names.js)
-   and ForzaGarage's [FH6 Car Tracker](https://forzagarage.com/car-tracker/);
+4. Match OCR text against the FH6 ordinals in the sibling forzagarage project's
+   `car-ids` map (`..\forzagarage\car-ids\data\car-ids.json`, installed as
+   `@forzagarage/car-ids`; rebuild it there with `npm run build:data`),
    then export deduplicated matched catalog names.
 
 No OCR runs during capture, and no keyboard input is sent during splitting
@@ -517,20 +338,15 @@ Each run directory contains:
   text, and up to five suggested catalog entries for manual review.
 - `ordinal-matches.txt`: confirmed source identifier, catalog name, and source tile
   for every match, including repeated captured cars.
-  HDR identifiers are Forza ordinals; site IDs are explicitly prefixed by
-  their adapter ID (for example, `kudosprime:` or `forzagarage:`) and are not
-  Forza ordinals.
-- `car-ordinals-source.json`: the downloaded catalog snapshot used for matching.
-- `kudosprime-source.js`: the downloaded KudosPrime data snapshot. Its JSON
-  array is parsed as data; downloaded JavaScript is never executed.
-- `forzagarage-source.json`: the compact ForzaGarage tracker catalog snapshot.
+  The identifier is the FH6 ordinal from car-ids.
+- `car-ordinals-source.json`: the car-ids name→ordinal snapshot used for matching.
+  A name car-ids gives two ordinals (e.g. `2025 GR GT Prototype`) is left out
+  and goes to review.
 
-Exact normalized matches search all available catalogs. When multiple sources
-match the same normalized name, the HDR name/ordinal takes precedence. Existing
-manual selections always take precedence. Pending mappings that now have an
-exact site-catalog match are resolved automatically; fuzzy suggestions still
-require manual selection. Suggestions include same-year names from the
-available catalogs. Site-only output retains the catalog's capitalization.
+Existing manual selections always take precedence. When matching, a selection that names
+an older spelling (the old HDR gist or KudosPrime's upper case) is moved to the
+car-ids name for the same car; one car-ids doesn't know goes back to review. Fuzzy suggestions
+always require manual selection.
 
 Automatic matches require the complete year/manufacturer/model to agree after
 case, accents, spacing, and punctuation normalization. Similar names, different
@@ -581,7 +397,7 @@ including selections and entries absent from the current run, are preserved;
 unresolved candidate lists encountered in the current run are refreshed with
 same-year suggestions. Missing captured names are appended. Legacy `null` entries encountered
 in a run are upgraded to choice objects with ranked candidates, leaving
-`selected` null unless an exact KudosPrime match is now available.
+`selected` null.
 Invalid JSON or a catalog name not present in the selected catalog raises an
 error instead of ignoring the edit. A catalog snapshot must contain all
 resolved targets in the mapping.
@@ -596,21 +412,18 @@ Process an existing run's OCR files without recapturing or rerunning OCR:
 npm run match
 # Or select a particular run:
 npm run match -- --run-dir ".\screenshots\scan-YFrlNh"
-# Offline/reproducible matching with a previously saved catalog:
-npm run match -- --run-dir ".\screenshots\scan-YFrlNh" --catalog ".\screenshots\scan-YFrlNh\car-ordinals-source.json" --kudos-catalog ".\screenshots\scan-YFrlNh\kudosprime-source.js" --forzagarage-catalog ".\screenshots\scan-YFrlNh\forzagarage-source.json"
+# Reproducible matching with a previously saved snapshot:
+npm run match -- --run-dir ".\screenshots\scan-YFrlNh" --catalog ".\screenshots\scan-YFrlNh\car-ordinals-source.json"
 ```
 
-Matching downloads the enabled public catalogs over HTTPS by default. To replay
-them offline, supply `--catalog`, `--kudos-catalog` and
-`--forzagarage-catalog` snapshot paths.
-Matching, ownership review and sync all default to the newest `scan-*` folder
+Matching reads car-ids locally by default; `--catalog` replays a saved
+`car-ordinals-source.json` instead.
+Matching and ownership review default to the newest `scan-*` folder
 by creation time under the project's `screenshots` directory and log the
 selected path. An explicit `--run-dir` overrides discovery. Missing input
 files fail on that selected run; commands never silently choose an older run.
 The scanner always creates a new run under the same default screenshots
 directory; `--screenshots-dir` overrides its output location.
-Supplying `--catalog` alone uses only HDR for compatibility with older runs; it cannot
-validate mappings that refer to site-only names.
 The npm `run` and `match` commands enable Node's `--use-system-ca` option
 to trust installed Windows certificate authorities without disabling TLS
 verification. For direct execution on networks with an enterprise CA, use
@@ -622,8 +435,8 @@ matching replaces generated matching files and snapshots but not the tile text.
 English OCR language data is installed through `@tesseract.js-data/eng`.
 The scanner uses the packaged LSTM data and local Tesseract engine; it does
 not download language data from a CDN or use a working-directory OCR cache.
-Dependency installation requires registry access. Ordinal matching separately
-requires GitHub access unless using the offline catalog option.
+Dependency installation requires registry access. Ordinal matching reads car-ids
+locally, so the forzagarage repo must be checked out next to this one.
 
 If OCR initialization fails, the scanner reports the error and exits with
 code 1. It terminates the OCR worker when leaving the processing phase.
@@ -638,7 +451,7 @@ the window, and crops its visible portion relative to that monitor.
 Restore minimized windows before scanning. A window spanning monitors is
 scanned only on the monitor containing its largest visible portion.
 
-Run `npm test` for ordinal matching, site isolation, ownership/sync failure handling,
+Run `npm test` for ordinal matching, ownership and owned-list building,
 navigation, options, screenshot-saving, car-tile, monitor/crop tests,
 and an OCR recognition smoke test without
 capturing the desktop or sending keyboard input. Run `npx tsc --noEmit` to

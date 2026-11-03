@@ -8,10 +8,9 @@
     "test:watch": "vitest --config src\\vitest.config.ts",
     "ownership": "node src\\cli\\review-ownership.ts",
     "review:web": "node src\\cli\\review-web.ts",
-    "sync": "node src\\cli\\sync-garage.ts --apply",
     "match": "node --use-system-ca src\\cli\\match-ordinals.ts",
-	"run": "node --use-system-ca src\\cli\\scanner.ts",
-	"capture:cloud": "node src\\cli\\cloud-capture.ts"
+    "run": "node --use-system-ca src\\cli\\scanner.ts",
+    "capture:cloud": "node src\\cli\\cloud-capture.ts"
   },
   "keywords": [],
   "author": "",
@@ -24,11 +23,12 @@
     "vitest": "^5.0.3"
   },
   "dependencies": {
+    "@forzagarage/car-ids": "file:../forzagarage/car-ids",
     "@nut-tree-fork/nut-js": "^4.2.6",
     "@tesseract.js-data/eng": "1.0.0",
+    "playwright": "^1.63.0",
     "screenshot-desktop": "^1.15.6",
     "sharp": "^0.35.5",
-    "playwright": "^1.63.0",
     "tesseract.js": "^7.0.0"
   }
 }

@@ -1,15 +1,13 @@
 import { readFile, rename, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
+import { hdrCatalog } from "../catalogs/hdr.ts";
 import { defaultCarMappingPath, loadCarNameMapping, matchCarText } from "../collection/car-matching.ts";
-import { buildOwnedGaragePlan } from "../sites/garage-plan.ts";
-import type { SiteAdapter } from "../sites/types.ts";
 import type { OwnedCarInput } from "../ocr/car-ownership.ts";
-import { loadOwnershipCatalogs } from "../workflows/ownership-input.ts";
-import { loadSiteMapping, parseSiteMapping, siteMappingPath } from "../workflows/site-mapping.ts";
+import { loadOwnershipCatalog } from "../workflows/ownership-input.ts";
+import { buildOwnedCars, loadManualMatches, manualMatchesFile, ownedCarsFile, parseManualMatches } from "../workflows/owned-cars.ts";
 import { applyOwnershipOverrides, loadOwnershipOverrides, ownershipOverridesFile } from "../workflows/ownership-overrides.ts";
 import type { OwnershipStatus } from "../workflows/ownership-overrides.ts";
-import { siteAdapters } from "../sites/registry.ts";
 
 export function parseOwnershipEvidence(value: unknown): OwnedCarInput[] {
 	if (!Array.isArray(value) || !value.length) throw new Error("Ownership evidence must contain captured cars. Run ownership review first.");
@@ -41,11 +39,10 @@ export async function replaceJson(path: string, value: unknown) {
 	}
 }
 
-export async function createReviewData(directory: string, site: SiteAdapter, mappingPath = defaultCarMappingPath) {
+export async function createReviewData(directory: string, mappingPath = defaultCarMappingPath) {
 	const inputPaths = [
-		mappingPath, join(directory, "ownership-evidence.json"), join(directory, "car-ordinals-source.json"),
-		siteMappingPath(directory, site), join(directory, ownershipOverridesFile),
-		...siteAdapters.map((adapter) => join(directory, adapter.catalog.snapshotFile)),
+		mappingPath, join(directory, "ownership-evidence.json"), join(directory, hdrCatalog.snapshotFile),
+		join(directory, manualMatchesFile), join(directory, ownershipOverridesFile),
 	];
 	async function inputContents() {
 		return Promise.all(inputPaths.map(async (path) => {
@@ -60,23 +57,22 @@ export async function createReviewData(directory: string, site: SiteAdapter, map
 	async function assertCurrent() {
 		const current = await inputContents();
 		if (current.some((content, index) => content !== expectedInputs[index])) {
-			throw new Error("Local inputs changed outside this dashboard. Reload local files before saving or syncing.");
+			throw new Error("Local inputs changed outside this dashboard. Reload local files before saving.");
 		}
 	}
-	const entries = await loadOwnershipCatalogs(directory, site);
-	const catalog = entries.filter((entry) => entry.siteIds?.[site.id] !== undefined);
+	const entries = await loadOwnershipCatalog(directory);
 	const mapping = await loadCarNameMapping(mappingPath, entries);
 	const cars = parseOwnershipEvidence(JSON.parse(await readFile(join(directory, "ownership-evidence.json"), "utf8")));
-	let manual = await loadSiteMapping(directory, site, entries);
+	let manual = await loadManualMatches(directory, entries);
 	let overrides = await loadOwnershipOverrides(directory);
-	const catalogItems = catalog.map((entry) => ({ id: entry.siteIds![site.id]!, name: entry.name }));
-	const plan = () => buildOwnedGaragePlan(applyOwnershipOverrides(cars, overrides), entries, mapping, site, manual);
+	const catalogItems = entries.map((entry) => ({ id: entry.ordinal!, name: entry.name }));
+	const owned = () => buildOwnedCars(applyOwnershipOverrides(cars, overrides), entries, mapping, manual, directory);
+	const writeOwned = () => replaceJson(join(directory, ownedCarsFile), owned());
 	function snapshot() {
-		const currentPlan = plan();
+		const current = owned();
 		const items = applyOwnershipOverrides(cars, overrides).map((car) => {
-			const confirmed = currentPlan.owned.find((owned) => owned.sources.includes(car.source));
-			const match = matchCarText(car, catalog);
-			const suggestions = match.candidates.map((entry) => entry.siteIds![site.id]!);
+			const confirmed = current.cars.find((ownedCar) => ownedCar.sources.includes(car.source));
+			const match = matchCarText(car, entries);
 			return {
 				source: car.source,
 				text: car.text,
@@ -85,24 +81,24 @@ export async function createReviewData(directory: string, site: SiteAdapter, map
 				ownership: car.ownership.status,
 				ownershipOverride: Object.hasOwn(overrides, car.source),
 				ocrOwnership: cars.find((original) => original.source === car.source)!.ownership.status,
-				selectedId: confirmed?.id ?? null,
+				selectedId: confirmed ? String(confirmed.ordinal) : null,
 				manual: Object.hasOwn(manual, car.source),
-				reason: currentPlan.review.find((reason) => reason.startsWith(`${car.source}:`)) ?? "",
-				suggestions,
+				reason: current.review.find((reason) => reason.startsWith(`${car.source}:`)) ?? "",
+				suggestions: match.candidates.map((entry) => entry.ordinal!),
 			};
 		});
-		return { directory, site: site.id, label: site.label, catalog: catalogItems, items,
-			ownedCount: currentPlan.owned.length, reviewCount: currentPlan.review.length,
+		return { directory, catalog: catalogItems, items,
+			ownedCount: current.cars.length, reviewCount: current.review.length,
 			unknownCount: items.filter((car) => car.ownership === "unknown").length };
 	}
 	return {
 		cars,
 		snapshot,
-		plan,
+		owned,
 		assertCurrent,
 		async regenerate() {
 			await assertCurrent();
-			await replaceJson(join(directory, site.planFile), plan());
+			await writeOwned();
 			return snapshot();
 		},
 		async saveOwnership(source: string, status: OwnershipStatus | null) {
@@ -115,23 +111,23 @@ export async function createReviewData(directory: string, site: SiteAdapter, map
 			await replaceJson(join(directory, ownershipOverridesFile), next);
 			overrides = next;
 			expectedInputs = await inputContents();
-			await replaceJson(join(directory, site.planFile), plan());
+			await writeOwned();
 			return snapshot();
 		},
-		async save(source: string, id: string | null) {
+		/** Pins a tile to a car by ordinal, or clears the pin with null. */
+		async save(source: string, ordinal: string | null) {
 			await assertCurrent();
 			if (!applyOwnershipOverrides(cars, overrides).some((car) => car.source === source && car.ownership.status === "owned")) {
 				throw new Error("Select a captured car with verified owned evidence.");
 			}
 			const next = { ...manual };
-			if (id === null) delete next[source];
-			else next[source] = id;
-			parseSiteMapping({ site: site.id, matches: next }, site, entries);
-			const nextPlan = buildOwnedGaragePlan(applyOwnershipOverrides(cars, overrides), entries, mapping, site, next);
-			await replaceJson(siteMappingPath(directory, site), { site: site.id, matches: next });
+			if (ordinal === null) delete next[source];
+			else next[source] = ordinal;
+			parseManualMatches({ matches: next }, entries);
+			await replaceJson(join(directory, manualMatchesFile), { matches: next });
 			manual = next;
 			expectedInputs = await inputContents();
-			await replaceJson(join(directory, site.planFile), nextPlan);
+			await writeOwned();
 			return snapshot();
 		},
 	};

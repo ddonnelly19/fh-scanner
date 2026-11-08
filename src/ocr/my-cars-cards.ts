@@ -345,8 +345,8 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		let nameComplete = true;
 		if (!car) issues.push("Could not read the car's name, year and manufacturer.");
 		else {
-			// Text too long for the card ends in an ellipsis, which OCR reads as dots or a single glyph.
-			const ellipsis = /\s*(?:\.{2,}|…|,{2,})$/;
+			// Text too long for the card ends in an ellipsis, which OCR reads as one or more dots or a single glyph.
+			const ellipsis = /\s*(?:\.+|…|,{2,})$/;
 			const name = car.name.replace(ellipsis, "");
 			const manufacturer = car.manufacturer.replace(ellipsis, "");
 			if (name !== car.name || manufacturer !== car.manufacturer) {

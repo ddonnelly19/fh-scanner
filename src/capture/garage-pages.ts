@@ -21,8 +21,11 @@ export interface GaragePagesActions {
 
 export interface GaragePagesOptions {
 	right: string;
+	/** Longest wait for a move to show, and then for the screen to stop changing. */
 	settleMs: number;
 	maxPages: number;
+	/** How often the screen is checked while waiting; defaults to 150 ms. */
+	pollMs?: number;
 }
 
 /** A card with its column counted from the first column of the whole grid. */
@@ -78,13 +81,30 @@ export async function pageGarage(
 	let reads: Promise<void> = Promise.resolve();
 	let readError: unknown;
 	const sorted = () => [...cards.values()].sort((a, b) => a.column - b.column || a.row - b.row);
+	const pollMs = options.pollMs ?? 150;
 	async function move(from: Buffer): Promise<Buffer | null> {
-		// A move that changes nothing is retried once, since streams occasionally drop a key press.
+		// A move that changes nothing is retried once, since streams occasionally drop a key press. Instead of a fixed
+		// wait, the screen is checked every pollMs: the move counts once the screen differs from before and has
+		// stopped scrolling, which on a stream usually takes well under the settle time.
 		for (let attempt = 0; attempt < 2; attempt++) {
 			await actions.press(options.right);
-			await actions.wait(options.settleMs);
-			const current = await actions.capture();
-			if (!await actions.isSameScreen(from, current)) return current;
+			let waited = 0;
+			let current: Buffer | null = null;
+			do {
+				const step = Math.min(pollMs, options.settleMs - waited);
+				await actions.wait(step);
+				waited += step;
+				const capture = await actions.capture();
+				if (!await actions.isSameScreen(from, capture)) current = capture;
+			} while (!current && waited < options.settleMs);
+			if (!current) continue;
+			for (let settled = 0; settled < options.settleMs; settled += pollMs) {
+				await actions.wait(pollMs);
+				const next = await actions.capture();
+				if (await actions.isSameScreen(current, next)) return next;
+				current = next;
+			}
+			return current;
 		}
 		return null;
 	}
@@ -135,6 +155,8 @@ export async function pageGarage(
 	}
 	try {
 		let current = await actions.capture();
+		// Right on the last car wraps to the first, so seeing the starting screen again also ends the grid.
+		const firstScreen = current;
 		let layout = await actions.layout(current);
 		const start = layout.cards.find((card) => card.selected);
 		if (!start || start.row !== 0) throw new Error("Select a car in the top row of My Cars before paging; Right keeps the row.");
@@ -150,7 +172,8 @@ export async function pageGarage(
 			if (nextColumn <= selectedColumn) throw new Error("The highlighted card is not in a fully visible column.");
 			let moved = false;
 			while (selectedColumn < nextColumn) {
-				const next = await move(current);
+				const shown = await move(current);
+				const next = shown && await actions.isSameScreen(firstScreen, shown) ? null : shown;
 				if (!next) {
 					// The final screen is captured too, unless the grid had already stopped scrolling and it shows
 					// nothing new.

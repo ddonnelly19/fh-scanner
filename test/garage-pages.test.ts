@@ -7,7 +7,7 @@ import type { CardLayout, CardReading } from "../src/ocr/my-cars-cards.ts";
  * column and scrolls it to the left edge until the last columns are on screen; after that the highlight moves
  * across the screen. Screens are JSON of the visible state.
  */
-function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), visible = 4) {
+function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), visible = 4, wrap = false) {
 	const state = { selected: 0, presses: 0 };
 	const pressed: string[] = [];
 	const files = new Map<string, Buffer>();
@@ -24,7 +24,7 @@ function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), v
 			press: async (key: string) => {
 				pressed.push(key);
 				if (dropPresses.has(++state.presses)) return;
-				if (key === "ArrowRight") state.selected = Math.min(state.selected + 1, heights.length - 1);
+				if (key === "ArrowRight") state.selected = wrap && state.selected === heights.length - 1 ? 0 : Math.min(state.selected + 1, heights.length - 1);
 			},
 			wait: async () => {},
 			layout: async (image: Buffer): Promise<CardLayout> => {
@@ -90,6 +90,27 @@ describe("garage paging", () => {
 		const result = await pageGarage(grid.actions, options, async () => {});
 		expect(result.status).toBe("completed");
 		expect(positions(result.cars)).toEqual(expected(heights));
+	});
+	it("moves on as soon as the screen settles instead of waiting the full settle time", async () => {
+		const heights = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+		const grid = simulateGrid(heights, new Set([2]));
+		const waits: number[] = [];
+		grid.actions.wait = async (milliseconds: number) => { waits.push(milliseconds); };
+		const result = await pageGarage(grid.actions, { ...options, settleMs: 1200, pollMs: 150 }, async () => {});
+		expect(positions(result.cars)).toEqual(expected(heights));
+		// Each move that shows: one poll to see the change, one to confirm it settled. The dropped press waits the full
+		// 1200 ms (eight polls) before its retry, and the end of the grid waits it out twice.
+		const total = waits.reduce((sum, wait) => sum + wait, 0);
+		const moves = heights.length - 1;
+		expect(total).toBe(moves * 300 + 1200 + 2 * 1200);
+	});
+	it("stops when Right wraps from the last car back to the first", async () => {
+		const heights = [3, 2, 3, 1, 3, 3, 2, 3, 3, 1];
+		const grid = simulateGrid(heights, new Set(), 4, true);
+		const result = await pageGarage(grid.actions, options, async () => {});
+		expect(result.status).toBe("completed");
+		expect(positions(result.cars)).toEqual(expected(heights));
+		expect(result.pages.map((page) => page.firstColumn)).toEqual([0, 4, 6]);
 	});
 	it("reports a card read differently on overlapping pages instead of picking one", async () => {
 		const heights = [1, 1, 1, 1, 1, 1];

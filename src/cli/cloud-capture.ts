@@ -15,6 +15,7 @@ import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
 import { assertSignedIn } from "../capture/session-check.ts";
+import { listDisplays, pickDisplay } from "../capture/displays.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
 const { values, positionals } = parseArgs({
@@ -28,6 +29,7 @@ const { values, positionals } = parseArgs({
 		"max-pages": { type: "string", default: "1000" },
 		"max-cars": { type: "string", default: "2000" },
 		"settle-ms": { type: "string", default: "1200" },
+		display: { type: "string", default: "internal" },
 	},
 });
 const provider = positionals[0] ?? "geforce";
@@ -37,7 +39,7 @@ const settleMs = Number(values["settle-ms"]);
 if (positionals.length > 1 || values.image?.trim() === "" ||
 	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000]]");
 }
 
 const urls: Record<string, string> = {
@@ -55,12 +57,19 @@ async function capture(): Promise<Buffer | undefined> {
 	const localAppData = process.env.LOCALAPPDATA;
 	if (!localAppData) throw new Error("LOCALAPPDATA is not available.");
 	const profileDirectory = join(localAppData, "fh-scanner", "browser-profiles", provider);
+	const display = pickDisplay(await listDisplays(), values.display!);
+	if (display) console.log(`Opening on ${display.name}${display.internal ? " (built-in screen)" : ""}, ${display.width}x${display.height}.`);
 	const context = await chromium.launchPersistentContext(profileDirectory, {
 		channel: "msedge",
 		headless: false,
-		// A fixed viewport larger than the window clips the visible page; full screen keeps the game on screen at 16:9.
+		// A fixed viewport larger than the window clips the visible page; full screen keeps the game on screen.
 		viewport: null,
-		args: ["--start-fullscreen"],
+		// --start-fullscreen left the page about 40 px short of the screen; kiosk mode fills it, so the capture is the
+		// whole screen and cropToGame trims any bars. Sign-in keeps a normal window so its pages and prompts work.
+		args: [
+			...display ? [`--window-position=${display.x},${display.y}`] : [],
+			values.login ? "--start-maximized" : "--kiosk",
+		],
 	});
 	const prompt = createInterface({ input: stdin, output: stdout });
 	try {

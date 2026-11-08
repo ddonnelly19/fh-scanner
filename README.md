@@ -62,6 +62,21 @@ temporary is dropped when the browser closes. Nothing is typed for you and the
 terminal never sees credentials, so you can do this through a remote desktop
 (Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
 
+### Choosing the screen
+
+Captures open on the laptop's built-in screen by default, so a run works the
+same when external monitors are unplugged. Pass `--display primary` for the
+primary screen or `--display 2` for `\\.\DISPLAY2` (the numbers Windows uses);
+without a built-in screen, `internal` falls back to the primary one. The
+terminal prints which screen it chose.
+
+Capture modes open Edge in kiosk mode, which fills the whole screen (normal full
+screen left the page about 40 px short). Kiosk mode has no address bar or tabs;
+the scanner closes it when the run ends, or press Alt+F4. A screen that isn't
+16:9 adds black bars, which are cropped before anything is read: the built-in
+3:2 screen gives a 1920x1080 game picture. `--login` opens a normal maximized
+window instead.
+
 Every capture mode (`--walk`, `--pages`, `--record` and the single capture) now
 checks the browser's URL before each screenshot and key press. If the stream
 tab has been sent to a provider sign-in page, the run stops with a message to
@@ -115,8 +130,8 @@ do not share or commit them.
 npm run capture:cloud -- geforce --walk
 ```
 
-Use `xbox` instead of `geforce` for Xbox Cloud. Edge opens full screen (press
-F11 if it doesn't) on a 16:9 monitor. Launch the game, open **My Cars**,
+Use `xbox` instead of `geforce` for Xbox Cloud. Edge opens in kiosk mode, filling
+the screen (see "Choosing the screen" below). Launch the game, open **My Cars**,
 select the first (top-left) car, click the stream to focus it, hide overlays,
 then press Enter. Don't touch the stream while the walk runs.
 

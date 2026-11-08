@@ -38,7 +38,7 @@ export async function checkGameFrame(image: Buffer): Promise<void> {
 	const { width, height } = await sharp(image).metadata();
 	if (!width || !height || Math.abs(width / height - gameAspect) > tolerance) {
 		throw new Error(`The game picture is ${width}x${height}, not 16:9, even after cropping black bars. ` +
-			"Make the game fill the browser at 16:9 (press F11 for full screen, or use a 16:9 monitor) and try again.");
+			"Make the game fill the screen (the capture opens in kiosk mode; if it doesn't, press F11) and try again.");
 	}
 	try {
 		await findSelectedTile(image);

@@ -75,6 +75,10 @@ async function capture(): Promise<Buffer | undefined> {
 	try {
 		const page = context.pages()[0] ?? await context.newPage();
 		await page.goto(url!);
+		// The profile restores earlier tabs and kiosk mode adds a blank one; kiosk shows a single tab, often not this
+		// one, so the stream would run in a hidden tab behind a white screen. Keep only the tab the scanner drives.
+		for (const other of context.pages()) if (other !== page) await other.close();
+		await page.bringToFront();
 		if (values.login) {
 			await login(page, prompt, profileDirectory);
 			return undefined;

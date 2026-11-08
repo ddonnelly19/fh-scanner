@@ -166,6 +166,10 @@ export interface IconMatch {
 // 0.96: Slick vs Semi-Slick, AWD with the engine elsewhere, or a chunkier off-road tread against Rally.
 export const iconMatchThreshold = 0.97;
 export const iconMatchMargin = 0.03;
+// At 1920 wide Slick and Semi-Slick differ only by a thin inner ring: the right one scores 0.98-1.00 and the other
+// about 0.022 less. A near-perfect match therefore needs a smaller lead.
+export const iconStrongMatch = 0.98;
+export const iconStrongMatchMargin = 0.015;
 /** Below this best score an icon area holds no icon at all; a real but unknown icon still scores 0.6 or more. */
 export const blankIconScore = 0.3;
 /** Tires recorded for a card without a tire icon. */
@@ -188,7 +192,8 @@ export function matchIcon(area: Uint8Array, areaWidth: number, areaHeight: numbe
 	const ranked = [...best.entries()].sort((a, b) => b[1] - a[1]);
 	const [label, score] = ranked[0] ?? [null, 0];
 	const runnerUp = ranked[1]?.[1] ?? 0;
-	return { label: label !== null && score >= iconMatchThreshold && score - runnerUp >= iconMatchMargin ? label : null, score, runnerUp };
+	const margin = score >= iconStrongMatch ? iconStrongMatchMargin : iconMatchMargin;
+	return { label: label !== null && score >= iconMatchThreshold && score - runnerUp >= margin ? label : null, score, runnerUp };
 }
 
 /** The card area searched for an icon: its template box plus a margin on every side. */

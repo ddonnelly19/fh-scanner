@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSameSelection, mergeCarPanels, walkGarage } from "../src/capture/garage-walk.ts";
+import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSamePanel, isSameSelection, mergeCarPanels, walkGarage } from "../src/capture/garage-walk.ts";
 import type { GarageCar } from "../src/capture/garage-walk.ts";
 import type { CarPerformance } from "../src/ocr/car-performance.ts";
 
@@ -33,6 +33,7 @@ function simulateGarage(heights: number[], dropPresses: Set<number> = new Set())
 	const state = { column: 0, row: 0, panel: "ratings" as CarPerformance["panel"], presses: 0 };
 	const pressed: string[] = [];
 	const saved: string[] = [];
+	const files = new Map<string, Buffer>();
 	const number = (column: number, row: number) => heights.slice(0, column).reduce((sum, height) => sum + height, 0) + row + 1;
 	const screen = () => Buffer.from(JSON.stringify({
 		car: number(state.column, state.row), column: state.column, row: state.row, panel: state.panel,
@@ -70,7 +71,10 @@ function simulateGarage(heights: number[], dropPresses: Set<number> = new Set())
 				parse(previous).column === parse(current).column && parse(current).row === parse(previous).row + 1,
 			hasTileBelow: async (image: Buffer) => parse(image).row + 1 < heights[parse(image).column]!,
 			selectionTop: async (image: Buffer) => 0.2 + 0.23 * parse(image).row,
-			saveScreenshot: async (name: string) => { saved.push(name); },
+			isSamePanel: async (previous: Buffer, current: Buffer) =>
+				(JSON.parse(previous.toString()) as { panel: string }).panel === (JSON.parse(current.toString()) as { panel: string }).panel,
+			saveScreenshot: async (name: string, image: Buffer) => { saved.push(name); files.set(name, image); },
+			loadScreenshot: async (name: string) => files.get(name)!,
 			log: () => {},
 		},
 	};
@@ -127,6 +131,37 @@ describe("garage walk", () => {
 		});
 		expect(garage.saved.slice(0, 3)).toEqual(["car-0001-1.png", "car-0001-2.png", "car-0001-3.png"]);
 	});
+	it("moves on without waiting for OCR, then reports every car in walk order", async () => {
+		const garage = simulateGarage([1, 3, 2]);
+		let release!: () => void;
+		const gate = new Promise<void>((resolve) => { release = resolve; });
+		let pressesWhenFirstRead = -1;
+		const walking = walkGarage({
+			...garage.actions,
+			extract: async (image) => {
+				if (pressesWhenFirstRead < 0) pressesWhenFirstRead = garage.pressed.length;
+				await gate;
+				return garage.actions.extract(image);
+			},
+		}, walkOptions, async () => {});
+		// Let the walk run as far as it can while the first read is blocked.
+		for (let tick = 0; tick < 200; tick++) await Promise.resolve();
+		const pressedWhileBlocked = garage.pressed.length;
+		release();
+		const result = await walking;
+		expect(pressesWhenFirstRead).toBe(1);
+		expect(pressedWhileBlocked).toBe(garage.pressed.length);
+		expect(names(result.cars)).toEqual(numbered(6));
+	});
+	it("reports a failure to save a car as an interrupted walk", async () => {
+		const garage = simulateGarage([2, 2]);
+		const result = await walkGarage(garage.actions, walkOptions, async (car) => {
+			if (car.index === 2) throw new Error("disk full");
+		});
+		expect(result.status).toBe("interrupted");
+		expect(result.error).toBe("disk full");
+		expect(names(result.cars)).toEqual(["CAR 1", "CAR 2"]);
+	});
 	it("stops at the car limit", async () => {
 		const garage = simulateGarage([3, 3, 3]);
 		const result = await walkGarage(garage.actions, { ...walkOptions, maxCars: 3 }, async () => {});
@@ -150,6 +185,20 @@ describe("garage walk", () => {
 });
 
 describe("panel merge", () => {
+	it("keeps the longest reading of a name that scrolls on the tile", () => {
+		const car = (name: string) => ({ name, year: 1968, manufacturer: "ALFA ROMEO" });
+		const merged = mergeCarPanels(15, [
+			{ screenshot: "a.png", observation: observation("x", "ratings", { car: car("TODELTA TIPO 33/2 DAYT") }) },
+			{ screenshot: "b.png", observation: observation("x", "details", { car: car("33/2 DAYTONA A") }) },
+		]);
+		expect(merged.car).toEqual(car("TODELTA TIPO 33/2 DAYT"));
+		expect(merged.issues).toEqual([expect.stringContaining("disagree on car"), expect.stringContaining("scrolls on the tile")]);
+		const different = mergeCarPanels(16, [
+			{ screenshot: "a.png", observation: observation("x", "ratings", { car: car("GIULIA GTAM") }) },
+			{ screenshot: "b.png", observation: observation("x", "details", { car: car("4C") }) },
+		]);
+		expect(different.car).toBeNull();
+	});
 	it("reports disagreements and missing panels instead of choosing a value", () => {
 		const car = mergeCarPanels(1, [
 			{ screenshot: "a.png", observation: observation("ONE", "ratings") },
@@ -188,20 +237,39 @@ describe("panel merge", () => {
 	});
 });
 
+describe("panel comparison", () => {
+	const panel = (labels: string[], values: string[]) => sharp(Buffer.from(
+		'<svg width="1365" height="768"><rect width="100%" height="100%" fill="black"/>' +
+		labels.map((label, index) => `<text x="92" y="${370 + index * 32}" font-family="Arial" font-size="16" fill="white">${label}</text>` +
+			`<text x="250" y="${370 + index * 32}" font-family="Arial" font-size="16" fill="white">${values[index]}</text>`).join("") +
+		"</svg>",
+	)).png().toBuffer();
+	it("tells ratings from details by the label column", async () => {
+		const ratings = await panel(["Speed", "Handling", "Acceleration", "Launch", "Braking"], ["5.6", "4.9", "4.4", "4.0", "5.5"]);
+		const otherCar = await panel(["Speed", "Handling", "Acceleration", "Launch", "Braking"], ["7.7", "6.1", "8.0", "7.7", "6.3"]);
+		const details = await panel(["Power", "Torque", "Weight", "Front", "Displacement"], ["195 hp", "130 ft-lb", "2,627 lb", "62%", "1.80 l"]);
+		expect(await isSamePanel(ratings, otherCar)).toBe(true);
+		expect(await isSamePanel(ratings, details)).toBe(false);
+	});
+});
+
 describe("selection comparison", () => {
-	async function screen(tileLeft: number, label: string): Promise<Buffer> {
+	// The name sits at the top of a tile (and scrolls when it is long); the car picture fills the rest.
+	async function screen(tileLeft: number, picture: string, name = "NAME", nameShift = 0): Promise<Buffer> {
 		return sharp(Buffer.from(
 			'<svg width="1365" height="768"><rect width="100%" height="100%" fill="black"/>' +
 			`<rect x="${tileLeft}" y="150" width="230" height="175" fill="white" stroke="#caff00" stroke-width="3"/>` +
-			`<text x="${tileLeft + 115}" y="180" font-family="Arial" font-size="20" text-anchor="middle">${label}</text></svg>`,
+			`<text x="${tileLeft + 115 - nameShift}" y="175" font-family="Arial" font-size="20" text-anchor="middle">${name}</text>` +
+			`<text x="${tileLeft + 115}" y="260" font-family="Arial" font-size="28" text-anchor="middle">${picture}</text></svg>`,
 		)).png().toBuffer();
 	}
-	it("detects a moved highlight and a scrolled tile but not compression noise", async () => {
-		const base = await screen(535, "SPEEDTAIL");
+	it("detects a moved highlight and a scrolled grid but not compression noise or a scrolling name", async () => {
+		const base = await screen(535, "SPEEDTAIL", "AUTODELTA TIPO 33/2");
 		const noisy = await sharp(base).jpeg({ quality: 40 }).toBuffer();
 		expect(await isSameSelection(base, await sharp(noisy).png().toBuffer())).toBe(true);
-		expect(await isSameSelection(base, await screen(780, "SPEEDTAIL"))).toBe(false);
-		expect(await isSameSelection(base, await screen(535, "CHIRON"))).toBe(false);
+		expect(await isSameSelection(base, await screen(535, "SPEEDTAIL", "TODELTA TIPO 33/2 DAYT", 40))).toBe(true);
+		expect(await isSameSelection(base, await screen(780, "SPEEDTAIL", "AUTODELTA TIPO 33/2"))).toBe(false);
+		expect(await isSameSelection(base, await screen(535, "CHIRON", "AUTODELTA TIPO 33/2"))).toBe(false);
 	});
 	it("tells a move down the column from a jump into the column on the left", async () => {
 		const grid = (tiles: Array<[number, number, string]>, selected: [number, number]) => sharp(Buffer.from(

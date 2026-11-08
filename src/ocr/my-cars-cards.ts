@@ -4,7 +4,7 @@ import sharp from "sharp";
 import type { Region } from "sharp";
 import { PSM } from "tesseract.js";
 import type { Worker } from "tesseract.js";
-import { classForPi, findSelectedTile, mergeLineSpacing, parseCarIdentity, parsePerformance } from "./car-performance.ts";
+import { classForPi, findSelectedTile, mergeLineSpacing, parseCarIdentity } from "./car-performance.ts";
 import type { CarPerformance, TextEvidence } from "./car-performance.ts";
 import type { CatalogCar } from "./card-catalog.ts";
 
@@ -362,19 +362,31 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		const pi = await read("performance", piRegion, PSM.SINGLE_LINE, true, "0123456789", { height: 100 }, shapeWorker);
 		const piCheck = await read("performanceCheck", piRegion, PSM.SINGLE_LINE, true, "0123456789", { height: 100 });
 		// The class badge is small and often misread at 1920 wide ("BB", or nothing), but the class follows from the
-		// PI, so when both engines agree on the PI the class is taken from it and a different badge reading is reported.
-		const piValue = /^\d{3}$/.test(pi.replace(/\s/g, "")) ? Number(pi.replace(/\s/g, "")) : null;
-		const piAgreed = piValue !== null && piCheck.replace(/\s/g, "") === String(piValue);
-		let performance = parsePerformance(`${performanceClass} ${pi}`);
-		const piClass = piValue === null ? null : classForPi(piValue);
-		if (piAgreed && piClass) {
-			if (performance && performance.class !== piClass) {
-				issues.push(`Class badge read as ${performance.class}, but PI ${piValue} is class ${piClass}; used ${piClass}.`);
+		// PI. A PI counts when two reads agree on it, or when it is the only reading that fits the badge's class. When
+		// the first two reads don't agree, a blurred stream frame often reads better binarised at a larger size.
+		const digits = (text: string) => /^\d{3}$/.test(text.replace(/\s/g, "")) ? Number(text.replace(/\s/g, "")) : null;
+		const reads = [digits(pi), digits(piCheck)];
+		if (reads[0] === null || reads[0] !== reads[1]) {
+			const binarised = { height: 150, threshold: 128 };
+			reads.push(digits(await read("performanceRetry", piRegion, PSM.SINGLE_LINE, true, "0123456789", binarised, shapeWorker)));
+			reads.push(digits(await read("performanceRetryCheck", piRegion, PSM.SINGLE_LINE, true, "0123456789", binarised)));
+		}
+		const badge = performanceClass.replace(/\s/g, "").toUpperCase();
+		const badgeClass = ["D", "C", "B", "A", "S1", "S2", "R", "X"].includes(badge) ? badge : null;
+		const values = [...new Set(reads.filter((value): value is number => value !== null && classForPi(value) !== null))];
+		const agreed = values.filter((value) => reads.filter((other) => other === value).length >= 2);
+		const fitsBadge = (value: number) => badgeClass !== null && classForPi(value) === badgeClass;
+		const piValue = agreed.find(fitsBadge) ?? (agreed.length === 1 ? agreed[0]! : null) ??
+			(values.filter(fitsBadge).length === 1 ? values.find(fitsBadge)! : null);
+		let performance: CardReading["performance"] = null;
+		if (piValue !== null) {
+			const piClass = classForPi(piValue)!;
+			if (badgeClass && badgeClass !== piClass) {
+				issues.push(`Class badge read as ${badgeClass}, but PI ${piValue} is class ${piClass}; used ${piClass}.`);
 			}
-			performance = { class: piClass, pi: piValue! };
-		} else if (!performance) issues.push(`Could not read class and PI ("${performanceClass}" "${pi}").`);
-		else if (piCheck.replace(/\s/g, "") !== String(performance.pi)) {
-			issues.push(`OCR engines disagree on PI ("${pi}" vs "${piCheck}"); kept the shape-based reading.`);
+			performance = { class: piClass, pi: piValue };
+		} else {
+			issues.push(`Could not read class and PI ("${performanceClass}" "${reads.map((value) => value ?? "?").join("/")}").`);
 		}
 		const icons: Record<IconKind, string | null> = { drivetrain: null, tires: null };
 		for (const kind of ["drivetrain", "tires"] as const) {
@@ -385,10 +397,10 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 			else if (!match.label) issues.push(`Unknown ${kind} icon (best match ${match.score.toFixed(2)}, next ${match.runnerUp.toFixed(2)}).`);
 		}
 		for (const [field, item] of Object.entries(evidence)) {
-			// A lone class letter always gets a low confidence; parsePerformance already validates it. A rarity
-			// settled by the bar colour or a known word is confirmed whatever the text's confidence.
-			if (item.confidence < 60 && !["carSpacing", "performanceCheck", "performanceClass"].includes(field) &&
-				!(field === "rarity" && rarity !== null)) {
+			// A lone class letter always gets a low confidence. A rarity settled by the bar colour or a known word, or a
+			// PI confirmed as above, is accepted whatever the text's confidence.
+			if (item.confidence < 60 && !["carSpacing", "performanceClass"].includes(field) &&
+				!(field === "rarity" && rarity !== null) && !(field.startsWith("performance") && performance !== null)) {
 				issues.push(`Low OCR confidence for ${field}: ${item.confidence.toFixed(1)}.`);
 			}
 		}

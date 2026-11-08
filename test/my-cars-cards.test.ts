@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
 import {
-	buildIconTemplates, cardPixels, findCards, iconBoxes, iconSearchArea, loadIconTemplates, matchIcon, rarityFromColour, readCard,
+	buildIconTemplates, cleanYearLine, cardPixels, findCards, iconBoxes, iconSearchArea, loadIconTemplates, matchIcon, rarityFromColour, readCard,
 } from "../src/ocr/my-cars-cards.ts";
 import type { IconTemplate } from "../src/ocr/my-cars-cards.ts";
 import { createLocalOCRWorker } from "../src/ocr/ocr.ts";
@@ -125,6 +125,13 @@ describe("card icon matching", () => {
 			expect([item.width, item.height]).toEqual([iconBoxes[item.kind].width, iconBoxes[item.kind].height]);
 		}
 		expect(iconSearchArea("tires").width).toBeGreaterThan(iconBoxes.tires.width);
+	});
+	it("cleans a year line read on its own", () => {
+		expect(cleanYearLine("~~ 1970 PORSCHE ~~")).toBe("1970 PORSCHE");
+		expect(cleanYearLine("771990 MERCEDES-BENZ")).toBe("1990 MERCEDES-BENZ");
+		expect(cleanYearLine("© 2010FORD")).toBe("2010 FORD");
+		expect(cleanYearLine("~2020L0TUS")).toBe("2020 LOTUS");
+		expect(cleanYearLine("")).toBeNull();
 	});
 	it("names rarities by bar colour", () => {
 		expect(rarityFromColour(49, 173, 36)).toBe("COMMON");

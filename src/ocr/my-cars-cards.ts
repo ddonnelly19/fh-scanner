@@ -297,6 +297,17 @@ async function nameReachesEdges(image: Buffer, card: Region): Promise<boolean> {
 }
 
 /**
+ * Pulls "<year> <manufacturer>" out of a year line read on its own, which comes with stray marks from the gradient
+ * around it ("~~ 1970 PORSCHE ~~", "771990 MERCEDES-BENZ") and sometimes no space after the year or a 0 for an O.
+ */
+export function cleanYearLine(text: string): string | null {
+	const match = /(19\d{2}|2\d{3})(?!\d)\s*([A-Z][A-Z0-9 .&'-]*[A-Z0-9])/.exec(text.toUpperCase());
+	if (!match) return null;
+	const manufacturer = match[2]!.replace(/(?<=[A-Z])0|0(?=[A-Z])/g, "O");
+	return `${match[1]} ${manufacturer}`;
+}
+
+/**
  * Reads one card. As on the stats panel, `worker` is the LSTM recognizer and `shapeWorker` the legacy one:
  * PI digits come from the shape classifier and the LSTM reading cross-checks them.
  */
@@ -328,7 +339,8 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 			// out of the two-line read, so that line is read again on its own under the first line of the name.
 			const yearLine = await read("carYear", cardRegion(bounds, 8, 62, 630, 54), PSM.SINGLE_LINE, false, "", { height: 100 });
 			const name = mergeLineSpacing(title, titleSpacing).split("\n").map((line) => line.trim()).find(Boolean);
-			if (name) car = parseCarIdentity(`${name}\n${yearLine}`);
+			const details = cleanYearLine(yearLine);
+			if (name && details) car = parseCarIdentity(`${name}\n${details}`);
 		}
 		let nameComplete = true;
 		if (!car) issues.push("Could not read the car's name, year and manufacturer.");

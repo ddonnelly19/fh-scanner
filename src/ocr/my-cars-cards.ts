@@ -4,8 +4,9 @@ import sharp from "sharp";
 import type { Region } from "sharp";
 import { PSM } from "tesseract.js";
 import type { Worker } from "tesseract.js";
-import { findSelectedTile, mergeLineSpacing, parseCarIdentity, parsePerformance } from "./car-performance.ts";
+import { classForPi, findSelectedTile, mergeLineSpacing, parseCarIdentity, parsePerformance } from "./car-performance.ts";
 import type { CarPerformance, TextEvidence } from "./car-performance.ts";
+import type { CatalogCar } from "./card-catalog.ts";
 
 /** One card slot of the My Cars grid. Columns count from the leftmost fully visible column. */
 export interface CardSlot {
@@ -166,6 +167,14 @@ export interface IconMatch {
 // 0.96: Slick vs Semi-Slick, AWD with the engine elsewhere, or a chunkier off-road tread against Rally.
 export const iconMatchThreshold = 0.97;
 export const iconMatchMargin = 0.03;
+// At 1920 wide Slick and Semi-Slick differ only by a thin inner ring: the right one scores 0.98-1.00 and the other
+// about 0.022 less. A near-perfect match therefore needs a smaller lead.
+export const iconStrongMatch = 0.98;
+export const iconStrongMatchMargin = 0.015;
+/** Below this best score an icon area holds no icon at all; a real but unknown icon still scores 0.6 or more. */
+export const blankIconScore = 0.3;
+/** Tires recorded for a card without a tire icon. */
+export const stockTires = "Stock Tires";
 
 /**
  * Matches an icon area against the templates of one kind, sliding each template a few pixels to absorb
@@ -184,7 +193,8 @@ export function matchIcon(area: Uint8Array, areaWidth: number, areaHeight: numbe
 	const ranked = [...best.entries()].sort((a, b) => b[1] - a[1]);
 	const [label, score] = ranked[0] ?? [null, 0];
 	const runnerUp = ranked[1]?.[1] ?? 0;
-	return { label: label !== null && score >= iconMatchThreshold && score - runnerUp >= iconMatchMargin ? label : null, score, runnerUp };
+	const margin = score >= iconStrongMatch ? iconStrongMatchMargin : iconMatchMargin;
+	return { label: label !== null && score >= iconMatchThreshold && score - runnerUp >= margin ? label : null, score, runnerUp };
 }
 
 /** The card area searched for an icon: its template box plus a margin on every side. */
@@ -242,7 +252,7 @@ export async function loadIconTemplates(directory: string | URL = defaultIconDir
 	return templates;
 }
 
-export const rarities = ["COMMON", "RARE", "EPIC", "LEGENDARY"] as const;
+export const rarities = ["COMMON", "RARE", "EPIC", "LEGENDARY", "FORZA EDITION"] as const;
 
 /** Rarity by the colour of the card's rarity bar, used to cross-check the bar's text. */
 export function rarityFromColour(red: number, green: number, blue: number): string | null {
@@ -250,6 +260,7 @@ export function rarityFromColour(red: number, green: number, blue: number): stri
 	if (blue > red + 60 && green > red + 30) return "RARE";
 	if (red > green + 60 && blue > green + 60) return "EPIC";
 	if (red > blue + 100 && green > blue + 40) return "LEGENDARY";
+	if (blue > red + 100 && blue > green + 100) return "FORZA EDITION";
 	return null;
 }
 
@@ -266,6 +277,8 @@ export interface CardReading {
 	tires: string | null;
 	evidence: Record<string, TextEvidence>;
 	issues: string[];
+	/** The car-ids car this card was tied to by name, when matching ran and found exactly one. */
+	catalog?: CatalogCar | null;
 }
 
 /**
@@ -326,17 +339,20 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 				issues.push("Name scrolls on the highlighted card and may be cut off.");
 			}
 		}
-		// A letter whitelist made the LSTM drop C, O and P entirely; unrestricted it reads the word, sometimes in lower case.
-		const rarityText = await read("rarity", cardRegion(bounds, 16, 414, 300, 54), PSM.SINGLE_LINE, true, "",
-			{ height: 100, threshold: 180 });
-		const rarityWord = rarityText.toUpperCase().replace(/[^A-Z]/g, "");
-		let rarity: string | null = (rarities as readonly string[]).includes(rarityWord) ? rarityWord : null;
-		if (!rarity) issues.push(`Could not read rarity ("${rarityText}").`);
-		const barColour = await sharp(image).removeAlpha().extract(cardRegion(bounds, 320, 420, 120, 40)).stats();
+		// A letter whitelist made the LSTM drop C, O and P entirely; unrestricted it reads the word, sometimes in lower
+		// case. A fixed threshold lost the word at 1920 wide (read as "|" or nothing), so the crop is only normalised.
+		const rarityText = await read("rarity", cardRegion(bounds, 16, 414, 300, 54), PSM.SINGLE_LINE, true, "", { height: 100 });
+		const rarityWords = rarityText.toUpperCase().replace(/[^A-Z ]/g, "").trim().replace(/\s+/g, " ");
+		const textRarity = rarities.find((name) => rarityWords === name || rarityWords.endsWith(` ${name}`)) ?? null;
+		// Each rarity has its own bar colour, which is reliable at any size, so the colour decides and the text
+		// stands in only when the colour is unknown.
+		const barCrop = await sharp(image).removeAlpha().extract(cardRegion(bounds, 320, 420, 120, 40)).toBuffer();
+		const barColour = await sharp(barCrop).stats();
 		const colourRarity = rarityFromColour(...barColour.channels.slice(0, 3).map((channel) => channel.mean) as [number, number, number]);
-		if (rarity && colourRarity && colourRarity !== rarity) {
-			issues.push(`Rarity text "${rarity}" doesn't match the bar colour (${colourRarity}).`);
-			rarity = null;
+		const rarity: string | null = colourRarity ?? textRarity;
+		if (!rarity) issues.push(`Could not read rarity ("${rarityText}").`);
+		else if (colourRarity && textRarity && colourRarity !== textRarity) {
+			issues.push(`Rarity text "${textRarity}" doesn't match the bar colour (${colourRarity}); used the colour.`);
 		}
 		// The class letter is white on a class-coloured badge and the PI white on black, so they are read apart.
 		const performanceClass = await read("performanceClass", cardRegion(bounds, 462, 416, 60, 50), PSM.SINGLE_BLOCK, true, "DCBASRX12",
@@ -345,8 +361,18 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		const piRegion = cardRegion(bounds, 540, 416, 78, 50);
 		const pi = await read("performance", piRegion, PSM.SINGLE_LINE, true, "0123456789", { height: 100 }, shapeWorker);
 		const piCheck = await read("performanceCheck", piRegion, PSM.SINGLE_LINE, true, "0123456789", { height: 100 });
-		const performance = parsePerformance(`${performanceClass} ${pi}`);
-		if (!performance) issues.push(`Could not read class and PI ("${performanceClass}" "${pi}").`);
+		// The class badge is small and often misread at 1920 wide ("BB", or nothing), but the class follows from the
+		// PI, so when both engines agree on the PI the class is taken from it and a different badge reading is reported.
+		const piValue = /^\d{3}$/.test(pi.replace(/\s/g, "")) ? Number(pi.replace(/\s/g, "")) : null;
+		const piAgreed = piValue !== null && piCheck.replace(/\s/g, "") === String(piValue);
+		let performance = parsePerformance(`${performanceClass} ${pi}`);
+		const piClass = piValue === null ? null : classForPi(piValue);
+		if (piAgreed && piClass) {
+			if (performance && performance.class !== piClass) {
+				issues.push(`Class badge read as ${performance.class}, but PI ${piValue} is class ${piClass}; used ${piClass}.`);
+			}
+			performance = { class: piClass, pi: piValue! };
+		} else if (!performance) issues.push(`Could not read class and PI ("${performanceClass}" "${pi}").`);
 		else if (piCheck.replace(/\s/g, "") !== String(performance.pi)) {
 			issues.push(`OCR engines disagree on PI ("${pi}" vs "${piCheck}"); kept the shape-based reading.`);
 		}
@@ -354,11 +380,13 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		for (const kind of ["drivetrain", "tires"] as const) {
 			const match = await readIcon(image, bounds, kind, templates);
 			icons[kind] = match.label;
-			if (!match.label) issues.push(`Unknown ${kind} icon (best match ${match.score.toFixed(2)}, next ${match.runnerUp.toFixed(2)}).`);
+			// A card shows no tire icon when the car is on its stock tires: the area is blank, so nothing correlates.
+			if (kind === "tires" && match.score < blankIconScore) icons[kind] = stockTires;
+			else if (!match.label) issues.push(`Unknown ${kind} icon (best match ${match.score.toFixed(2)}, next ${match.runnerUp.toFixed(2)}).`);
 		}
 		for (const [field, item] of Object.entries(evidence)) {
-			// A lone class letter always gets a low confidence; parsePerformance already validates it. A rarity word
-			// that matched a known rarity and the bar colour is confirmed whatever its confidence.
+			// A lone class letter always gets a low confidence; parsePerformance already validates it. A rarity
+			// settled by the bar colour or a known word is confirmed whatever the text's confidence.
 			if (item.confidence < 60 && !["carSpacing", "performanceCheck", "performanceClass"].includes(field) &&
 				!(field === "rarity" && rarity !== null)) {
 				issues.push(`Low OCR confidence for ${field}: ${item.confidence.toFixed(1)}.`);

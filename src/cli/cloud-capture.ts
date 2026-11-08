@@ -13,6 +13,8 @@ import type { GarageCar } from "../capture/garage-walk.ts";
 import { isSameScreen, pageGarage, saveGaragePagesManifest } from "../capture/garage-pages.ts";
 import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
+import { matchCatalog } from "../ocr/card-catalog.ts";
+import { loadCarIdData } from "@forzagarage/car-ids";
 import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
 import { assertSignedIn } from "../capture/session-check.ts";
 import { listDisplays, pickDisplay } from "../capture/displays.ts";
@@ -210,6 +212,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 async function pages(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
 	// Loaded before the prompt so missing templates fail before the game is set up.
 	const templates = await loadIconTemplates();
+	const catalog = loadCarIdData().cars;
 	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
 	await checkGameFrame(await cropToGame(await page.screenshot()));
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
@@ -232,7 +235,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			layout: findCards,
 			isSameScreen,
-			read: async (image) => (await readCardPage(image, worker, shapeWorker, templates)).cards,
+			read: async (image) => (await readCardPage(image, worker, shapeWorker, templates)).cards.map((card) => matchCatalog(card, catalog)),
 			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
 			loadScreenshot: (name) => readFile(join(directory, name)),
 			log: (message) => console.log(message),

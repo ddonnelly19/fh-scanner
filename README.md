@@ -216,12 +216,34 @@ Fields that couldn't be read are null and listed in `issues`, including:
   ```
 
   The walk's `garage.json` labels the highlighted card on each walk
-  screenshot. Only the icon crops are written.
+  screenshot. Only the icon crops are written. Templates from 4K and 1920-wide
+  captures sit side by side as numbered variants of the same label.
+
+  A card with no tire icon is a car on its stock tires, recorded as
+  `Stock Tires` without an issue. Rarity comes from the colour of the rarity
+  bar, with the bar's text as a fallback and cross-check. The class comes from
+  the PI when both OCR engines agree on it.
+
+Each card is also tied to the car-ids list by its year, manufacturer and
+name (`catalog` holds the car number and full name). A name cut off on the
+card is matched by the part that is shown; when exactly one car fits, the
+full name is known and the cut-off issue is dropped.
 
 To check the card reader against walks, run
 `node src\cli\validate-card-pages.ts .\screenshots\garage-abc123`. It reads
 every card on each walk screenshot, matches cards to walked cars and prints
 per-field accuracy and every mismatch.
+
+After changing the card reader or its templates, re-read a finished page scan
+without scanning again:
+
+```powershell
+node src\cli\reread-pages.ts .\screenshots\pages-abc123
+```
+
+It writes `garage-pages.reread.json` next to `garage-pages.json` (or the file
+named by `--out`) and prints how many cards each kind of issue flags, before
+and after.
 
 Options: `--max-pages <n>` stops after n screens, and `--settle-ms` works as
 for the walk. The command exits with code 1 when any car needs review or

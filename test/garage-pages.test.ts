@@ -26,7 +26,7 @@ function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), v
 				if (dropPresses.has(++state.presses)) return;
 				if (key === "ArrowRight") state.selected = wrap && state.selected === heights.length - 1 ? 0 : Math.min(state.selected + 1, heights.length - 1);
 			},
-			wait: async () => {},
+			wait: async (_milliseconds: number) => {},
 			layout: async (image: Buffer): Promise<CardLayout> => {
 				const screen = parse(image);
 				const columns = Math.min(visible, heights.length - screen.first);

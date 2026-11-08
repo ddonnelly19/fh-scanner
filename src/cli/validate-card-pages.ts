@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { cropToGame } from "../capture/game-frame.ts";
 import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import type { CardReading } from "../ocr/my-cars-cards.ts";
@@ -58,7 +59,7 @@ try {
 		const { cars } = JSON.parse(await readFile(join(directory, "garage.json"), "utf8")) as { cars: GarageCar[] };
 		const screenshots = (await readdir(directory)).filter((file) => /^car-\d+-\d\.png$/.test(file)).sort();
 		for (const screenshot of screenshots) {
-			const { cards } = await readCardPage(await readFile(join(directory, screenshot)), worker, shapeWorker, templates);
+			const { cards } = await readCardPage(await cropToGame(await readFile(join(directory, screenshot))), worker, shapeWorker, templates);
 			cardsRead += cards.length;
 			for (const card of cards) {
 				const car = card.selected ? cars.find((walked) => walked.screenshots.captures.includes(screenshot)) : matchCar(card, cars);

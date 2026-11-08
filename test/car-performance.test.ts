@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import sharp from "sharp";
 import {
 	confirmsNumber, extractCarPerformance, findSelectedTile, isCrossCheck, mergeLineSpacing, normalizeUnitGlyphs,
-	parseCarIdentity, parseMeasurement, parsePerformance, parseRating, parseSeparatedMeasurement,
+	classForPi, parseCarIdentity, parseMeasurement, parsePerformance, parseRating, parseSeparatedMeasurement,
 } from "../src/ocr/car-performance.ts";
 import { createLocalOCRWorker } from "../src/ocr/ocr.ts";
 
@@ -71,6 +71,9 @@ describe("performance observations", () => {
 		expect(parsePerformance("B600")).toEqual({ class: "B", pi: 600 });
 		expect(parsePerformance("R 998")).toEqual({ class: "R", pi: 998 });
 		for (const text of ["S3 900", "S2", "S2 1000", "A 99"]) expect(parsePerformance(text)).toBeNull();
+		expect([100, 400, 401, 500, 501, 600, 700, 701, 800, 801, 900, 901, 998, 999].map(classForPi))
+			.toEqual(["D", "D", "C", "C", "B", "B", "A", "S1", "S1", "S2", "S2", "R", "R", "X"]);
+		expect([99, 1000, 700.5].map(classForPi)).toEqual([null, null, null]);
 	});
 	it("reads identity from tile lines, including multiline names", () => {
 		expect(parseCarIdentity("SPEEDTAIL\n2019 MCLAREN")).toEqual({ name: "SPEEDTAIL", year: 2019, manufacturer: "MCLAREN" });

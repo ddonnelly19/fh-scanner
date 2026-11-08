@@ -66,6 +66,24 @@ function sameCard(a: GarageCard, b: GarageCard): boolean {
 }
 
 /**
+ * Adds one page's readings to the cards read so far, keyed by grid column and row. Pages overlap only at the end of
+ * the grid. A second reading of the same card replaces the first only when it is cleaner; a conflicting one is
+ * reported on the card instead of picked.
+ */
+export function addPageReadings(cards: Map<string, GarageCard>, page: GaragePage, readings: CardReading[]): void {
+	for (const { evidence: _evidence, selected: _selected, ...reading } of readings) {
+		const card: GarageCard = { ...reading, column: page.firstColumn + reading.column, page: page.page, screenshot: page.screenshot };
+		const key = `${card.column},${card.row}`;
+		const previous = cards.get(key);
+		if (!previous) cards.set(key, card);
+		else if (!sameCard(previous, card)) {
+			previous.issues.push(`Page ${card.page} read this card differently: ${JSON.stringify({ car: card.car, rarity: card.rarity,
+				performance: card.performance, drivetrain: card.drivetrain, tires: card.tires })}.`);
+		} else if (card.issues.length < previous.issues.length) cards.set(key, card);
+	}
+}
+
+/**
  * Pages through the My Cars grid one screen at a time, starting from the highlighted top-left car. Right moves the
  * highlight one column and the grid scrolls to keep it leftmost, so after each screenshot the highlight moves
  * right until it reaches the first column that wasn't fully visible. The end of the grid is where Right no longer
@@ -116,18 +134,7 @@ export async function pageGarage(
 			page.error = error instanceof Error ? error.message : String(error);
 		}
 		page.cards = readings.length;
-		for (const { evidence: _evidence, selected: _selected, ...reading } of readings) {
-			const card: GarageCard = { ...reading, column: page.firstColumn + reading.column, page: page.page, screenshot: page.screenshot };
-			const key = `${card.column},${card.row}`;
-			const previous = cards.get(key);
-			// Pages overlap only at the end of the grid. A second reading of the same card replaces the first only
-			// when it is cleaner; a conflicting one is reported on the card instead of picked.
-			if (!previous) cards.set(key, card);
-			else if (!sameCard(previous, card)) {
-				previous.issues.push(`Page ${card.page} read this card differently: ${JSON.stringify({ car: card.car, rarity: card.rarity,
-					performance: card.performance, drivetrain: card.drivetrain, tires: card.tires })}.`);
-			} else if (card.issues.length < previous.issues.length) cards.set(key, card);
-		}
+		addPageReadings(cards, page, readings);
 		const flagged = readings.filter((reading) => reading.issues.length).length;
 		actions.log(`Page ${page.page}: ${readings.length} cards` + (flagged ? ` (${flagged} need review)` : "") +
 			(page.error ? ` (failed: ${page.error})` : ""));

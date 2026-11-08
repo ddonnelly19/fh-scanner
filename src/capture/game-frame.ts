@@ -4,17 +4,19 @@ import { findSelectedTile } from "../ocr/car-performance.ts";
 const gameAspect = 16 / 9;
 const tolerance = 0.03;
 
-async function isBlack(image: Buffer, region: { left: number; top: number; width: number; height: number }): Promise<boolean> {
+async function isMostlyBlack(image: Buffer, region: { left: number; top: number; width: number; height: number }): Promise<boolean> {
 	if (region.width <= 0 || region.height <= 0) return true;
 	const pixels = await sharp(image).removeAlpha().extract(region).grayscale().raw().toBuffer();
 	let bright = 0;
 	for (const value of pixels) if (value > 24) bright++;
-	return bright / pixels.length < 0.002;
+	// GeForce Now can draw a line of status text in the bar above the game (about 3% of the bar's pixels on a
+	// 1920x1281 capture), so a bar only has to be mostly black. A game stretched over the bar is far brighter.
+	return bright / pixels.length < 0.05;
 }
 
 /**
  * Crops the black bars a stream adds when the window isn't 16:9. GeForce Now and Xbox Cloud centre the game,
- * so the 16:9 area is taken from the middle, and only when the bars beside it are actually black.
+ * so the 16:9 area is taken from the middle, and only when the bars beside it are (mostly) black.
  */
 export async function cropToGame(image: Buffer): Promise<Buffer> {
 	const { width, height } = await sharp(image).metadata();
@@ -27,7 +29,7 @@ export async function cropToGame(image: Buffer): Promise<Buffer> {
 	const bars = width / height > gameAspect
 		? [{ left: 0, top: 0, width: left, height }, { left: left + game.width, top: 0, width: width - left - game.width, height }]
 		: [{ left: 0, top: 0, width, height: top }, { left: 0, top: top + game.height, width, height: height - top - game.height }];
-	for (const bar of bars) if (!await isBlack(image, bar)) return image;
+	for (const bar of bars) if (!await isMostlyBlack(image, bar)) return image;
 	return sharp(image).extract({ left, top, ...game }).png().toBuffer();
 }
 

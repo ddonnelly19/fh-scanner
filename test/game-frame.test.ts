@@ -20,6 +20,15 @@ describe("game frame", () => {
 			expect([cropped.width, cropped.height]).toEqual([1600, 900]);
 		}
 	});
+	it("crops a letterboxed frame whose top bar carries a line of stream status text", async () => {
+		// garage-SXnmaM: 1920x1281 from GeForce Now, game at rows 100-1179, a status line in the top bar.
+		const frame = await sharp(await streamed(1920, 1281, 1920, 1080))
+			.composite([{ input: { create: { width: 600, height: 12, channels: 3, background: "#d0d0d0" } }, left: 500, top: 48 }])
+			.png().toBuffer();
+		const cropped = await cropToGame(frame);
+		expect(await sharp(cropped).metadata()).toMatchObject({ width: 1920, height: 1080 });
+		await expect(checkGameFrame(cropped)).resolves.toBeUndefined();
+	});
 	it("leaves a frame alone when the area beside the middle isn't black", async () => {
 		const stretched = await streamed(2560, 900, 2560, 900);
 		expect(await cropToGame(stretched)).toBe(stretched);

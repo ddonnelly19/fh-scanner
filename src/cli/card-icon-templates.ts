@@ -6,6 +6,7 @@ import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { buildIconTemplates, cardPixels, defaultIconDirectory, findCards, iconBoxes } from "../ocr/my-cars-cards.ts";
 import type { IconKind, IconTemplate } from "../ocr/my-cars-cards.ts";
 import type { GarageCar } from "../capture/garage-walk.ts";
+import { cropToGame } from "../capture/game-frame.ts";
 
 /**
  * Rebuilds the My Cars card icon templates from garage walks. Each walk screenshot highlights the walked car,
@@ -26,7 +27,8 @@ for (const directory of directories) {
 	for (const car of manifest.cars) {
 		const labels: Record<IconKind, string | null> = { drivetrain: car.drivetrain, tires: car.tires };
 		for (const screenshot of car.screenshots.captures) {
-			const image = await readFile(join(directory, screenshot));
+			// Walks saved before captures were cropped can still carry the stream's black bars.
+			const image = await cropToGame(await readFile(join(directory, screenshot)));
 			const selected = (await findCards(image)).cards.find((card) => card.selected);
 			if (!selected) {
 				console.warn(`${directory}\\${screenshot}: no highlighted card found; skipped.`);

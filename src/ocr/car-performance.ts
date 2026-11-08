@@ -102,6 +102,18 @@ export function parseRating(text: string): number | null {
 	return value >= 0 && value <= 10 ? value : null;
 }
 
+/**
+ * FH6's class for a PI. Measured on a 576-car My Cars scan (2026-11-08): D up to 400, then a class per hundred
+ * up to S2 at 900, R above that and X at 999.
+ */
+export function classForPi(pi: number): string | null {
+	if (!Number.isInteger(pi) || pi < 100 || pi > 999) return null;
+	if (pi === 999) return "X";
+	if (pi > 900) return "R";
+	if (pi <= 400) return "D";
+	return ["C", "B", "A", "S1", "S2"][Math.ceil(pi / 100) - 5]!;
+}
+
 export function parsePerformance(text: string): CarPerformance["performance"] {
 	const match = /^(D|C|B|A|S1|S2|R|X)\s*(\d{3,4})$/.exec(text.trim().toUpperCase());
 	if (!match) return null;

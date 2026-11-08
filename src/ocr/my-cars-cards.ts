@@ -4,7 +4,7 @@ import sharp from "sharp";
 import type { Region } from "sharp";
 import { PSM } from "tesseract.js";
 import type { Worker } from "tesseract.js";
-import { findSelectedTile, mergeLineSpacing, parseCarIdentity, parsePerformance } from "./car-performance.ts";
+import { classForPi, findSelectedTile, mergeLineSpacing, parseCarIdentity, parsePerformance } from "./car-performance.ts";
 import type { CarPerformance, TextEvidence } from "./car-performance.ts";
 
 /** One card slot of the My Cars grid. Columns count from the leftmost fully visible column. */
@@ -345,8 +345,18 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		const piRegion = cardRegion(bounds, 540, 416, 78, 50);
 		const pi = await read("performance", piRegion, PSM.SINGLE_LINE, true, "0123456789", { height: 100 }, shapeWorker);
 		const piCheck = await read("performanceCheck", piRegion, PSM.SINGLE_LINE, true, "0123456789", { height: 100 });
-		const performance = parsePerformance(`${performanceClass} ${pi}`);
-		if (!performance) issues.push(`Could not read class and PI ("${performanceClass}" "${pi}").`);
+		// The class badge is small and often misread at 1920 wide ("BB", or nothing), but the class follows from the
+		// PI, so when both engines agree on the PI the class is taken from it and a different badge reading is reported.
+		const piValue = /^\d{3}$/.test(pi.replace(/\s/g, "")) ? Number(pi.replace(/\s/g, "")) : null;
+		const piAgreed = piValue !== null && piCheck.replace(/\s/g, "") === String(piValue);
+		let performance = parsePerformance(`${performanceClass} ${pi}`);
+		const piClass = piValue === null ? null : classForPi(piValue);
+		if (piAgreed && piClass) {
+			if (performance && performance.class !== piClass) {
+				issues.push(`Class badge read as ${performance.class}, but PI ${piValue} is class ${piClass}; used ${piClass}.`);
+			}
+			performance = { class: piClass, pi: piValue! };
+		} else if (!performance) issues.push(`Could not read class and PI ("${performanceClass}" "${pi}").`);
 		else if (piCheck.replace(/\s/g, "") !== String(performance.pi)) {
 			issues.push(`OCR engines disagree on PI ("${pi}" vs "${piCheck}"); kept the shape-based reading.`);
 		}

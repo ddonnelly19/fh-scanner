@@ -14,12 +14,14 @@ import { isSameScreen, pageGarage, saveGaragePagesManifest } from "../capture/ga
 import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
+import { assertSignedIn } from "../capture/session-check.ts";
 import { setTimeout as wait } from "node:timers/promises";
 
 const { values, positionals } = parseArgs({
 	allowPositionals: true,
 	options: {
 		image: { type: "string" },
+		login: { type: "boolean", default: false },
 		record: { type: "boolean", default: false },
 		walk: { type: "boolean", default: false },
 		pages: { type: "boolean", default: false },
@@ -33,9 +35,9 @@ const maxCars = Number(values["max-cars"]);
 const maxPages = Number(values["max-pages"]);
 const settleMs = Number(values["settle-ms"]);
 if (positionals.length > 1 || values.image?.trim() === "" ||
-	[values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
+	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000]]");
 }
 
 const urls: Record<string, string> = {
@@ -64,6 +66,10 @@ async function capture(): Promise<Buffer | undefined> {
 	try {
 		const page = context.pages()[0] ?? await context.newPage();
 		await page.goto(url!);
+		if (values.login) {
+			await login(page, prompt, profileDirectory);
+			return undefined;
+		}
 		if (values.walk) {
 			await walk(page, prompt);
 			return undefined;
@@ -76,8 +82,9 @@ async function capture(): Promise<Buffer | undefined> {
 			await mkdir(defaultScreenshotsDirectory, { recursive: true });
 			const directory = await mkdtemp(join(defaultScreenshotsDirectory, "recording-"));
 			const recording = new BrowserRecording(directory, provider, {
-				capture: () => page.screenshot(),
+				capture: () => { assertSignedIn(page.url(), provider); return page.screenshot(); },
 				press: async (key, holdMs) => {
+					assertSignedIn(page.url(), provider);
 					await page.bringToFront();
 					await page.keyboard.press(key, { delay: holdMs });
 				},
@@ -115,11 +122,27 @@ async function capture(): Promise<Buffer | undefined> {
 			return undefined;
 		}
 		await prompt.question("Open My Cars, select a car, show ratings or press L for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
+		assertSignedIn(page.url(), provider);
 		return await cropToGame(await page.screenshot());
 	} finally {
 		prompt.close();
 		await context.close();
 	}
+}
+
+async function login(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>, profileDirectory: string): Promise<void> {
+	console.log(`Sign in to ${provider} in this Edge window and finish any verification. Choose "stay signed in" or "keep me signed in" if offered, since the saved profile only keeps sessions the site marks as persistent.`);
+	console.log("You can do this over a remote desktop. Don't type credentials into this terminal.");
+	while (true) {
+		await prompt.question("Press Enter once you are signed in and the provider's home page is showing. ");
+		try {
+			assertSignedIn(page.url(), provider);
+			break;
+		} catch (error) {
+			console.error(error instanceof Error ? error.message : String(error));
+		}
+	}
+	console.log(`Signed in. The session is kept in ${profileDirectory} when the browser closes. That folder holds login data: don't share or commit it.`);
 }
 
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
@@ -137,8 +160,9 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await walkGarage({
-			capture: async () => cropToGame(await page.screenshot()),
+			capture: async () => { assertSignedIn(page.url(), provider); return cropToGame(await page.screenshot()); },
 			press: async (key) => {
+				assertSignedIn(page.url(), provider);
 				await page.bringToFront();
 				await page.keyboard.press(key, { delay: 100 });
 			},
@@ -186,8 +210,9 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await pageGarage({
-			capture: async () => cropToGame(await page.screenshot()),
+			capture: async () => { assertSignedIn(page.url(), provider); return cropToGame(await page.screenshot()); },
 			press: async (key) => {
+				assertSignedIn(page.url(), provider);
 				await page.bringToFront();
 				await page.keyboard.press(key, { delay: 100 });
 			},

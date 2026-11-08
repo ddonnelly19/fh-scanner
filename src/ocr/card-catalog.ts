@@ -13,12 +13,14 @@ export function normalizeCarName(name: string): string {
 }
 
 const cutOffIssues = ["Name or manufacturer is cut off with an ellipsis on the card.", "Name scrolls on the highlighted card and may be cut off."];
+/** Doubts about the name reads that a match against the car list settles. */
+const settledByMatch = (issue: string) => cutOffIssues.includes(issue) || /^Low OCR confidence for (car|carYear):/.test(issue);
 
 /**
  * Ties a card to a car in the car list. A complete name must match exactly. A name or manufacturer cut off on the card
  * matches the cars whose full name starts with what is shown, or, when the manufacturer is the cut-off part, the cars
  * of that year whose name starts with the shown manufacturer and ends with the shown model. Only a single candidate
- * counts; the cut-off issue is then dropped, since the full name is known.
+ * counts; the cut-off issue and low confidence in the name reads are then dropped, since the car is known.
  */
 export function matchCatalog<T extends Pick<CardReading, "car" | "nameComplete" | "issues">>(card: T, cars: readonly CatalogCar[]):
 	T & { catalog: CatalogCar | null } {
@@ -35,5 +37,5 @@ export function matchCatalog<T extends Pick<CardReading, "car" | "nameComplete" 
 		});
 	}
 	if (candidates.length !== 1) return { ...card, catalog: null };
-	return { ...card, catalog: candidates[0]!, issues: card.issues.filter((issue) => !cutOffIssues.includes(issue)) };
+	return { ...card, catalog: candidates[0]!, issues: card.issues.filter((issue) => !settledByMatch(issue)) };
 }

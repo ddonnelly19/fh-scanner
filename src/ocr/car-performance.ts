@@ -236,9 +236,13 @@ export async function extractCarPerformance(image: Buffer, worker: Worker, shape
 				const top = 351 + index * 32;
 				const label = await read(`${name}Label`, region(89, top, 110, 27), PSM.SINGLE_LINE, true);
 				// The shape classifier keeps a space before the unit, so unit glyphs that look like digits stay out of the number.
+				// Front is read at a fixed height instead: width-based upscaling of a 1920-wide capture turned "%" into "96"
+				// for the shape classifier and 5 into 9 for the LSTM, and at 4K made the shape classifier read 62% as 52%.
+				const front = name === "front";
 				const value = await read(name, region(201, top, 78, 27), PSM.SINGLE_LINE, true,
-					name === "front" ? "0123456789%" : "", {}, shapeWorker);
-				const check = await read(`${name}Check`, region(201, top, 78, 27), PSM.SINGLE_LINE, true);
+					front ? "0123456789%" : "", front ? { height: 150 } : {}, shapeWorker);
+				const check = await read(`${name}Check`, region(201, top, 78, 27), PSM.SINGLE_LINE, true,
+					front ? "0123456789%" : "", front ? { height: 100 } : {});
 				details[name] = label.toLowerCase().replace(/\s/g, "") === name ? parseSeparatedMeasurement(name, value) : null;
 				const measured = details[name];
 				if (measured && !confirmsNumber(/^[\d.,]+/.exec(value.trim())![0], measured.unit, check)) {

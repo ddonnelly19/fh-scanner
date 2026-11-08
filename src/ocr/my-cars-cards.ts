@@ -166,6 +166,10 @@ export interface IconMatch {
 // 0.96: Slick vs Semi-Slick, AWD with the engine elsewhere, or a chunkier off-road tread against Rally.
 export const iconMatchThreshold = 0.97;
 export const iconMatchMargin = 0.03;
+/** Below this best score an icon area holds no icon at all; a real but unknown icon still scores 0.6 or more. */
+export const blankIconScore = 0.3;
+/** Tires recorded for a card without a tire icon. */
+export const stockTires = "Stock Tires";
 
 /**
  * Matches an icon area against the templates of one kind, sliding each template a few pixels to absorb
@@ -368,7 +372,9 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		for (const kind of ["drivetrain", "tires"] as const) {
 			const match = await readIcon(image, bounds, kind, templates);
 			icons[kind] = match.label;
-			if (!match.label) issues.push(`Unknown ${kind} icon (best match ${match.score.toFixed(2)}, next ${match.runnerUp.toFixed(2)}).`);
+			// A card shows no tire icon when the car is on its stock tires: the area is blank, so nothing correlates.
+			if (kind === "tires" && match.score < blankIconScore) icons[kind] = stockTires;
+			else if (!match.label) issues.push(`Unknown ${kind} icon (best match ${match.score.toFixed(2)}, next ${match.runnerUp.toFixed(2)}).`);
 		}
 		for (const [field, item] of Object.entries(evidence)) {
 			// A lone class letter always gets a low confidence; parsePerformance already validates it. A rarity

@@ -23,6 +23,8 @@ const tireSvg: Record<string, string> = {
 	Street: '<circle cx="88" cy="189" r="11" fill="none" stroke="black" stroke-width="3"/><path d="M88 178 V200 M77 189 H99" stroke="black" stroke-width="3"/>',
 	Slick: '<circle cx="88" cy="189" r="9" fill="none" stroke="black" stroke-width="6"/>',
 	unknown: '<rect x="78" y="179" width="20" height="20"/>',
+	// Cars on stock tires show no tire icon.
+	none: "",
 };
 
 function cardSvg(left: number, top: number, card: SvgCard, selected: boolean): string {
@@ -150,6 +152,7 @@ describe("card reading", () => {
 			[1, 0, { name: "AUTODELTA TIPO 33/2 D...", year: "1968", maker: "ALFA ROMEO", rarity: "LEGENDARY", colour: "#ef8a12",
 				badge: "R", pi: "998", drive: "FWD", tire: "Slick" }],
 			[2, 0, { ...sample, rarity: "COMMON", colour: "#31ad24", drive: "unknown", tire: "unknown" }],
+			[3, 0, { ...sample, tire: "none" }],
 		]);
 		const { cards } = await findCards(image);
 		const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
@@ -168,6 +171,8 @@ describe("card reading", () => {
 			const third = await readCard(image, cards[2]!, worker, shapeWorker, templates);
 			expect(third).toMatchObject({ rarity: "COMMON", drivetrain: null, tires: null });
 			expect(third.issues).toEqual([expect.stringContaining("Unknown drivetrain icon"), expect.stringContaining("Unknown tires icon")]);
+			const fourth = await readCard(image, cards[3]!, worker, shapeWorker, templates);
+			expect(fourth).toMatchObject({ drivetrain: "AWD", tires: "Stock Tires", issues: [] });
 		} finally {
 			await Promise.all([worker.terminate(), shapeWorker.terminate()]);
 		}

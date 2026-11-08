@@ -242,7 +242,7 @@ export async function loadIconTemplates(directory: string | URL = defaultIconDir
 	return templates;
 }
 
-export const rarities = ["COMMON", "RARE", "EPIC", "LEGENDARY"] as const;
+export const rarities = ["COMMON", "RARE", "EPIC", "LEGENDARY", "FORZA EDITION"] as const;
 
 /** Rarity by the colour of the card's rarity bar, used to cross-check the bar's text. */
 export function rarityFromColour(red: number, green: number, blue: number): string | null {
@@ -250,6 +250,7 @@ export function rarityFromColour(red: number, green: number, blue: number): stri
 	if (blue > red + 60 && green > red + 30) return "RARE";
 	if (red > green + 60 && blue > green + 60) return "EPIC";
 	if (red > blue + 100 && green > blue + 40) return "LEGENDARY";
+	if (blue > red + 100 && blue > green + 100) return "FORZA EDITION";
 	return null;
 }
 
@@ -326,17 +327,20 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 				issues.push("Name scrolls on the highlighted card and may be cut off.");
 			}
 		}
-		// A letter whitelist made the LSTM drop C, O and P entirely; unrestricted it reads the word, sometimes in lower case.
-		const rarityText = await read("rarity", cardRegion(bounds, 16, 414, 300, 54), PSM.SINGLE_LINE, true, "",
-			{ height: 100, threshold: 180 });
-		const rarityWord = rarityText.toUpperCase().replace(/[^A-Z]/g, "");
-		let rarity: string | null = (rarities as readonly string[]).includes(rarityWord) ? rarityWord : null;
-		if (!rarity) issues.push(`Could not read rarity ("${rarityText}").`);
-		const barColour = await sharp(image).removeAlpha().extract(cardRegion(bounds, 320, 420, 120, 40)).stats();
+		// A letter whitelist made the LSTM drop C, O and P entirely; unrestricted it reads the word, sometimes in lower
+		// case. A fixed threshold lost the word at 1920 wide (read as "|" or nothing), so the crop is only normalised.
+		const rarityText = await read("rarity", cardRegion(bounds, 16, 414, 300, 54), PSM.SINGLE_LINE, true, "", { height: 100 });
+		const rarityWords = rarityText.toUpperCase().replace(/[^A-Z ]/g, "").trim().replace(/\s+/g, " ");
+		const textRarity = rarities.find((name) => rarityWords === name || rarityWords.endsWith(` ${name}`)) ?? null;
+		// Each rarity has its own bar colour, which is reliable at any size, so the colour decides and the text
+		// stands in only when the colour is unknown.
+		const barCrop = await sharp(image).removeAlpha().extract(cardRegion(bounds, 320, 420, 120, 40)).toBuffer();
+		const barColour = await sharp(barCrop).stats();
 		const colourRarity = rarityFromColour(...barColour.channels.slice(0, 3).map((channel) => channel.mean) as [number, number, number]);
-		if (rarity && colourRarity && colourRarity !== rarity) {
-			issues.push(`Rarity text "${rarity}" doesn't match the bar colour (${colourRarity}).`);
-			rarity = null;
+		const rarity: string | null = colourRarity ?? textRarity;
+		if (!rarity) issues.push(`Could not read rarity ("${rarityText}").`);
+		else if (colourRarity && textRarity && colourRarity !== textRarity) {
+			issues.push(`Rarity text "${textRarity}" doesn't match the bar colour (${colourRarity}); used the colour.`);
 		}
 		// The class letter is white on a class-coloured badge and the PI white on black, so they are read apart.
 		const performanceClass = await read("performanceClass", cardRegion(bounds, 462, 416, 60, 50), PSM.SINGLE_BLOCK, true, "DCBASRX12",
@@ -367,8 +371,8 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 			if (!match.label) issues.push(`Unknown ${kind} icon (best match ${match.score.toFixed(2)}, next ${match.runnerUp.toFixed(2)}).`);
 		}
 		for (const [field, item] of Object.entries(evidence)) {
-			// A lone class letter always gets a low confidence; parsePerformance already validates it. A rarity word
-			// that matched a known rarity and the bar colour is confirmed whatever its confidence.
+			// A lone class letter always gets a low confidence; parsePerformance already validates it. A rarity
+			// settled by the bar colour or a known word is confirmed whatever the text's confidence.
 			if (item.confidence < 60 && !["carSpacing", "performanceCheck", "performanceClass"].includes(field) &&
 				!(field === "rarity" && rarity !== null)) {
 				issues.push(`Low OCR confidence for ${field}: ${item.confidence.toFixed(1)}.`);

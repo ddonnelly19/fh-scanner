@@ -128,6 +128,9 @@ describe("card icon matching", () => {
 		expect(rarityFromColour(18, 170, 214)).toBe("RARE");
 		expect(rarityFromColour(210, 75, 230)).toBe("EPIC");
 		expect(rarityFromColour(240, 140, 20)).toBe("LEGENDARY");
+		// Measured on a 1920-wide GeForce Now capture.
+		expect(rarityFromColour(99, 108, 249)).toBe("FORZA EDITION");
+		expect(rarityFromColour(9, 176, 211)).toBe("RARE");
 		expect(rarityFromColour(120, 120, 120)).toBeNull();
 	});
 });

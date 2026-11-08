@@ -323,6 +323,13 @@ export async function readCard(image: Buffer, card: CardSlot, worker: Worker, sh
 		const title = await read("car", titleRegion, PSM.SINGLE_BLOCK, false, "", { height: 150 });
 		const titleSpacing = await read("carSpacing", titleRegion, PSM.SINGLE_BLOCK, false, "", {}, shapeWorker);
 		let car = parseCarIdentity(mergeLineSpacing(title, titleSpacing));
+		if (!car) {
+			// On Forza Edition and Legendary cards the grey year and manufacturer sit on a coloured gradient and drop
+			// out of the two-line read, so that line is read again on its own under the first line of the name.
+			const yearLine = await read("carYear", cardRegion(bounds, 8, 62, 630, 54), PSM.SINGLE_LINE, false, "", { height: 100 });
+			const name = mergeLineSpacing(title, titleSpacing).split("\n").map((line) => line.trim()).find(Boolean);
+			if (name) car = parseCarIdentity(`${name}\n${yearLine}`);
+		}
 		let nameComplete = true;
 		if (!car) issues.push("Could not read the car's name, year and manufacturer.");
 		else {

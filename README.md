@@ -48,7 +48,28 @@ matching and ownership require the missing tile/text inputs to be completed firs
 For names-only export, stop after step 1 or 2; `ordinals.txt` is already
 generated.
 
-### Single-car cloud performance capture
+### Signing in to a cloud provider
+
+```powershell
+npm run capture:cloud -- geforce --login
+```
+
+Use `xbox` instead of `geforce` for Xbox Cloud. This opens the same dedicated Edge
+profile the captures use, waits while you sign in and finish any verification,
+then closes the browser so the session stays in the profile. Choose "stay signed
+in" or "keep me signed in" if the site offers it: a login the site marks as
+temporary is dropped when the browser closes. Nothing is typed for you and the
+terminal never sees credentials, so you can do this through a remote desktop
+(Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
+
+Every capture mode (`--walk`, `--pages`, `--record` and the single capture) now
+checks the browser's URL before each screenshot and key press. If the stream
+tab has been sent to a provider sign-in page, the run stops with a message to
+sign in again. A walk or paging run is saved as `interrupted` with that error.
+The check only looks at known sign-in URLs (`login.nvidia.com`,
+`login.live.com`, `login.microsoftonline.com` and Xbox's `/auth` route), so a
+session that expires some other way, such as a stream that drops to an error
+screen on the same page, is not detected.
 
 Run `npm run capture:cloud -- geforce` (or `xbox`) to open a dedicated Edge
 profile. Log in manually, launch the game, open **My Cars**, select a car,

@@ -6,6 +6,7 @@ import { PSM } from "tesseract.js";
 import type { Worker } from "tesseract.js";
 import { classForPi, findSelectedTile, mergeLineSpacing, parseCarIdentity, parsePerformance } from "./car-performance.ts";
 import type { CarPerformance, TextEvidence } from "./car-performance.ts";
+import type { CatalogCar } from "./card-catalog.ts";
 
 /** One card slot of the My Cars grid. Columns count from the leftmost fully visible column. */
 export interface CardSlot {
@@ -276,6 +277,8 @@ export interface CardReading {
 	tires: string | null;
 	evidence: Record<string, TextEvidence>;
 	issues: string[];
+	/** The car-ids car this card was tied to by name, when matching ran and found exactly one. */
+	catalog?: CatalogCar | null;
 }
 
 /**

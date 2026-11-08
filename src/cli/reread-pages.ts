@@ -5,6 +5,8 @@ import { addPageReadings } from "../capture/garage-pages.ts";
 import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { createLocalOCRWorker } from "../ocr/ocr.ts";
 import { loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
+import { matchCatalog } from "../ocr/card-catalog.ts";
+import { loadCarIdData } from "@forzagarage/car-ids";
 
 /**
  * Reads the saved screenshots of a page scan again with the current card reader, for example after new icon
@@ -32,6 +34,7 @@ function tally(cars: GarageCard[]): Map<string, number> {
 const manifestPath = join(directory, "garage-pages.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { pages: GaragePage[]; cars: GarageCard[] } & Record<string, unknown>;
 const templates = await loadIconTemplates();
+const catalog = loadCarIdData().cars;
 const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 const cards = new Map<string, GarageCard>();
 const pages: GaragePage[] = [];
@@ -42,7 +45,7 @@ try {
 		try {
 			const { cards: readings } = await readCardPage(await readFile(join(directory, page.screenshot)), worker, shapeWorker, templates);
 			page.cards = readings.length;
-			addPageReadings(cards, page, readings);
+			addPageReadings(cards, page, readings.map((reading) => matchCatalog(reading, catalog)));
 		} catch (error) {
 			page.error = error instanceof Error ? error.message : String(error);
 		}
@@ -58,6 +61,7 @@ await writeFile(join(directory, values.out), JSON.stringify({ ...manifest, rerea
 const before = tally(manifest.cars);
 const after = tally(cars);
 console.log(`Cards: ${manifest.cars.length} before, ${cars.length} after.`);
+console.log(`Tied to the car list: ${cars.filter((car) => car.catalog).length} of ${cars.length}.`);
 console.log(`Flagged: ${manifest.cars.filter((car) => car.issues.length).length} before, ${cars.filter((car) => car.issues.length).length} after.`);
 console.log("\n before   after  issue");
 for (const kind of [...new Set([...before.keys(), ...after.keys()])].sort((a, b) => (after.get(b) ?? 0) - (after.get(a) ?? 0))) {

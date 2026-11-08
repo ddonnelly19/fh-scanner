@@ -224,6 +224,11 @@ Fields that couldn't be read are null and listed in `issues`, including:
   bar, with the bar's text as a fallback and cross-check. The class comes from
   the PI when both OCR engines agree on it.
 
+Each card is also tied to the car-ids list by its year, manufacturer and
+name (`catalog` holds the car number and full name). A name cut off on the
+card is matched by the part that is shown; when exactly one car fits, the
+full name is known and the cut-off issue is dropped.
+
 To check the card reader against walks, run
 `node src\cli\validate-card-pages.ts .\screenshots\garage-abc123`. It reads
 every card on each walk screenshot, matches cards to walked cars and prints

@@ -28,6 +28,8 @@ export interface CardLayout {
 const rowTops = [425 / 2160, 929 / 2160, 1433 / 2160];
 const cardHeight = 487 / 2160;
 const cardWidth = 646 / 3840;
+// Left edge to left edge of neighbouring columns: the card plus the gap between cards.
+const columnPitch = 664 / 3840;
 // The info panel and the dimmed column scrolled off to the left end before this.
 const gridLeft = 0.2;
 
@@ -60,7 +62,18 @@ export async function findCards(image: Buffer): Promise<CardLayout> {
 			const card = bright > samples.length * 0.2;
 			if (card && start < 0) start = x;
 			if (!card && start >= 0) {
-				if (x - start > width * 0.9 && x - start < width * 1.1) runs.push({ row, left: start, right: x - 1 });
+				const run = x - start;
+				if (run > width * 0.9 && run < width * 1.1) runs.push({ row, left: start, right: x - 1 });
+				else if (run >= width * 1.1) {
+					// A bright patch of the moving background can fill the gap between cards, or the dimmed column at the
+					// right edge can touch the last card, so neighbouring cards read as one run: cut it at the column pitch.
+					const pitch = columnPitch * info.width;
+					const pieces = Math.floor((run + pitch - width + width * 0.1) / pitch);
+					for (let piece = 0; piece < pieces; piece++) {
+						const left = start + Math.round(piece * pitch);
+						runs.push({ row, left, right: left + Math.round(width) - 1 });
+					}
+				}
 				start = -1;
 			}
 		}

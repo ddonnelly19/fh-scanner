@@ -44,8 +44,8 @@ function cardSvg(left: number, top: number, card: SvgCard, selected: boolean): s
 
 const sample: SvgCard = { name: "SPEEDTAIL", year: "2019", maker: "MCLAREN", rarity: "EPIC", colour: "#d24be6", badge: "A", pi: "700", drive: "AWD", tire: "Street" };
 
-async function page(cards: Array<[number, number, SvgCard]>): Promise<Buffer> {
-	const body = cards.map(([column, row, card]) => cardSvg(columnLefts[column]!, rowTops[row]!, card, column === 0 && row === 0)).join("");
+async function page(cards: Array<[number, number, SvgCard]>, extra = ""): Promise<Buffer> {
+	const body = cards.map(([column, row, card]) => cardSvg(columnLefts[column]!, rowTops[row]!, card, column === 0 && row === 0)).join("") + extra;
 	// A dimmed column cut off by the right edge, as the game shows the next page's first column.
 	const partial = `<rect x="1775" y="212" width="145" height="243" fill="#6a6a6a"/>`;
 	return sharp(Buffer.from(`<svg width="1920" height="1080"><rect width="100%" height="100%" fill="#2b2b2b"/>${body}${partial}</svg>`)).png().toBuffer();
@@ -74,6 +74,13 @@ describe("My Cars card layout", () => {
 			expect(Math.abs(card.bounds.left - columnLefts[card.column]!)).toBeLessThanOrEqual(2);
 			expect(Math.abs(card.bounds.width - 323)).toBeLessThanOrEqual(3);
 		}
+	});
+	it("separates neighbouring cards when a bright background fills the gap between them", async () => {
+		// The game's moving background can be light grey behind a row, so the gap between two cards isn't dark.
+		const gap = `<rect x="${columnLefts[0]! + 323}" y="${rowTops[2]!}" width="${columnLefts[1]! - columnLefts[0]! - 323}" height="243" fill="#d0d0d0"/>`;
+		const image = await page([[0, 0, sample], [0, 2, sample], [1, 0, sample], [1, 2, sample], [2, 0, sample], [3, 0, sample]], gap);
+		const layout = await findCards(image);
+		expect(layout.cards.map((card) => [card.column, card.row])).toEqual([[0, 0], [0, 2], [1, 0], [1, 2], [2, 0], [3, 0]]);
 	});
 	it("rejects screenshots that aren't 16:9", async () => {
 		const image = await sharp({ create: { width: 1600, height: 1200, channels: 3, background: "black" } }).png().toBuffer();

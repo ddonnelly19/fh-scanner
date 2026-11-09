@@ -27,6 +27,10 @@ describe("car list matching", () => {
 		expect(matched.catalog).toEqual(cars[0]);
 		expect(matched.issues).toEqual([]);
 	});
+	it("drops low confidence in the name reads once the car is matched", () => {
+		const matched = matchCatalog({ ...card(2008, "BMW", "Z4 M COUPE"), issues: ["Low OCR confidence for carYear: 40.0.", "Unknown tires icon (best match 0.50, next 0.40)."] }, cars);
+		expect(matched.issues).toEqual(["Unknown tires icon (best match 0.50, next 0.40)."]);
+	});
 	it("completes a cut-off manufacturer from the year and model", () => {
 		expect(matchCatalog(card(2018, "MERCEDES-A", "E 63 S", false), cars).catalog?.ordinal).toBe(4);
 	});

@@ -15,7 +15,7 @@ import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { matchCatalog } from "../ocr/card-catalog.ts";
 import { loadCarIdData } from "@forzagarage/car-ids";
-import { checkGameFrame, cropToGame, readWidth, scaleToReadWidth } from "../capture/game-frame.ts";
+import { checkGameFrame, cropToGame, readWidth, sameFrame, scaleToReadWidth } from "../capture/game-frame.ts";
 import { assertSignedIn } from "../capture/session-check.ts";
 import { listDisplays, pickDisplay } from "../capture/displays.ts";
 import { setTimeout as wait } from "node:timers/promises";
@@ -38,6 +38,7 @@ const { values, positionals } = parseArgs({
 		display: { type: "string", default: "internal" },
 		source: { type: "string", default: "video" },
 		"keep-open": { type: "boolean", default: false },
+		"from-recent": { type: "boolean", default: false },
 	},
 });
 const provider = positionals[0] ?? "geforce";
@@ -48,7 +49,7 @@ if (positionals.length > 1 || values.image?.trim() === "" ||
 	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
 	!["video", "screen"].includes(values.source!) ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--keep-open] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--keep-open] [--from-recent] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
 }
 
 const urls: Record<string, string> = {
@@ -234,8 +235,56 @@ async function login(page: import("playwright").Page, prompt: ReturnType<typeof 
 	console.log(`Signed in. The session is kept in ${profileDirectory} when the browser closes. That folder holds login data: don't share or commit it.`);
 }
 
+async function pressKey(page: import("playwright").Page, key: string): Promise<void> {
+	assertSignedIn(page.url(), provider);
+	await page.bringToFront();
+	await page.keyboard.press(key, { delay: 50 });
+}
+
+/** Waits for the screen to change from before (up to changeMs) and then to stop changing (up to settleMs more). */
+async function waitForScreen(page: import("playwright").Page, before: Buffer, changeMs: number, settleMs = 3000): Promise<Buffer> {
+	let current = await probe(page);
+	for (let waited = 0; waited < changeMs && await sameFrame(before, current); waited += 150) {
+		await wait(150);
+		current = await probe(page);
+	}
+	for (let waited = 0; waited < settleMs; waited += 150) {
+		await wait(150);
+		const next = await probe(page);
+		if (await sameFrame(current, next)) return next;
+		current = next;
+	}
+	return current;
+}
+
+/**
+ * Brings My Cars to the start of the whole garage: sorts by Recently Added (X opens the sort list, Recently Added is
+ * six down), then Backspace and Enter pick the group of all cars, which highlights the first car of the grid.
+ */
+async function startFromRecentlyAdded(page: import("playwright").Page): Promise<void> {
+	console.log("Sorting My Cars by Recently Added: X, Down x6, Enter.");
+	let screen = await probe(page);
+	await pressKey(page, "x");
+	screen = await waitForScreen(page, screen, 3000);
+	for (let step = 0; step < 6; step++) {
+		await pressKey(page, "ArrowDown");
+		await wait(250);
+	}
+	screen = await probe(page);
+	await pressKey(page, "Enter");
+	screen = await waitForScreen(page, screen, 8000);
+	console.log("Selecting all cars: Backspace, Enter.");
+	await pressKey(page, "Backspace");
+	screen = await waitForScreen(page, screen, 3000);
+	await pressKey(page, "Enter");
+	await waitForScreen(page, screen, 8000);
+}
+
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
-	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	await prompt.question(values["from-recent"]
+		? "Launch the game, open My Cars, click the stream to focus it and hide overlays, then press Enter here. Don't touch the stream until the walk finishes."
+		: "Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	if (values["from-recent"]) await startFromRecentlyAdded(page);
 	await reportStream(page);
 	await checkGameFrame(await grab(page));
 	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
@@ -288,7 +337,10 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	// Loaded before the prompt so missing templates fail before the game is set up.
 	const templates = await loadIconTemplates();
 	const catalog = loadCarIdData().cars;
-	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
+	await prompt.question(values["from-recent"]
+		? "Launch the game, open My Cars, click the stream to focus it and hide overlays, then press Enter here. Don't touch the stream until paging finishes."
+		: "Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
+	if (values["from-recent"]) await startFromRecentlyAdded(page);
 	await reportStream(page);
 	await checkGameFrame(await grab(page));
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });

@@ -25,7 +25,7 @@ export async function connectStreamWindow(port: number): Promise<Browser | undef
 }
 
 /** Starts Edge on its own, so it keeps running after this process ends, and connects to it. */
-export async function openStreamWindow(options: { profileDirectory: string; port: number; args: string[]; executable?: string }): Promise<Browser> {
+export async function openStreamWindow(options: { profileDirectory: string; port: number; args: string[]; executable?: string | undefined }): Promise<Browser> {
 	const executable = options.executable ?? edgeLocations.find((location) => location && existsSync(location));
 	if (!executable) throw new Error("Microsoft Edge was not found. Set FH_SCANNER_EDGE to the path of msedge.exe.");
 	const child = spawn(executable, [

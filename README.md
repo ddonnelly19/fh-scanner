@@ -62,6 +62,13 @@ temporary is dropped when the browser closes. Nothing is typed for you and the
 terminal never sees credentials, so you can do this through a remote desktop
 (Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
 
+### Starting from the first car automatically
+
+With `--from-recent`, a walk or page scan only needs My Cars open with any car
+highlighted. It sorts by Recently Added (X opens the sort list, Recently Added
+is six down, Enter), then presses Backspace and Enter to pick the group of all
+cars, which highlights the first car of the grid, and starts from there.
+
 ### Keeping the stream open between runs
 
 Starting a cloud session takes a while, so `--keep-open` starts Edge on its own

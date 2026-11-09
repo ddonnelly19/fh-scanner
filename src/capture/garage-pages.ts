@@ -23,6 +23,11 @@ export interface GaragePagesActions {
 	 * to its first page is recognised.
 	 */
 	sameCards?(previous: Buffer, previousLayout: CardLayout, current: Buffer, currentLayout: CardLayout): Promise<boolean>;
+	/**
+	 * True when the current page starts with the column that was cut off at the right edge of the previous page,
+	 * false when it starts further on, null when that can't be told. Catches a key press the game took twice.
+	 */
+	continuesFrom?(previous: Buffer, previousLayout: CardLayout, current: Buffer, currentLayout: CardLayout): Promise<boolean | null>;
 	/** Reads every fully visible card. */
 	read(image: Buffer): Promise<CardReading[]>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
@@ -32,6 +37,8 @@ export interface GaragePagesActions {
 
 export interface GaragePagesOptions {
 	right: string;
+	/** Steps back one column when a page skipped one; defaults to ArrowLeft. */
+	left?: string;
 	/** Longest wait for a move to show, and then for the screen to stop changing. */
 	settleMs: number;
 	maxPages: number;
@@ -81,6 +88,52 @@ export async function sameCardTiles(previous: Buffer, previousLayout: CardLayout
 		if (!await sameTileContents(previous, current, region)) return false;
 	}
 	return true;
+}
+
+// Left edge to left edge of neighbouring card columns, as a fraction of the screen width.
+const columnPitch = 664 / 3840;
+
+function correlation(a: number[], b: number[]): number {
+	let meanA = 0, meanB = 0;
+	for (let i = 0; i < a.length; i++) { meanA += a[i]!; meanB += b[i]!; }
+	meanA /= a.length; meanB /= a.length;
+	let ab = 0, aa = 0, bb = 0;
+	for (let i = 0; i < a.length; i++) {
+		const x = a[i]! - meanA, y = b[i]! - meanB;
+		ab += x * y; aa += x * x; bb += y * y;
+	}
+	return aa && bb ? ab / Math.sqrt(aa * bb) : 0;
+}
+
+/**
+ * True when the current page's first column is the one shown cut off and dimmed at the right edge of the previous
+ * page; false when the grid moved past it. The visible part of the cut-off column is compared with the same part of
+ * the first column's cards, by correlation so the dimming doesn't matter. Null when there is nothing to compare.
+ */
+export async function followsCutOffColumn(previous: Buffer, previousLayout: CardLayout, current: Buffer, currentLayout: CardLayout): Promise<boolean | null> {
+	if (currentLayout.selectedColumn !== 0) return null;
+	const lastColumn = previousLayout.cards.filter((card) => card.column === previousLayout.columns - 1);
+	if (!lastColumn.length) return null;
+	const [before, after] = await Promise.all([previous, current].map((image) => sharp(image).greyscale().raw().toBuffer({ resolveWithObject: true })));
+	if (before!.info.width !== after!.info.width || before!.info.height !== after!.info.height) return null;
+	const width = after!.info.width;
+	const cutOffLeft = Math.round(lastColumn[0]!.bounds.left + columnPitch * width);
+	const scores: number[] = [];
+	for (const card of currentLayout.cards.filter((slot) => slot.column === 0)) {
+		const visible = Math.min(width - cutOffLeft, card.bounds.width);
+		if (visible < card.bounds.width * 0.3) return null;
+		// Below the name strip, where a long highlighted name scrolls, and above the rarity bar.
+		const top = card.bounds.top + Math.round(card.bounds.height * 0.25);
+		const a: number[] = [], b: number[] = [];
+		for (let y = top; y < top + card.bounds.height * 0.6; y += 2) {
+			for (let x = 0; x < visible * 0.9; x += 2) {
+				a.push(before!.data[y * width + cutOffLeft + x]!);
+				b.push(after!.data[y * width + card.bounds.left + x]!);
+			}
+		}
+		scores.push(correlation(a, b));
+	}
+	return scores.length ? Math.max(...scores) >= 0.9 : null;
 }
 
 /** True when the highlighted card stayed put and the grid didn't scroll; a duplicate car beside it can't fool both. */
@@ -148,14 +201,14 @@ export async function pageGarage(
 		.then((result) => { knownComparisons++; return result; }, (): null => null));
 	let pageStarted = Date.now();
 	/** Presses Right and returns a probe of the settled screen, or null when Right changed nothing. */
-	async function move(from: Buffer): Promise<Buffer | null> {
+	async function move(from: Buffer, key = options.right): Promise<Buffer | null> {
 		// A move that changes nothing is retried once, since streams occasionally drop a key press. Instead of a fixed
 		// wait, the screen is checked every pollMs: the move counts once the screen differs from before and has
 		// stopped scrolling, which on a stream usually takes well under the settle time.
 		timing.moves++;
 		knownComparisons = 0;
 		for (let attempt = 0; attempt < 2; attempt++) {
-			await timed("keys", () => actions.press(options.right));
+			await timed("keys", () => actions.press(key));
 			let waited = 0;
 			let current: Buffer | null = null;
 			do {
@@ -241,6 +294,8 @@ export async function pageGarage(
 		while (true) {
 			if (layout.selectedColumn === null) throw new Error("Cannot find the highlighted card on the page.");
 			const page = await record(current, layout, selectedColumn);
+			const pageImage = current;
+			const pageLayout = layout;
 			if (pages.length >= options.maxPages) return await finish({ status: "limit" });
 			const nextColumn = page.firstColumn + layout.columns;
 			lastColumn = Math.max(lastColumn, nextColumn - 1);
@@ -271,6 +326,26 @@ export async function pageGarage(
 			if (actions.sameCards && await actions.sameCards(firstImage, firstLayout, current, layout)) {
 				actions.log("Back at the first car: the whole garage has been paged.");
 				return await finish({ status: "completed" });
+			}
+			// A stream can deliver one Right press twice, or a retried press can land after a slow first one, and the
+			// grid then moves one column too far, skipping the column that was cut off at the right edge.
+			if (actions.continuesFrom && await actions.continuesFrom(pageImage, pageLayout, current, layout) === false) {
+				actions.log(`Page ${pages.length + 1} skipped a column after page ${pages.length}; stepping back one column.`);
+				const back = await move(seen, options.left ?? "ArrowLeft");
+				if (back) {
+					const image = actions.probe ? await timed("grabs", () => actions.capture()) : back;
+					const backLayout = await actions.layout(image);
+					if (await actions.continuesFrom(pageImage, pageLayout, image, backLayout) !== false) {
+						seen = back;
+						current = image;
+						layout = backLayout;
+					} else {
+						// Stepping back didn't find the column either, so the check can't be trusted here: go forward again.
+						const forward = await move(back);
+						if (forward) seen = forward;
+						actions.log(`Page ${pages.length + 1} may be missing a column after page ${pages.length}.`);
+					}
+				}
 			}
 		}
 	} catch (error) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { pageGarage, sameCardTiles } from "../src/capture/garage-pages.ts";
+import { followsCutOffColumn, pageGarage, sameCardTiles } from "../src/capture/garage-pages.ts";
 import type { CardLayout, CardReading } from "../src/ocr/my-cars-cards.ts";
 
 /**
@@ -8,7 +8,8 @@ import type { CardLayout, CardReading } from "../src/ocr/my-cars-cards.ts";
  * column and scrolls it to the left edge until the last columns are on screen; after that the highlight moves
  * across the screen. Screens are JSON of the visible state.
  */
-function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), visible = 4, wrap = false, scrollToEnd = false) {
+function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), visible = 4, wrap = false, scrollToEnd = false,
+	doublePresses: Set<number> = new Set()) {
 	const state = { selected: 0, presses: 0 };
 	const pressed: string[] = [];
 	const files = new Map<string, Buffer>();
@@ -26,7 +27,11 @@ function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), v
 			press: async (key: string) => {
 				pressed.push(key);
 				if (dropPresses.has(++state.presses)) return;
-				if (key === "ArrowRight") state.selected = wrap && state.selected === heights.length - 1 ? 0 : Math.min(state.selected + 1, heights.length - 1);
+				const steps = doublePresses.has(state.presses) ? 2 : 1;
+				for (let step = 0; step < steps; step++) {
+					if (key === "ArrowRight") state.selected = wrap && state.selected === heights.length - 1 ? 0 : Math.min(state.selected + 1, heights.length - 1);
+					if (key === "ArrowLeft") state.selected = Math.max(state.selected - 1, 0);
+				}
 			},
 			wait: async (_milliseconds: number) => {},
 			layout: async (image: Buffer): Promise<CardLayout> => {
@@ -42,6 +47,12 @@ function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), v
 				return { columns, cards, selectedColumn: screen.selected - screen.first };
 			},
 			isSameScreen: async (previous: Buffer, current: Buffer) => previous.equals(current),
+			// The cut-off column at the right of a full page is the one just past its visible columns.
+			// Once the grid stops scrolling, the highlight isn't leftmost and there is nothing to compare.
+			continuesFrom: async (previous: Buffer, previousLayout: CardLayout, current: Buffer) => {
+				const screen = parse(current);
+				return screen.selected !== screen.first ? null : parse(previous).first + previousLayout.columns === screen.first;
+			},
 			read: async (image: Buffer) => {
 				const screen = parse(image);
 				const readings: CardReading[] = [];
@@ -275,6 +286,47 @@ describe("garage paging", () => {
 		expect(result.status).toBe("completed");
 		expect(result.pages[0]!.error).toBe("Cannot locate cards");
 		expect(positions(result.cars)).toEqual(["4-0", "5-0", "6-0", "7-0"]);
+	});
+});
+
+describe("skipped columns", () => {
+	it("steps back when one press moved the grid two columns", async () => {
+		const heights = [1, 3, 2, 3, 1, 2, 3, 3, 1, 2, 2, 1, 3];
+		// The fourth press, the last move to page 2, is taken twice and would skip column 4.
+		const grid = simulateGrid(heights, new Set(), 4, false, false, new Set([4]));
+		const result = await pageGarage(grid.actions, options, async () => {});
+		expect(result.status).toBe("completed");
+		expect(positions(result.cars)).toEqual(expected(heights));
+		expect(grid.pressed.filter((key) => key === "ArrowLeft")).toHaveLength(1);
+	});
+
+	// A 1920x1080 page: the last full column's card at x 1430, so the cut-off column starts 332 pixels further on.
+	const card = { width: 323, height: 243, top: 212 };
+	function picture(seed: number): Uint8Array {
+		const pixels = new Uint8Array(card.width * card.height);
+		for (let y = 0; y < card.height; y++) for (let x = 0; x < card.width; x++) {
+			pixels[y * card.width + x] = 128 + Math.round(100 * Math.sin((Math.floor(x / 12) + 1) * seed * 0.7) * Math.cos((Math.floor(y / 12) + 2) * seed * 1.3));
+		}
+		return pixels;
+	}
+	async function screen(left: number, pixels: Uint8Array, scale: number, offset: number): Promise<Buffer> {
+		const width = Math.min(card.width, 1920 - left);
+		const cropped = new Uint8Array(width * card.height);
+		for (let y = 0; y < card.height; y++) for (let x = 0; x < width; x++) cropped[y * width + x] = Math.round(pixels[y * card.width + x]! * scale + offset);
+		return sharp({ create: { width: 1920, height: 1080, channels: 3, background: { r: 40, g: 40, b: 40 } } })
+			.composite([{ input: Buffer.from(cropped), raw: { width, height: card.height, channels: 1 }, left, top: card.top }]).png().toBuffer();
+	}
+	const slot = (column: number, left: number, selected = false) =>
+		({ column, row: 0, selected, bounds: { left, top: card.top, width: card.width, height: card.height } });
+	const previousLayout: CardLayout = { columns: 4, selectedColumn: 0, cards: [slot(0, 408, true), slot(1, 740), slot(2, 1085), slot(3, 1430)] };
+	const currentLayout: CardLayout = { columns: 4, selectedColumn: 0, cards: [slot(0, 408, true), slot(1, 740), slot(2, 1085), slot(3, 1430)] };
+	it("recognises the dimmed, cut-off column as the next page's first", async () => {
+		// The cut-off column is dimmed by the game; the next page shows it at full brightness.
+		const previous = await screen(1762, picture(3), 0.45, 20);
+		expect(await followsCutOffColumn(previous, previousLayout, await screen(408, picture(3), 1, 0), currentLayout)).toBe(true);
+		expect(await followsCutOffColumn(previous, previousLayout, await screen(408, picture(5), 1, 0), currentLayout)).toBe(false);
+		// Without a highlighted first column (the end of the grid), there is nothing to compare.
+		expect(await followsCutOffColumn(previous, previousLayout, await screen(408, picture(3), 1, 0), { ...currentLayout, selectedColumn: 1 })).toBeNull();
 	});
 });
 

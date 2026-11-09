@@ -115,6 +115,11 @@ paging has finished, because OCR running alongside slowed paging from about
 terminal says so. `--read-during` reads in the background while paging
 instead, which ends the whole run sooner but keeps the stream busy longer.
 
+Each new page is checked against the column shown cut off and dimmed at the
+right edge of the page before it. If the stream delivered a Right press twice
+and the grid skipped that column, the scan says so and steps back one column
+with Left before capturing.
+
 ### Choosing the screen
 
 Captures open on the laptop's built-in screen by default, so a run works the

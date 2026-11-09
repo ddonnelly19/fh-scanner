@@ -33,7 +33,7 @@ const { values, positionals } = parseArgs({
 		"max-pages": { type: "string", default: "1000" },
 		"max-cars": { type: "string", default: "2000" },
 		"settle-ms": { type: "string", default: "1200" },
-		"read-after": { type: "boolean", default: false },
+		"read-during": { type: "boolean", default: false },
 		display: { type: "string", default: "internal" },
 		source: { type: "string", default: "video" },
 	},
@@ -46,7 +46,7 @@ if (positionals.length > 1 || values.image?.trim() === "" ||
 	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
 	!["video", "screen"].includes(values.source!) ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-after]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
 }
 
 const urls: Record<string, string> = {
@@ -303,7 +303,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 			},
 			loadScreenshot: (name) => readFile(join(directory, name)),
 			log: (message) => console.log(message),
-		}, { right: defaultGarageWalkKeys.right, settleMs, maxPages, readAfterPaging: values["read-after"] }, async (progress) => {
+		}, { right: defaultGarageWalkKeys.right, settleMs, maxPages, readAfterPaging: !values["read-during"] }, async (progress) => {
 			manifest.pages = progress.pages;
 			manifest.cars = progress.cars;
 			await saveGaragePagesManifest(directory, manifest);

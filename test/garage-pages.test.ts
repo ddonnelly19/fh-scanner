@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { pageGarage } from "../src/capture/garage-pages.ts";
+import sharp from "sharp";
+import { pageGarage, sameCardTiles } from "../src/capture/garage-pages.ts";
 import type { CardLayout, CardReading } from "../src/ocr/my-cars-cards.ts";
 
 /**
@@ -7,11 +8,12 @@ import type { CardLayout, CardReading } from "../src/ocr/my-cars-cards.ts";
  * column and scrolls it to the left edge until the last columns are on screen; after that the highlight moves
  * across the screen. Screens are JSON of the visible state.
  */
-function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), visible = 4, wrap = false) {
+function simulateGrid(heights: number[], dropPresses: Set<number> = new Set(), visible = 4, wrap = false, scrollToEnd = false) {
 	const state = { selected: 0, presses: 0 };
 	const pressed: string[] = [];
 	const files = new Map<string, Buffer>();
-	const first = () => Math.min(state.selected, Math.max(0, heights.length - visible));
+	// FH6 with some sorts scrolls even the last columns to the left edge instead of stopping at a full screen.
+	const first = () => scrollToEnd ? state.selected : Math.min(state.selected, Math.max(0, heights.length - visible));
 	const parse = (image: Buffer) => JSON.parse(image.toString()) as { first: number; selected: number };
 	const reading = (column: number, row: number, overrides: Partial<CardReading> = {}): CardReading => ({
 		column, row, selected: false, car: { name: `CAR ${column}-${row}`, year: 2020, manufacturer: "MAKER" }, nameComplete: true,
@@ -177,6 +179,38 @@ describe("garage paging", () => {
 		expect(positions(result.cars)).toEqual(expected(heights));
 		expect(result.pages.map((page) => page.firstColumn)).toEqual([0, 4, 6]);
 	});
+	it("recognises the wrap by the cards when the animated background makes whole screens differ", async () => {
+		const heights = [3, 2, 3, 1, 3, 3, 2, 3, 3, 1];
+		const grid = simulateGrid(heights, new Set(), 4, true, true);
+		// Every capture carries a frame count standing in for the moving background: screens match only when taken
+		// close together, so the starting screen never matches the wrapped one as a whole.
+		let frame = 0;
+		const capture = grid.actions.capture;
+		const stamp = async () => Buffer.from(JSON.stringify({ ...JSON.parse((await capture()).toString()), frame: frame++ }));
+		const view = (image: Buffer) => { const { first, selected, frame: at } = JSON.parse(image.toString()); return { first, selected, at }; };
+		const result = await pageGarage({
+			...grid.actions,
+			capture: stamp,
+			isSameScreen: async (previous, current) => {
+				const [a, b] = [view(previous), view(current)];
+				return a.first === b.first && a.selected === b.selected && Math.abs(a.at - b.at) < 5;
+			},
+			sameCards: async (previous, _previousLayout, current) => {
+				const [a, b] = [view(previous), view(current)];
+				return a.first === b.first && a.selected === b.selected;
+			},
+		}, options, async () => {});
+		expect(result.status).toBe("completed");
+		expect(positions(result.cars)).toEqual(expected(heights));
+		expect(result.pages.map((page) => [page.firstColumn, page.columns])).toEqual([[0, 4], [4, 4], [8, 2]]);
+	});
+	it("lists each page in the progress report as soon as it is captured", async () => {
+		const grid = simulateGrid([1, 1, 1, 1, 1, 1, 1, 1, 1]);
+		const reported: number[] = [];
+		await pageGarage(grid.actions, { ...options, readAfterPaging: true }, async (progress) => { reported.push(progress.pages.length); });
+		// Pages 1-3 while paging, before any card is read; then once more after each page is read.
+		expect(reported.slice(0, 3)).toEqual([1, 2, 3]);
+	});
 	it("reports a card read differently on overlapping pages instead of picking one", async () => {
 		const heights = [1, 1, 1, 1, 1, 1];
 		const grid = simulateGrid(heights);
@@ -241,5 +275,27 @@ describe("garage paging", () => {
 		expect(result.status).toBe("completed");
 		expect(result.pages[0]!.error).toBe("Cannot locate cards");
 		expect(positions(result.cars)).toEqual(["4-0", "5-0", "6-0", "7-0"]);
+	});
+});
+
+describe("card comparison", () => {
+	// Two white cards on a background; the background can change, as the menu's animated one does.
+	async function screen(background: string, secondCard = "#ffffff"): Promise<Buffer> {
+		const card = (fill: string) => sharp({ create: { width: 300, height: 220, channels: 3, background: fill } })
+			.composite([{ input: { create: { width: 120, height: 60, channels: 3, background: "#203040" } }, left: 90, top: 100 }]).png().toBuffer();
+		return sharp({ create: { width: 1280, height: 720, channels: 3, background } })
+			.composite([{ input: await card("#ffffff"), left: 200, top: 150 }, { input: await card(secondCard), left: 520, top: 150 }]).png().toBuffer();
+	}
+	const layout: CardLayout = {
+		columns: 2, selectedColumn: 0, cards: [
+			{ column: 0, row: 0, selected: true, bounds: { left: 200, top: 150, width: 300, height: 220 } },
+			{ column: 1, row: 0, selected: false, bounds: { left: 520, top: 150, width: 300, height: 220 } },
+		],
+	};
+	it("ignores the background around the cards but not a card that changed", async () => {
+		const first = await screen("#301010");
+		expect(await sameCardTiles(first, layout, await screen("#806040"), layout)).toBe(true);
+		expect(await sameCardTiles(first, layout, await screen("#301010", "#ffd0d0"), layout)).toBe(false);
+		expect(await sameCardTiles(first, layout, first, { ...layout, columns: 1, cards: layout.cards.slice(0, 1) })).toBe(false);
 	});
 });

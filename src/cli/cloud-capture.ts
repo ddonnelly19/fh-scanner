@@ -10,7 +10,7 @@ import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { BrowserRecording, parseRecordingCommand } from "../capture/browser-recording.ts";
 import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSamePanel, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
 import type { GarageCar } from "../capture/garage-walk.ts";
-import { isSameScreen, pageGarage, saveGaragePagesManifest } from "../capture/garage-pages.ts";
+import { isSameScreen, pageGarage, sameCardTiles, saveGaragePagesManifest } from "../capture/garage-pages.ts";
 import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { matchCatalog } from "../ocr/card-catalog.ts";
@@ -366,6 +366,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			layout: findCards,
 			isSameScreen,
+			sameCards: sameCardTiles,
 			read: async (image) => (await readCardPage(image, worker, shapeWorker, templates)).cards.map((card) => matchCatalog(card, catalog)),
 			saveScreenshot: async (name, image) => {
 				await writeFile(join(directory, name), image, { flag: "wx" });

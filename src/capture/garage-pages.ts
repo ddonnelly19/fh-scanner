@@ -17,6 +17,12 @@ export interface GaragePagesActions {
 	layout(image: Buffer): Promise<CardLayout>;
 	/** True when nothing moved: the same card is highlighted and the grid hasn't scrolled. */
 	isSameScreen(previous: Buffer, current: Buffer): Promise<boolean>;
+	/**
+	 * True when two full captures show the same cards in the same places, judged by the cards alone. The menu's
+	 * background is animated, so screens minutes apart never match as a whole; this is how a grid that wrapped back
+	 * to its first page is recognised.
+	 */
+	sameCards?(previous: Buffer, previousLayout: CardLayout, current: Buffer, currentLayout: CardLayout): Promise<boolean>;
 	/** Reads every fully visible card. */
 	read(image: Buffer): Promise<CardReading[]>;
 	saveScreenshot(name: string, image: Buffer): Promise<void>;
@@ -59,6 +65,22 @@ export interface GaragePagesResult {
 	pages: GaragePage[];
 	cars: GarageCard[];
 	error?: string;
+}
+
+/** True when two same-sized captures show the same cards in the same slots, comparing only inside the cards. */
+export async function sameCardTiles(previous: Buffer, previousLayout: CardLayout, current: Buffer, currentLayout: CardLayout): Promise<boolean> {
+	const slots = (layout: CardLayout) => layout.cards.map((card) => `${card.column},${card.row},${card.selected}`).join(" ");
+	if (previousLayout.columns !== currentLayout.columns || slots(previousLayout) !== slots(currentLayout)) return false;
+	for (const card of previousLayout.cards) {
+		// Inside the card, below the name strip, where a long highlighted name scrolls.
+		const { left, top, width, height } = card.bounds;
+		const region = {
+			left: Math.round(left + width * 0.08), top: Math.round(top + height * 0.25),
+			width: Math.round(width * 0.84), height: Math.round(height * 0.67),
+		};
+		if (!await sameTileContents(previous, current, region)) return false;
+	}
+	return true;
 }
 
 /** True when the highlighted card stayed put and the grid didn't scroll; a duplicate car beside it can't fool both. */
@@ -177,6 +199,8 @@ export async function pageGarage(
 		};
 		await actions.saveScreenshot(page.screenshot, image);
 		pages.push(page);
+		// Saved as soon as it is captured, so a stopped run still lists every page it took.
+		await onPage({ pages, cars: sorted() });
 		const now = Date.now();
 		const seconds = (milliseconds: number) => `${(milliseconds / 1000).toFixed(1)} s`;
 		actions.log(`Captured page ${page.page} (${seconds(now - pageStarted)}` + (timing.moves ? `: ${timing.moves} moves, ` +
@@ -206,7 +230,9 @@ export async function pageGarage(
 		let seen = actions.probe ? await probe() : current;
 		// Right on the last car wraps to the first, so seeing the starting screen again also ends the grid.
 		const firstScreen = seen;
+		const firstImage = current;
 		let layout = await actions.layout(current);
+		const firstLayout = layout;
 		const start = layout.cards.find((card) => card.selected);
 		if (!start || start.row !== 0) throw new Error("Select a car in the top row of My Cars before paging; Right keeps the row.");
 		// Grid column of the highlighted card, counted from where paging started, and the last column captured.
@@ -241,6 +267,11 @@ export async function pageGarage(
 			}
 			current = actions.probe ? await timed("grabs", () => actions.capture()) : seen;
 			layout = await actions.layout(current);
+			// Back on the first page: Right on the last car wrapped to the first, so every column has been captured.
+			if (actions.sameCards && await actions.sameCards(firstImage, firstLayout, current, layout)) {
+				actions.log("Back at the first car: the whole garage has been paged.");
+				return await finish({ status: "completed" });
+			}
 		}
 	} catch (error) {
 		return await finish({ status: "interrupted", error: error instanceof Error ? error.message : String(error) });

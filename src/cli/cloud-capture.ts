@@ -15,7 +15,7 @@ import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { matchCatalog } from "../ocr/card-catalog.ts";
 import { loadCarIdData } from "@forzagarage/car-ids";
-import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
+import { checkGameFrame, cropToGame, readWidth, scaleToReadWidth } from "../capture/game-frame.ts";
 import { assertSignedIn } from "../capture/session-check.ts";
 import { listDisplays, pickDisplay } from "../capture/displays.ts";
 import { setTimeout as wait } from "node:timers/promises";
@@ -59,6 +59,7 @@ if (!url) {
 }
 
 let usingScreenFallback = false;
+let warnedSmallStream = false;
 
 /**
  * The game picture. By default it is read from the stream's video at the stream's own resolution; a page screenshot
@@ -69,7 +70,14 @@ async function grab(page: import("playwright").Page): Promise<Buffer> {
 		const frame = await captureStreamFrame(page);
 		if (frame) {
 			usingScreenFallback = false;
-			return cropToGame(frame);
+			const game = await cropToGame(frame);
+			const width = game.readUInt32BE(16);
+			if (width < readWidth && !warnedSmallStream) {
+				warnedSmallStream = true;
+				console.warn(`The stream is only ${width} wide, so frames are scaled up to ${readWidth} and reads may be less reliable. ` +
+					"Raise the streaming resolution in the provider's settings (GeForce Now: Streaming Quality, Custom).");
+			}
+			return scaleToReadWidth(game);
 		}
 		if (!usingScreenFallback) console.warn("No playing stream video found; using a screenshot of the window instead.");
 		usingScreenFallback = true;

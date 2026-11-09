@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { checkGameFrame, cropToGame } from "../src/capture/game-frame.ts";
+import { checkGameFrame, cropToGame, scaleToReadWidth } from "../src/capture/game-frame.ts";
 
 // A 16:9 "game" with a bright frame edge and a highlighted tile, placed on a black canvas of the given size.
 async function streamed(canvasWidth: number, canvasHeight: number, gameWidth = 1600, gameHeight = 900): Promise<Buffer> {
@@ -38,5 +38,12 @@ describe("game frame", () => {
 		await expect(checkGameFrame(await cropToGame(await streamed(2560, 900)))).resolves.toBeUndefined();
 		const blank = await sharp({ create: { width: 1600, height: 900, channels: 3, background: "#405060" } }).png().toBuffer();
 		await expect(checkGameFrame(blank)).rejects.toThrow("highlighted car");
+	});
+	it("scales a small stream frame up to 1920 wide and leaves larger ones alone", async () => {
+		// GeForce Now sent 992x620 (16:10) on a bad connection: the 16:9 game is 992x558 after cropping.
+		const small = await cropToGame(await streamed(992, 620, 992, 558));
+		expect(await sharp(await scaleToReadWidth(small)).metadata()).toMatchObject({ width: 1920, height: 1080 });
+		const large = await streamed(2560, 1440, 2560, 1440);
+		expect(await scaleToReadWidth(large)).toBe(large);
 	});
 });

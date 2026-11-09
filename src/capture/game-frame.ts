@@ -46,3 +46,16 @@ export async function checkGameFrame(image: Buffer): Promise<void> {
 		throw new Error("Can't see a highlighted car. Open My Cars, select the first (top-left) car, hide overlays and try again.");
 	}
 }
+
+/** The width the card and stats readers were tuned on. */
+export const readWidth = 1920;
+
+/**
+ * Scales a game picture narrower than readWidth up to it. A cloud stream can drop to a small size (GeForce Now sent
+ * 992x620 on a bad connection), and the readers' crops and icon templates expect at least 1920 wide.
+ */
+export async function scaleToReadWidth(image: Buffer): Promise<Buffer> {
+	const { width } = await sharp(image).metadata();
+	if (!width || width >= readWidth) return image;
+	return sharp(image).resize({ width: readWidth, kernel: "lanczos3" }).png().toBuffer();
+}

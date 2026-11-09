@@ -76,7 +76,16 @@ Before a run starts the terminal shows what the stream delivers, for example
 scan also records the stream stats for every page in `garage-pages.json`
 (`stream`), so a page that reads badly can be matched to a drop in resolution
 or bitrate. Stream resolution itself is set in the provider's own settings and
-is kept in the saved browser profile.
+is kept in the saved browser profile. On GeForce Now (Settings, Gameplay,
+Streaming quality, Custom) pick a 16:9 resolution such as 2560x1440 and set
+"Adjust for network conditions" to "No adjustment" or "Optimal quality":
+"Optimal latency" drops the resolution on packet loss (992x620 was seen). A
+stream under 1920 wide is scaled up to 1920 before reading, with a warning.
+
+While waiting for a move to show and the screen to settle, the page scan checks
+small 1280-wide JPEG frames, which are several times quicker to grab than a
+full PNG; the full-size frame is taken once per page. Each "Captured page" line
+shows how long that page took.
 
 ### Choosing the screen
 

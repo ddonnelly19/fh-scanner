@@ -84,6 +84,32 @@ describe("garage paging", () => {
 		// Two moves across the page, then two presses that change nothing.
 		expect(grid.pressed).toHaveLength(4);
 	});
+	it("watches the screen with quick probes and takes one full capture per page", async () => {
+		const heights = [1, 3, 2, 3, 1, 2, 3, 3, 1, 2, 2];
+		const grid = simulateGrid(heights, new Set([3]));
+		let captures = 0;
+		const capture = grid.actions.capture;
+		const actions = {
+			...grid.actions,
+			capture: async () => { captures++; return capture(); },
+			// A probe shows the same screen in another format, so it only ever matches other probes.
+			probe: async () => Buffer.from(`probe:${(await capture()).toString()}`),
+			layout: async (image: Buffer) => {
+				expect(image.toString()).not.toMatch(/^probe:/);
+				return grid.actions.layout(image);
+			},
+			saveScreenshot: async (name: string, image: Buffer) => {
+				expect(image.toString()).not.toMatch(/^probe:/);
+				await grid.actions.saveScreenshot(name, image);
+			},
+		};
+		const result = await pageGarage(actions, options, async () => {});
+		expect(result.status).toBe("completed");
+		expect(positions(result.cars)).toEqual(expected(heights));
+		expect(result.pages).toHaveLength(3);
+		// The first screen, one per later page, and one for the final screen.
+		expect(captures).toBe(4);
+	});
 	it("retries a dropped Right instead of stopping early", async () => {
 		const heights = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 		const grid = simulateGrid(heights, new Set([2, 6]));

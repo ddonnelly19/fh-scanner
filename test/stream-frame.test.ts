@@ -53,6 +53,9 @@ describe("stream capture", () => {
 		const { channels } = await sharp(frame!).extract({ left: 0, top: 0, width: 100, height: 100 }).stats();
 		expect(channels[0]!.mean).toBeGreaterThan(150);
 		expect(channels[1]!.mean).toBeLessThan(60);
+		// The quick probe used while waiting for the screen to settle is a smaller JPEG of the same frame.
+		const probe = await sharp((await captureStreamFrame(page, { width: 320, type: "jpeg" }))!).metadata();
+		expect(probe).toMatchObject({ format: "jpeg", width: 320, height: Math.round(shown[1]! * 320 / shown[0]!) });
 	}, 20000);
 	it("reports the stream's video stats", async () => {
 		await readStreamStats(page);

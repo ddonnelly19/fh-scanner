@@ -77,20 +77,22 @@ export function describeStreamStats(stats: StreamStats): string {
 
 /**
  * The current frame of the largest playing video, as a PNG at the video's own resolution, or null when there is no
- * playing video. WebRTC video isn't cross-origin, so the canvas can be read back.
+ * playing video. WebRTC video isn't cross-origin, so the canvas can be read back. A smaller JPEG (width and type)
+ * is several times quicker to make and is enough to tell whether the screen is still moving.
  */
-export async function captureStreamFrame(page: Page): Promise<Buffer | null> {
-	const dataUrl = await page.evaluate(() => {
+export async function captureStreamFrame(page: Page, options: { width?: number; type?: "png" | "jpeg" } = {}): Promise<Buffer | null> {
+	const dataUrl = await page.evaluate(({ width, type }) => {
 		const videos = [...document.querySelectorAll("video")].filter((video) => video.videoWidth > 0 && !video.paused && !video.ended);
 		const video = videos.sort((a, b) => b.videoWidth * b.videoHeight - a.videoWidth * a.videoHeight)[0];
 		if (!video) return null;
 		const canvas = document.createElement("canvas");
-		canvas.width = video.videoWidth;
-		canvas.height = video.videoHeight;
+		const scale = width ? Math.min(1, width / video.videoWidth) : 1;
+		canvas.width = Math.round(video.videoWidth * scale);
+		canvas.height = Math.round(video.videoHeight * scale);
 		const context = canvas.getContext("2d");
 		if (!context) return null;
-		context.drawImage(video, 0, 0);
-		return canvas.toDataURL("image/png");
-	});
+		context.drawImage(video, 0, 0, canvas.width, canvas.height);
+		return type === "jpeg" ? canvas.toDataURL("image/jpeg", 0.9) : canvas.toDataURL("image/png");
+	}, { width: options.width ?? 0, type: options.type ?? "png" });
 	return dataUrl ? Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64") : null;
 }

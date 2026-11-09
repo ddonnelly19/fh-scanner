@@ -85,6 +85,15 @@ async function grab(page: import("playwright").Page): Promise<Buffer> {
 	return cropToGame(await page.screenshot());
 }
 
+/** A quick 1280-wide JPEG of the stream, only for telling whether the screen is still moving. */
+async function probe(page: import("playwright").Page): Promise<Buffer> {
+	if (values.source === "video") {
+		const frame = await captureStreamFrame(page, { width: 1280, type: "jpeg" });
+		if (frame) return cropToGame(frame);
+	}
+	return grab(page);
+}
+
 /** Prints where captures come from and what the stream delivers, before a run starts. */
 async function reportStream(page: import("playwright").Page): Promise<void> {
 	const stats = await readStreamStats(page);
@@ -275,6 +284,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	try {
 		const result = await pageGarage({
 			capture: async () => { assertSignedIn(page.url(), provider); return grab(page); },
+			probe: async () => { assertSignedIn(page.url(), provider); return probe(page); },
 			press: async (key) => {
 				assertSignedIn(page.url(), provider);
 				await page.bringToFront();

@@ -6,6 +6,11 @@ import type { CardLayout, CardReading } from "../ocr/my-cars-cards.ts";
 
 export interface GaragePagesActions {
 	capture(): Promise<Buffer>;
+	/**
+	 * A quick, smaller capture used only to see whether the screen moved or is still moving; capture() is then taken
+	 * once for the page itself. Without it, capture() is used for both.
+	 */
+	probe?(): Promise<Buffer>;
 	press(key: string): Promise<void>;
 	wait(milliseconds: number): Promise<void>;
 	/** Card positions and the highlighted column, without OCR. */
@@ -100,6 +105,9 @@ export async function pageGarage(
 	let readError: unknown;
 	const sorted = () => [...cards.values()].sort((a, b) => a.column - b.column || a.row - b.row);
 	const pollMs = options.pollMs ?? 150;
+	const probe = () => actions.probe ? actions.probe() : actions.capture();
+	let pageStarted = Date.now();
+	/** Presses Right and returns a probe of the settled screen, or null when Right changed nothing. */
 	async function move(from: Buffer): Promise<Buffer | null> {
 		// A move that changes nothing is retried once, since streams occasionally drop a key press. Instead of a fixed
 		// wait, the screen is checked every pollMs: the move counts once the screen differs from before and has
@@ -112,13 +120,13 @@ export async function pageGarage(
 				const step = Math.min(pollMs, options.settleMs - waited);
 				await actions.wait(step);
 				waited += step;
-				const capture = await actions.capture();
+				const capture = await probe();
 				if (!await actions.isSameScreen(from, capture)) current = capture;
 			} while (!current && waited < options.settleMs);
 			if (!current) continue;
 			for (let settled = 0; settled < options.settleMs; settled += pollMs) {
 				await actions.wait(pollMs);
-				const next = await actions.capture();
+				const next = await probe();
 				if (await actions.isSameScreen(current, next)) return next;
 				current = next;
 			}
@@ -147,7 +155,9 @@ export async function pageGarage(
 		};
 		await actions.saveScreenshot(page.screenshot, image);
 		pages.push(page);
-		actions.log(`Captured page ${page.page}.`);
+		const now = Date.now();
+		actions.log(`Captured page ${page.page} (${((now - pageStarted) / 1000).toFixed(1)} s).`);
+		pageStarted = now;
 		// Chained so pages are read in order, one at a time; a failed report ends the run once paging stops.
 		reads = reads.then(() => readError === undefined ? read(page) : undefined)
 			.catch((error: unknown) => { readError = error; });
@@ -161,9 +171,11 @@ export async function pageGarage(
 		return { ...result, pages, cars: sorted() };
 	}
 	try {
+		// current is the full capture of the screen a page is read from; seen is a probe of the screen shown now.
 		let current = await actions.capture();
+		let seen = actions.probe ? await probe() : current;
 		// Right on the last car wraps to the first, so seeing the starting screen again also ends the grid.
-		const firstScreen = current;
+		const firstScreen = seen;
 		let layout = await actions.layout(current);
 		const start = layout.cards.find((card) => card.selected);
 		if (!start || start.row !== 0) throw new Error("Select a car in the top row of My Cars before paging; Right keeps the row.");
@@ -179,23 +191,25 @@ export async function pageGarage(
 			if (nextColumn <= selectedColumn) throw new Error("The highlighted card is not in a fully visible column.");
 			let moved = false;
 			while (selectedColumn < nextColumn) {
-				const shown = await move(current);
+				const shown = await move(seen);
 				const next = shown && await actions.isSameScreen(firstScreen, shown) ? null : shown;
 				if (!next) {
 					// The final screen is captured too, unless the grid had already stopped scrolling and it shows
 					// nothing new.
 					if (moved) {
-						const final = await actions.layout(current);
+						const image = actions.probe ? await actions.capture() : seen;
+						const final = await actions.layout(image);
 						if (final.selectedColumn !== null && selectedColumn - final.selectedColumn + final.columns - 1 > lastColumn) {
-							await record(current, final, selectedColumn);
+							await record(image, final, selectedColumn);
 						}
 					}
 					return await finish({ status: "completed" });
 				}
-				current = next;
+				seen = next;
 				selectedColumn++;
 				moved = true;
 			}
+			current = actions.probe ? await actions.capture() : seen;
 			layout = await actions.layout(current);
 		}
 	} catch (error) {

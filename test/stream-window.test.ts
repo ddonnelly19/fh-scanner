@@ -25,10 +25,17 @@ describe("kept-open stream window", () => {
 			expect(await again.evaluate(() => (window as unknown as { kept: number }).kept)).toBe(42);
 			const session = await second!.newBrowserCDPSession();
 			await session.send("Browser.close").catch(() => {});
+			// Edge exits a moment after Browser.close; wait for the port to go quiet so it doesn't hold the profile.
+			for (let attempt = 0; attempt < 40; attempt++) {
+				const lingering = await connectStreamWindow(port);
+				if (!lingering) break;
+				await lingering.close();
+				await new Promise((resolve) => setTimeout(resolve, 250));
+			}
 		} finally {
 			for (let attempt = 0; attempt < 20; attempt++) {
 				try { rmSync(profileDirectory, { recursive: true, force: true }); break; } catch { await new Promise((resolve) => setTimeout(resolve, 250)); }
 			}
 		}
-	}, 30000);
+	}, 90000);
 });

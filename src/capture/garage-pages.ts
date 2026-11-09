@@ -118,7 +118,12 @@ export async function pageGarage(
 		try { return await work(); } finally { timing[part] += Date.now() - started; }
 	}
 	const probe = () => { timing.checks++; return timed("grabs", () => actions.probe ? actions.probe() : actions.capture()); };
-	const same = (previous: Buffer, current: Buffer) => timed("compares", () => actions.isSameScreen(previous, current));
+	// A frame caught mid-scroll, or with a stream notice drawn over it for a moment, can lack a findable highlight:
+	// the comparison is then unknown (null), which counts neither as a move nor as a settled screen. A lasting
+	// problem still stops the run when the page's full capture is laid out.
+	let knownComparisons = 0;
+	const same = (previous: Buffer, current: Buffer) => timed("compares", () => actions.isSameScreen(previous, current)
+		.then((result) => { knownComparisons++; return result; }, (): null => null));
 	let pageStarted = Date.now();
 	/** Presses Right and returns a probe of the settled screen, or null when Right changed nothing. */
 	async function move(from: Buffer): Promise<Buffer | null> {
@@ -126,6 +131,7 @@ export async function pageGarage(
 		// wait, the screen is checked every pollMs: the move counts once the screen differs from before and has
 		// stopped scrolling, which on a stream usually takes well under the settle time.
 		timing.moves++;
+		knownComparisons = 0;
 		for (let attempt = 0; attempt < 2; attempt++) {
 			await timed("keys", () => actions.press(options.right));
 			let waited = 0;
@@ -135,17 +141,19 @@ export async function pageGarage(
 				await timed("waits", () => actions.wait(step));
 				waited += step;
 				const capture = await probe();
-				if (!await same(from, capture)) current = capture;
+				if (await same(from, capture) === false) current = capture;
 			} while (!current && waited < options.settleMs);
 			if (!current) continue;
 			for (let settled = 0; settled < options.settleMs; settled += pollMs) {
 				await timed("waits", () => actions.wait(pollMs));
 				const next = await probe();
-				if (await same(current, next)) return next;
+				if (await same(current, next) === true) return next;
 				current = next;
 			}
 			return current;
 		}
+		// Right changing nothing ends the grid, but only if the screen could be compared at all.
+		if (!knownComparisons) throw new Error("Cannot follow the highlighted My Cars tile after a move. Hide streaming overlays and try again.");
 		return null;
 	}
 	async function read(page: GaragePage): Promise<void> {
@@ -214,7 +222,7 @@ export async function pageGarage(
 			let moved = false;
 			while (selectedColumn < nextColumn) {
 				const shown = await move(seen);
-				const next = shown && await same(firstScreen, shown) ? null : shown;
+				const next = shown && await same(firstScreen, shown) === true ? null : shown;
 				if (!next) {
 					// The final screen is captured too, unless the grid had already stopped scrolling and it shows
 					// nothing new.

@@ -127,6 +127,28 @@ describe("garage paging", () => {
 		expect(events.indexOf("read")).toBeGreaterThan(events.lastIndexOf("press"));
 		expect(events.filter((event) => event === "read")).toHaveLength(3);
 	});
+	it("keeps waiting through a frame whose highlight can't be found, but stops if it lasts", async () => {
+		const heights = [1, 3, 2, 3, 1, 2, 3, 3, 1, 2, 2];
+		const glitchy = (every: number) => {
+			const grid = simulateGrid(heights, new Set([2]));
+			let probes = 0;
+			return {
+				...grid.actions,
+				probe: async () => (++probes % every === 0 ? Buffer.from("glitch") : grid.actions.capture()),
+				isSameScreen: async (previous: Buffer, current: Buffer) => {
+					if (previous.toString() === "glitch" || current.toString() === "glitch") throw new Error("Cannot locate the highlighted My Cars tile.");
+					return previous.equals(current);
+				},
+			};
+		};
+		const settled = { ...options, settleMs: 1200, pollMs: 150 };
+		const result = await pageGarage(glitchy(3), settled, async () => {});
+		expect(result.status).toBe("completed");
+		expect(positions(result.cars)).toEqual(expected(heights));
+		const stuck = await pageGarage(glitchy(1), settled, async () => {});
+		expect(stuck.status).toBe("interrupted");
+		expect(stuck.error).toMatch(/highlighted My Cars tile/);
+	});
 	it("retries a dropped Right instead of stopping early", async () => {
 		const heights = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 		const grid = simulateGrid(heights, new Set([2, 6]));

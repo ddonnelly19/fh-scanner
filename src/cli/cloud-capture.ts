@@ -15,10 +15,12 @@ import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { matchCatalog } from "../ocr/card-catalog.ts";
 import { loadCarIdData } from "@forzagarage/car-ids";
-import { checkGameFrame, cropToGame } from "../capture/game-frame.ts";
+import { checkGameFrame, cropToGame, readWidth, scaleToReadWidth } from "../capture/game-frame.ts";
 import { assertSignedIn } from "../capture/session-check.ts";
 import { listDisplays, pickDisplay } from "../capture/displays.ts";
 import { setTimeout as wait } from "node:timers/promises";
+import { captureStreamFrame, describeStreamStats, readStreamStats, streamInitScript } from "../capture/stream-frame.ts";
+import type { StreamStats } from "../capture/stream-frame.ts";
 
 const { values, positionals } = parseArgs({
 	allowPositionals: true,
@@ -31,7 +33,9 @@ const { values, positionals } = parseArgs({
 		"max-pages": { type: "string", default: "1000" },
 		"max-cars": { type: "string", default: "2000" },
 		"settle-ms": { type: "string", default: "1200" },
+		"read-during": { type: "boolean", default: false },
 		display: { type: "string", default: "internal" },
+		source: { type: "string", default: "video" },
 	},
 });
 const provider = positionals[0] ?? "geforce";
@@ -40,8 +44,9 @@ const maxPages = Number(values["max-pages"]);
 const settleMs = Number(values["settle-ms"]);
 if (positionals.length > 1 || values.image?.trim() === "" ||
 	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
+	!["video", "screen"].includes(values.source!) ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
 }
 
 const urls: Record<string, string> = {
@@ -52,6 +57,53 @@ const urls: Record<string, string> = {
 const url = urls[provider];
 if (!url) {
 	throw new Error("Choose either geforce or xbox.");
+}
+
+let usingScreenFallback = false;
+let warnedSmallStream = false;
+
+/**
+ * The game picture. By default it is read from the stream's video at the stream's own resolution; a page screenshot
+ * (capped by the window) is the fallback when no playing video is found, and the choice with --source screen.
+ */
+async function grab(page: import("playwright").Page): Promise<Buffer> {
+	if (values.source === "video") {
+		const frame = await captureStreamFrame(page);
+		if (frame) {
+			usingScreenFallback = false;
+			const game = await cropToGame(frame);
+			const width = game.readUInt32BE(16);
+			if (width < readWidth && !warnedSmallStream) {
+				warnedSmallStream = true;
+				console.warn(`The stream is only ${width} wide, so frames are scaled up to ${readWidth} and reads may be less reliable. ` +
+					"Raise the streaming resolution in the provider's settings (GeForce Now: Streaming Quality, Custom).");
+			}
+			return scaleToReadWidth(game);
+		}
+		if (!usingScreenFallback) console.warn("No playing stream video found; using a screenshot of the window instead.");
+		usingScreenFallback = true;
+	}
+	return cropToGame(await page.screenshot());
+}
+
+/** A quick 1280-wide JPEG of the stream, only for telling whether the screen is still moving. */
+async function probe(page: import("playwright").Page): Promise<Buffer> {
+	if (values.source === "video") {
+		const frame = await captureStreamFrame(page, { width: 1280, type: "jpeg" });
+		if (frame) return cropToGame(frame);
+	}
+	return grab(page);
+}
+
+/** Prints where captures come from and what the stream delivers, before a run starts. */
+async function reportStream(page: import("playwright").Page): Promise<void> {
+	const stats = await readStreamStats(page);
+	const frame = values.source === "video" ? await captureStreamFrame(page) : null;
+	console.log(`Stream: ${stats ? describeStreamStats(stats) : "no stats available"}.`);
+	if (frame) {
+		const size = frame.readUInt32BE(16) + "x" + frame.readUInt32BE(20);
+		console.log(`Capturing frames from the stream video at ${size}.`);
+	} else console.log("Capturing screenshots of the window.");
 }
 
 async function capture(): Promise<Buffer | undefined> {
@@ -73,6 +125,8 @@ async function capture(): Promise<Buffer | undefined> {
 			values.login ? "--start-maximized" : "--kiosk",
 		],
 	});
+	// Registered before any page loads, so the player's peer connection can report stream stats.
+	await context.addInitScript(streamInitScript);
 	const prompt = createInterface({ input: stdin, output: stdout });
 	try {
 		const page = context.pages()[0] ?? await context.newPage();
@@ -138,7 +192,7 @@ async function capture(): Promise<Buffer | undefined> {
 		}
 		await prompt.question("Open My Cars, select a car, show ratings or press L for details, and make the game fill the viewport (16:9). Hide overlays, then press Enter here.");
 		assertSignedIn(page.url(), provider);
-		return await cropToGame(await page.screenshot());
+		return await grab(page);
 	} finally {
 		prompt.close();
 		await context.close();
@@ -162,7 +216,8 @@ async function login(page: import("playwright").Page, prompt: ReturnType<typeof 
 
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
 	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
-	await checkGameFrame(await cropToGame(await page.screenshot()));
+	await reportStream(page);
+	await checkGameFrame(await grab(page));
 	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
 	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "garage-"));
@@ -175,7 +230,7 @@ async function walk(page: import("playwright").Page, prompt: ReturnType<typeof c
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await walkGarage({
-			capture: async () => { assertSignedIn(page.url(), provider); return cropToGame(await page.screenshot()); },
+			capture: async () => { assertSignedIn(page.url(), provider); return grab(page); },
 			press: async (key) => {
 				assertSignedIn(page.url(), provider);
 				await page.bringToFront();
@@ -214,19 +269,23 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	const templates = await loadIconTemplates();
 	const catalog = loadCarIdData().cars;
 	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
-	await checkGameFrame(await cropToGame(await page.screenshot()));
+	await reportStream(page);
+	await checkGameFrame(await grab(page));
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
 	const directory = await mkdtemp(join(defaultScreenshotsDirectory, "pages-"));
 	console.log(`Pages directory: ${directory}`);
 	const manifest: {
 		schemaVersion: number; provider: string; startedAt: string; finishedAt?: string;
 		status: string; error?: string; pages: GaragePage[]; cars: GarageCard[];
-	} = { schemaVersion: 1, provider, startedAt: new Date().toISOString(), status: "paging", pages: [], cars: [] };
+		/** What the stream delivered when each page was captured, to explain a page that reads badly. */
+		stream: Array<{ screenshot: string; source: "video" | "screen"; stats: StreamStats | null }>;
+	} = { schemaVersion: 1, provider, startedAt: new Date().toISOString(), status: "paging", pages: [], cars: [], stream: [] };
 	await saveGaragePagesManifest(directory, manifest);
 	const [worker, shapeWorker] = await Promise.all([createLocalOCRWorker(), createLocalOCRWorker("legacy")]);
 	try {
 		const result = await pageGarage({
-			capture: async () => { assertSignedIn(page.url(), provider); return cropToGame(await page.screenshot()); },
+			capture: async () => { assertSignedIn(page.url(), provider); return grab(page); },
+			probe: async () => { assertSignedIn(page.url(), provider); return probe(page); },
 			press: async (key) => {
 				assertSignedIn(page.url(), provider);
 				await page.bringToFront();
@@ -236,10 +295,15 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 			layout: findCards,
 			isSameScreen,
 			read: async (image) => (await readCardPage(image, worker, shapeWorker, templates)).cards.map((card) => matchCatalog(card, catalog)),
-			saveScreenshot: (name, image) => writeFile(join(directory, name), image, { flag: "wx" }),
+			saveScreenshot: async (name, image) => {
+				await writeFile(join(directory, name), image, { flag: "wx" });
+				const stats = await readStreamStats(page).catch(() => null);
+				manifest.stream.push({ screenshot: name, source: usingScreenFallback || values.source === "screen" ? "screen" : "video", stats });
+				if (stats) console.log(`Stream at ${name}: ${describeStreamStats(stats)}.`);
+			},
 			loadScreenshot: (name) => readFile(join(directory, name)),
 			log: (message) => console.log(message),
-		}, { right: defaultGarageWalkKeys.right, settleMs, maxPages }, async (progress) => {
+		}, { right: defaultGarageWalkKeys.right, settleMs, maxPages, readAfterPaging: !values["read-during"] }, async (progress) => {
 			manifest.pages = progress.pages;
 			manifest.cars = progress.cars;
 			await saveGaragePagesManifest(directory, manifest);

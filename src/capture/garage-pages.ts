@@ -6,6 +6,11 @@ import type { CardLayout, CardReading } from "../ocr/my-cars-cards.ts";
 
 export interface GaragePagesActions {
 	capture(): Promise<Buffer>;
+	/**
+	 * A quick, smaller capture used only to see whether the screen moved or is still moving; capture() is then taken
+	 * once for the page itself. Without it, capture() is used for both.
+	 */
+	probe?(): Promise<Buffer>;
 	press(key: string): Promise<void>;
 	wait(milliseconds: number): Promise<void>;
 	/** Card positions and the highlighted column, without OCR. */
@@ -26,6 +31,11 @@ export interface GaragePagesOptions {
 	maxPages: number;
 	/** How often the screen is checked while waiting; defaults to 150 ms. */
 	pollMs?: number;
+	/**
+	 * Reads the cards only after paging ends. Reading alongside paging finishes sooner overall, but the OCR competes
+	 * with the screen checks for the CPU and slows paging down, which is the part that needs the stream left alone.
+	 */
+	readAfterPaging?: boolean;
 }
 
 /** A card with its column counted from the first column of the whole grid. */
@@ -96,30 +106,42 @@ export async function pageGarage(
 ): Promise<GaragePagesResult> {
 	const pages: GaragePage[] = [];
 	const cards = new Map<string, GarageCard>();
-	let reads: Promise<void> = Promise.resolve();
+	let releaseReads: (() => void) | undefined;
+	let reads: Promise<void> = options.readAfterPaging ? new Promise<void>((resolve) => { releaseReads = resolve; }) : Promise.resolve();
 	let readError: unknown;
 	const sorted = () => [...cards.values()].sort((a, b) => a.column - b.column || a.row - b.row);
 	const pollMs = options.pollMs ?? 150;
+	// Where each page's time goes, shown on its "Captured page" line.
+	let timing = { moves: 0, checks: 0, keys: 0, waits: 0, grabs: 0, compares: 0 };
+	async function timed<T>(part: "keys" | "waits" | "grabs" | "compares", work: () => Promise<T>): Promise<T> {
+		const started = Date.now();
+		try { return await work(); } finally { timing[part] += Date.now() - started; }
+	}
+	const probe = () => { timing.checks++; return timed("grabs", () => actions.probe ? actions.probe() : actions.capture()); };
+	const same = (previous: Buffer, current: Buffer) => timed("compares", () => actions.isSameScreen(previous, current));
+	let pageStarted = Date.now();
+	/** Presses Right and returns a probe of the settled screen, or null when Right changed nothing. */
 	async function move(from: Buffer): Promise<Buffer | null> {
 		// A move that changes nothing is retried once, since streams occasionally drop a key press. Instead of a fixed
 		// wait, the screen is checked every pollMs: the move counts once the screen differs from before and has
 		// stopped scrolling, which on a stream usually takes well under the settle time.
+		timing.moves++;
 		for (let attempt = 0; attempt < 2; attempt++) {
-			await actions.press(options.right);
+			await timed("keys", () => actions.press(options.right));
 			let waited = 0;
 			let current: Buffer | null = null;
 			do {
 				const step = Math.min(pollMs, options.settleMs - waited);
-				await actions.wait(step);
+				await timed("waits", () => actions.wait(step));
 				waited += step;
-				const capture = await actions.capture();
-				if (!await actions.isSameScreen(from, capture)) current = capture;
+				const capture = await probe();
+				if (!await same(from, capture)) current = capture;
 			} while (!current && waited < options.settleMs);
 			if (!current) continue;
 			for (let settled = 0; settled < options.settleMs; settled += pollMs) {
-				await actions.wait(pollMs);
-				const next = await actions.capture();
-				if (await actions.isSameScreen(current, next)) return next;
+				await timed("waits", () => actions.wait(pollMs));
+				const next = await probe();
+				if (await same(current, next)) return next;
 				current = next;
 			}
 			return current;
@@ -147,13 +169,23 @@ export async function pageGarage(
 		};
 		await actions.saveScreenshot(page.screenshot, image);
 		pages.push(page);
-		actions.log(`Captured page ${page.page}.`);
+		const now = Date.now();
+		const seconds = (milliseconds: number) => `${(milliseconds / 1000).toFixed(1)} s`;
+		actions.log(`Captured page ${page.page} (${seconds(now - pageStarted)}` + (timing.moves ? `: ${timing.moves} moves, ` +
+			`${timing.checks} screen checks; key presses ${seconds(timing.keys)}, waiting ${seconds(timing.waits)}, ` +
+			`grabbing ${seconds(timing.grabs)}, comparing ${seconds(timing.compares)}` : "") + ").");
+		pageStarted = now;
+		timing = { moves: 0, checks: 0, keys: 0, waits: 0, grabs: 0, compares: 0 };
 		// Chained so pages are read in order, one at a time; a failed report ends the run once paging stops.
 		reads = reads.then(() => readError === undefined ? read(page) : undefined)
 			.catch((error: unknown) => { readError = error; });
 		return page;
 	}
 	async function finish(result: Omit<GaragePagesResult, "pages" | "cars">): Promise<GaragePagesResult> {
+		if (releaseReads) {
+			actions.log(`Paging finished; reading ${pages.length} page${pages.length === 1 ? "" : "s"}. The stream can be used again.`);
+			releaseReads();
+		}
 		await reads;
 		if (readError !== undefined && result.status !== "interrupted") {
 			return { status: "interrupted", pages, cars: sorted(), error: readError instanceof Error ? readError.message : String(readError) };
@@ -161,9 +193,11 @@ export async function pageGarage(
 		return { ...result, pages, cars: sorted() };
 	}
 	try {
+		// current is the full capture of the screen a page is read from; seen is a probe of the screen shown now.
 		let current = await actions.capture();
+		let seen = actions.probe ? await probe() : current;
 		// Right on the last car wraps to the first, so seeing the starting screen again also ends the grid.
-		const firstScreen = current;
+		const firstScreen = seen;
 		let layout = await actions.layout(current);
 		const start = layout.cards.find((card) => card.selected);
 		if (!start || start.row !== 0) throw new Error("Select a car in the top row of My Cars before paging; Right keeps the row.");
@@ -179,23 +213,25 @@ export async function pageGarage(
 			if (nextColumn <= selectedColumn) throw new Error("The highlighted card is not in a fully visible column.");
 			let moved = false;
 			while (selectedColumn < nextColumn) {
-				const shown = await move(current);
-				const next = shown && await actions.isSameScreen(firstScreen, shown) ? null : shown;
+				const shown = await move(seen);
+				const next = shown && await same(firstScreen, shown) ? null : shown;
 				if (!next) {
 					// The final screen is captured too, unless the grid had already stopped scrolling and it shows
 					// nothing new.
 					if (moved) {
-						const final = await actions.layout(current);
+						const image = actions.probe ? await actions.capture() : seen;
+						const final = await actions.layout(image);
 						if (final.selectedColumn !== null && selectedColumn - final.selectedColumn + final.columns - 1 > lastColumn) {
-							await record(current, final, selectedColumn);
+							await record(image, final, selectedColumn);
 						}
 					}
 					return await finish({ status: "completed" });
 				}
-				current = next;
+				seen = next;
 				selectedColumn++;
 				moved = true;
 			}
+			current = actions.probe ? await timed("grabs", () => actions.capture()) : seen;
 			layout = await actions.layout(current);
 		}
 	} catch (error) {

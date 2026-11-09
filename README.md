@@ -62,6 +62,35 @@ temporary is dropped when the browser closes. Nothing is typed for you and the
 terminal never sees credentials, so you can do this through a remote desktop
 (Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
 
+### Stream frames and stats
+
+Both cloud players show the game as WebRTC video in the page. By default the
+walk and page scan read each frame straight from that video, at the stream's
+own resolution (for example 2560x1440), instead of screenshotting the window,
+which is capped by the window's size. When no playing video is found the
+capture falls back to a screenshot and says so; `--source screen` always uses
+screenshots.
+
+Before a run starts the terminal shows what the stream delivers, for example
+`Stream: 2560x1440 at 60 fps, 28.4 Mbps, H264`, and the capture size. A page
+scan also records the stream stats for every page in `garage-pages.json`
+(`stream`), so a page that reads badly can be matched to a drop in resolution
+or bitrate. Stream resolution itself is set in the provider's own settings and
+is kept in the saved browser profile. On GeForce Now (Settings, Gameplay,
+Streaming quality, Custom) pick a 16:9 resolution such as 2560x1440 and set
+"Adjust for network conditions" to "No adjustment" or "Optimal quality":
+"Optimal latency" drops the resolution on packet loss (992x620 was seen). A
+stream under 1920 wide is scaled up to 1920 before reading, with a warning.
+
+While waiting for a move to show and the screen to settle, the page scan checks
+small 1280-wide JPEG frames, which are several times quicker to grab than a
+full PNG; the full-size frame is taken once per page. Each "Captured page" line
+shows how long that page took and where the time went. Cards are read once
+paging has finished, because OCR running alongside slowed paging from about
+3.6 s to 6.4 s a page at 2560x1440; the stream is free again as soon as the
+terminal says so. `--read-during` reads in the background while paging
+instead, which ends the whole run sooner but keeps the stream busy longer.
+
 ### Choosing the screen
 
 Captures open on the laptop's built-in screen by default, so a run works the

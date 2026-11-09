@@ -105,29 +105,37 @@ export async function pageGarage(
 	let readError: unknown;
 	const sorted = () => [...cards.values()].sort((a, b) => a.column - b.column || a.row - b.row);
 	const pollMs = options.pollMs ?? 150;
-	const probe = () => actions.probe ? actions.probe() : actions.capture();
+	// Where each page's time goes, shown on its "Captured page" line.
+	let timing = { moves: 0, checks: 0, keys: 0, waits: 0, grabs: 0, compares: 0 };
+	async function timed<T>(part: "keys" | "waits" | "grabs" | "compares", work: () => Promise<T>): Promise<T> {
+		const started = Date.now();
+		try { return await work(); } finally { timing[part] += Date.now() - started; }
+	}
+	const probe = () => { timing.checks++; return timed("grabs", () => actions.probe ? actions.probe() : actions.capture()); };
+	const same = (previous: Buffer, current: Buffer) => timed("compares", () => actions.isSameScreen(previous, current));
 	let pageStarted = Date.now();
 	/** Presses Right and returns a probe of the settled screen, or null when Right changed nothing. */
 	async function move(from: Buffer): Promise<Buffer | null> {
 		// A move that changes nothing is retried once, since streams occasionally drop a key press. Instead of a fixed
 		// wait, the screen is checked every pollMs: the move counts once the screen differs from before and has
 		// stopped scrolling, which on a stream usually takes well under the settle time.
+		timing.moves++;
 		for (let attempt = 0; attempt < 2; attempt++) {
-			await actions.press(options.right);
+			await timed("keys", () => actions.press(options.right));
 			let waited = 0;
 			let current: Buffer | null = null;
 			do {
 				const step = Math.min(pollMs, options.settleMs - waited);
-				await actions.wait(step);
+				await timed("waits", () => actions.wait(step));
 				waited += step;
 				const capture = await probe();
-				if (!await actions.isSameScreen(from, capture)) current = capture;
+				if (!await same(from, capture)) current = capture;
 			} while (!current && waited < options.settleMs);
 			if (!current) continue;
 			for (let settled = 0; settled < options.settleMs; settled += pollMs) {
-				await actions.wait(pollMs);
+				await timed("waits", () => actions.wait(pollMs));
 				const next = await probe();
-				if (await actions.isSameScreen(current, next)) return next;
+				if (await same(current, next)) return next;
 				current = next;
 			}
 			return current;
@@ -156,8 +164,12 @@ export async function pageGarage(
 		await actions.saveScreenshot(page.screenshot, image);
 		pages.push(page);
 		const now = Date.now();
-		actions.log(`Captured page ${page.page} (${((now - pageStarted) / 1000).toFixed(1)} s).`);
+		const seconds = (milliseconds: number) => `${(milliseconds / 1000).toFixed(1)} s`;
+		actions.log(`Captured page ${page.page} (${seconds(now - pageStarted)}` + (timing.moves ? `: ${timing.moves} moves, ` +
+			`${timing.checks} screen checks; key presses ${seconds(timing.keys)}, waiting ${seconds(timing.waits)}, ` +
+			`grabbing ${seconds(timing.grabs)}, comparing ${seconds(timing.compares)}` : "") + ").");
 		pageStarted = now;
+		timing = { moves: 0, checks: 0, keys: 0, waits: 0, grabs: 0, compares: 0 };
 		// Chained so pages are read in order, one at a time; a failed report ends the run once paging stops.
 		reads = reads.then(() => readError === undefined ? read(page) : undefined)
 			.catch((error: unknown) => { readError = error; });
@@ -192,7 +204,7 @@ export async function pageGarage(
 			let moved = false;
 			while (selectedColumn < nextColumn) {
 				const shown = await move(seen);
-				const next = shown && await actions.isSameScreen(firstScreen, shown) ? null : shown;
+				const next = shown && await same(firstScreen, shown) ? null : shown;
 				if (!next) {
 					// The final screen is captured too, unless the grid had already stopped scrolling and it shows
 					// nothing new.
@@ -209,7 +221,7 @@ export async function pageGarage(
 				selectedColumn++;
 				moved = true;
 			}
-			current = actions.probe ? await actions.capture() : seen;
+			current = actions.probe ? await timed("grabs", () => actions.capture()) : seen;
 			layout = await actions.layout(current);
 		}
 	} catch (error) {

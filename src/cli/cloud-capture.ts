@@ -10,17 +10,18 @@ import { defaultScreenshotsDirectory } from "../workflows/run-directory.ts";
 import { BrowserRecording, parseRecordingCommand } from "../capture/browser-recording.ts";
 import { defaultGarageWalkKeys, hasTileBelow, isDirectlyBelow, isSamePanel, isSameSelection, saveGarageManifest, selectionTop, walkGarage } from "../capture/garage-walk.ts";
 import type { GarageCar } from "../capture/garage-walk.ts";
-import { isSameScreen, pageGarage, saveGaragePagesManifest } from "../capture/garage-pages.ts";
+import { followsCutOffColumn, isSameScreen, pageGarage, sameCardTiles, saveGaragePagesManifest } from "../capture/garage-pages.ts";
 import type { GarageCard, GaragePage } from "../capture/garage-pages.ts";
 import { findCards, loadIconTemplates, readCardPage } from "../ocr/my-cars-cards.ts";
 import { matchCatalog } from "../ocr/card-catalog.ts";
 import { loadCarIdData } from "@forzagarage/car-ids";
-import { checkGameFrame, cropToGame, readWidth, scaleToReadWidth } from "../capture/game-frame.ts";
+import { checkGameFrame, cropToGame, readWidth, sameFrame, scaleToReadWidth } from "../capture/game-frame.ts";
 import { assertSignedIn } from "../capture/session-check.ts";
 import { listDisplays, pickDisplay } from "../capture/displays.ts";
 import { setTimeout as wait } from "node:timers/promises";
 import { captureStreamFrame, describeStreamStats, readStreamStats, streamInitScript } from "../capture/stream-frame.ts";
 import type { StreamStats } from "../capture/stream-frame.ts";
+import { connectStreamWindow, openStreamWindow, streamWindowPorts } from "../capture/stream-window.ts";
 
 const { values, positionals } = parseArgs({
 	allowPositionals: true,
@@ -36,6 +37,8 @@ const { values, positionals } = parseArgs({
 		"read-during": { type: "boolean", default: false },
 		display: { type: "string", default: "internal" },
 		source: { type: "string", default: "video" },
+		"keep-open": { type: "boolean", default: false },
+		"from-recent": { type: "boolean", default: false },
 	},
 });
 const provider = positionals[0] ?? "geforce";
@@ -46,7 +49,7 @@ if (positionals.length > 1 || values.image?.trim() === "" ||
 	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
 	!["video", "screen"].includes(values.source!) ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--keep-open] [--from-recent] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
 }
 
 const urls: Record<string, string> = {
@@ -112,25 +115,39 @@ async function capture(): Promise<Buffer | undefined> {
 	if (!localAppData) throw new Error("LOCALAPPDATA is not available.");
 	const profileDirectory = join(localAppData, "fh-scanner", "browser-profiles", provider);
 	const display = pickDisplay(await listDisplays(), values.display!);
-	if (display) console.log(`Opening on ${display.name}${display.internal ? " (built-in screen)" : ""}, ${display.width}x${display.height}.`);
-	const context = await chromium.launchPersistentContext(profileDirectory, {
+	// A window left open by an earlier --keep-open run already has the stream running: use it as it is.
+	const port = streamWindowPorts[provider]!;
+	let browser = await connectStreamWindow(port);
+	if (browser && values.login) {
+		await browser.close();
+		throw new Error("A stream window kept open by an earlier run is using the browser profile. Close it, then sign in.");
+	}
+	const reused = browser !== undefined;
+	const windowArgs = [...display ? [`--window-position=${display.x},${display.y}`] : [], values.login ? "--start-maximized" : "--kiosk"];
+	if (reused) console.log(`Using the stream window left open by an earlier run (debugging port ${port}).`);
+	else if (display) console.log(`Opening on ${display.name}${display.internal ? " (built-in screen)" : ""}, ${display.width}x${display.height}.`);
+	if (!browser && values["keep-open"]) browser = await openStreamWindow({ profileDirectory, port, args: windowArgs });
+	const context = browser ? browser.contexts()[0]! : await chromium.launchPersistentContext(profileDirectory, {
 		channel: "msedge",
 		headless: false,
 		// A fixed viewport larger than the window clips the visible page; full screen keeps the game on screen.
 		viewport: null,
 		// --start-fullscreen left the page about 40 px short of the screen; kiosk mode fills it, so the capture is the
 		// whole screen and cropToGame trims any bars. Sign-in keeps a normal window so its pages and prompts work.
-		args: [
-			...display ? [`--window-position=${display.x},${display.y}`] : [],
-			values.login ? "--start-maximized" : "--kiosk",
-		],
+		args: windowArgs,
 	});
-	// Registered before any page loads, so the player's peer connection can report stream stats.
-	await context.addInitScript(streamInitScript);
 	const prompt = createInterface({ input: stdin, output: stdout });
 	try {
-		const page = context.pages()[0] ?? await context.newPage();
-		await page.goto(url!);
+		const host = new URL(url!).host;
+		const open = reused ? context.pages().find((tab) => URL.canParse(tab.url()) && new URL(tab.url()).host === host) : undefined;
+		const page = open ?? await (async () => {
+			// Registered before the player loads, so its peer connection can report stream stats. A reused window
+			// already has it from the run that opened the page.
+			await context.addInitScript(streamInitScript);
+			const tab = context.pages()[0] ?? await context.newPage();
+			await tab.goto(url!);
+			return tab;
+		})();
 		// The profile restores earlier tabs and kiosk mode adds a blank one; kiosk shows a single tab, often not this
 		// one, so the stream would run in a hidden tab behind a white screen. Keep only the tab the scanner drives.
 		for (const other of context.pages()) if (other !== page) await other.close();
@@ -195,7 +212,11 @@ async function capture(): Promise<Buffer | undefined> {
 		return await grab(page);
 	} finally {
 		prompt.close();
-		await context.close();
+		if (browser) {
+			// Disconnects only: the window and its stream stay up for the next run.
+			await browser.close();
+			console.log(`The stream window stays open for the next run (it will be reused automatically). Close it with Alt+F4 when you're done.`);
+		} else await context.close();
 	}
 }
 
@@ -214,8 +235,56 @@ async function login(page: import("playwright").Page, prompt: ReturnType<typeof 
 	console.log(`Signed in. The session is kept in ${profileDirectory} when the browser closes. That folder holds login data: don't share or commit it.`);
 }
 
+async function pressKey(page: import("playwright").Page, key: string): Promise<void> {
+	assertSignedIn(page.url(), provider);
+	await page.bringToFront();
+	await page.keyboard.press(key, { delay: 50 });
+}
+
+/** Waits for the screen to change from before (up to changeMs) and then to stop changing (up to settleMs more). */
+async function waitForScreen(page: import("playwright").Page, before: Buffer, changeMs: number, settleMs = 3000): Promise<Buffer> {
+	let current = await probe(page);
+	for (let waited = 0; waited < changeMs && await sameFrame(before, current); waited += 150) {
+		await wait(150);
+		current = await probe(page);
+	}
+	for (let waited = 0; waited < settleMs; waited += 150) {
+		await wait(150);
+		const next = await probe(page);
+		if (await sameFrame(current, next)) return next;
+		current = next;
+	}
+	return current;
+}
+
+/**
+ * Brings My Cars to the start of the whole garage: sorts by Recently Added (X opens the sort list, Recently Added is
+ * six down), then Backspace and Enter pick the group of all cars, which highlights the first car of the grid.
+ */
+async function startFromRecentlyAdded(page: import("playwright").Page): Promise<void> {
+	console.log("Sorting My Cars by Recently Added: X, Down x6, Enter.");
+	let screen = await probe(page);
+	await pressKey(page, "x");
+	screen = await waitForScreen(page, screen, 3000);
+	for (let step = 0; step < 6; step++) {
+		await pressKey(page, "ArrowDown");
+		await wait(250);
+	}
+	screen = await probe(page);
+	await pressKey(page, "Enter");
+	screen = await waitForScreen(page, screen, 8000);
+	console.log("Selecting all cars: Backspace, Enter.");
+	await pressKey(page, "Backspace");
+	screen = await waitForScreen(page, screen, 3000);
+	await pressKey(page, "Enter");
+	await waitForScreen(page, screen, 8000);
+}
+
 async function walk(page: import("playwright").Page, prompt: ReturnType<typeof createInterface>): Promise<void> {
-	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	await prompt.question(values["from-recent"]
+		? "Launch the game, open My Cars, click the stream to focus it and hide overlays, then press Enter here. Don't touch the stream until the walk finishes."
+		: "Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until the walk finishes.");
+	if (values["from-recent"]) await startFromRecentlyAdded(page);
 	await reportStream(page);
 	await checkGameFrame(await grab(page));
 	// Created after the prompt so abandoning the walk before it starts leaves no empty directory.
@@ -268,7 +337,10 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 	// Loaded before the prompt so missing templates fail before the game is set up.
 	const templates = await loadIconTemplates();
 	const catalog = loadCarIdData().cars;
-	await prompt.question("Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
+	await prompt.question(values["from-recent"]
+		? "Launch the game, open My Cars, click the stream to focus it and hide overlays, then press Enter here. Don't touch the stream until paging finishes."
+		: "Launch the game, open My Cars, select the FIRST car (top-left), click the stream to focus it and hide overlays. Make the game fill the viewport at 16:9, then press Enter here. Don't touch the stream until paging finishes.");
+	if (values["from-recent"]) await startFromRecentlyAdded(page);
 	await reportStream(page);
 	await checkGameFrame(await grab(page));
 	await mkdir(defaultScreenshotsDirectory, { recursive: true });
@@ -289,11 +361,13 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 			press: async (key) => {
 				assertSignedIn(page.url(), provider);
 				await page.bringToFront();
-				await page.keyboard.press(key, { delay: 100 });
+				await page.keyboard.press(key, { delay: 50 });
 			},
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			layout: findCards,
 			isSameScreen,
+			sameCards: sameCardTiles,
+			continuesFrom: followsCutOffColumn,
 			read: async (image) => (await readCardPage(image, worker, shapeWorker, templates)).cards.map((card) => matchCatalog(card, catalog)),
 			saveScreenshot: async (name, image) => {
 				await writeFile(join(directory, name), image, { flag: "wx" });

@@ -62,6 +62,29 @@ temporary is dropped when the browser closes. Nothing is typed for you and the
 terminal never sees credentials, so you can do this through a remote desktop
 (Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
 
+### Starting from the first car automatically
+
+With `--from-recent`, a walk or page scan only needs My Cars open with any car
+highlighted. It sorts by Recently Added (X opens the sort list, Recently Added
+is six down, Enter), then presses Backspace and Enter to pick the group of all
+cars, which highlights the first car of the grid, and starts from there.
+
+### Keeping the stream open between runs
+
+Starting a cloud session takes a while, so `--keep-open` starts Edge on its own
+and leaves the window, and the game stream in it, running after the run ends:
+
+```
+npm run capture:cloud -- geforce --pages --keep-open
+```
+
+Every later run finds that window by its local debugging port (9333 for
+GeForce Now, 9334 for Xbox) and uses it as it is, with or without the flag, so
+the game only needs to be on My Cars with the first car selected. Close the
+window with Alt+F4 when you're done. While it is open, any program on this PC
+can control that browser through the port, signed-in session included, so don't
+leave it running unattended.
+
 ### Stream frames and stats
 
 Both cloud players show the game as WebRTC video in the page. By default the
@@ -82,7 +105,8 @@ Streaming quality, Custom) pick a 16:9 resolution such as 2560x1440 and set
 "Optimal latency" drops the resolution on packet loss (992x620 was seen). A
 stream under 1920 wide is scaled up to 1920 before reading, with a warning.
 
-While waiting for a move to show and the screen to settle, the page scan checks
+While waiting for a move to show and the screen to settle (checked every
+100 ms), the page scan checks
 small 1280-wide JPEG frames, which are several times quicker to grab than a
 full PNG; the full-size frame is taken once per page. Each "Captured page" line
 shows how long that page took and where the time went. Cards are read once
@@ -90,6 +114,11 @@ paging has finished, because OCR running alongside slowed paging from about
 3.6 s to 6.4 s a page at 2560x1440; the stream is free again as soon as the
 terminal says so. `--read-during` reads in the background while paging
 instead, which ends the whole run sooner but keeps the stream busy longer.
+
+Each new page is checked against the column shown cut off and dimmed at the
+right edge of the page before it. If the stream delivered a Right press twice
+and the grid skipped that column, the scan says so and steps back one column
+with Left before capturing.
 
 ### Choosing the screen
 

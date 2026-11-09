@@ -59,3 +59,23 @@ export async function scaleToReadWidth(image: Buffer): Promise<Buffer> {
 	if (!width || width >= readWidth) return image;
 	return sharp(image).resize({ width: readWidth, kernel: "lanczos3" }).png().toBuffer();
 }
+
+const frameSamples = new WeakMap<Buffer, Promise<Buffer>>();
+
+/** A small grayscale copy of a frame, kept for as long as the frame. */
+function frameSample(image: Buffer): Promise<Buffer> {
+	let sample = frameSamples.get(image);
+	if (!sample) frameSamples.set(image, sample = sharp(image).removeAlpha().resize(160, 90, { fit: "fill" }).grayscale().raw().toBuffer());
+	return sample;
+}
+
+/**
+ * True when two frames show the same screen, allowing for stream compression. Unlike the My Cars comparisons it
+ * needs no highlighted car, so it works on any menu; small changes such as a scrolling name still count as the same.
+ */
+export async function sameFrame(previous: Buffer, current: Buffer): Promise<boolean> {
+	const [before, after] = await Promise.all([frameSample(previous), frameSample(current)]);
+	let total = 0;
+	for (let pixel = 0; pixel < before.length; pixel++) total += Math.abs(before[pixel]! - after[pixel]!);
+	return total / before.length <= 3;
+}

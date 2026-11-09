@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { checkGameFrame, cropToGame, scaleToReadWidth } from "../src/capture/game-frame.ts";
+import { checkGameFrame, cropToGame, sameFrame, scaleToReadWidth } from "../src/capture/game-frame.ts";
 
 // A 16:9 "game" with a bright frame edge and a highlighted tile, placed on a black canvas of the given size.
 async function streamed(canvasWidth: number, canvasHeight: number, gameWidth = 1600, gameHeight = 900): Promise<Buffer> {
@@ -45,5 +45,12 @@ describe("game frame", () => {
 		expect(await sharp(await scaleToReadWidth(small)).metadata()).toMatchObject({ width: 1920, height: 1080 });
 		const large = await streamed(2560, 1440, 2560, 1440);
 		expect(await scaleToReadWidth(large)).toBe(large);
+	});
+	it("tells a changed menu screen from compression noise", async () => {
+		const screen = await streamed(1280, 720, 1280, 720);
+		const noisy = await sharp(screen).jpeg({ quality: 70 }).toBuffer();
+		const changed = await sharp(screen).composite([{ input: { create: { width: 640, height: 400, channels: 3, background: "#e0e0e0" } }, left: 300, top: 150 }]).png().toBuffer();
+		expect(await sameFrame(screen, noisy)).toBe(true);
+		expect(await sameFrame(screen, changed)).toBe(false);
 	});
 });

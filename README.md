@@ -62,6 +62,22 @@ temporary is dropped when the browser closes. Nothing is typed for you and the
 terminal never sees credentials, so you can do this through a remote desktop
 (Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
 
+### Stream frames and stats
+
+Both cloud players show the game as WebRTC video in the page. By default the
+walk and page scan read each frame straight from that video, at the stream's
+own resolution (for example 2560x1440), instead of screenshotting the window,
+which is capped by the window's size. When no playing video is found the
+capture falls back to a screenshot and says so; `--source screen` always uses
+screenshots.
+
+Before a run starts the terminal shows what the stream delivers, for example
+`Stream: 2560x1440 at 60 fps, 28.4 Mbps, H264`, and the capture size. A page
+scan also records the stream stats for every page in `garage-pages.json`
+(`stream`), so a page that reads badly can be matched to a drop in resolution
+or bitrate. Stream resolution itself is set in the provider's own settings and
+is kept in the saved browser profile.
+
 ### Choosing the screen
 
 Captures open on the laptop's built-in screen by default, so a run works the

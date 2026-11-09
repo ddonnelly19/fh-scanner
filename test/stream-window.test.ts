@@ -21,7 +21,8 @@ describe("kept-open stream window", () => {
 
 			const second = await connectStreamWindow(port);
 			expect(second).toBeDefined();
-			const again = second!.contexts()[0]!.pages()[0]!;
+			// Found by address, as a real run finds the player's tab: Edge may have opened other tabs meanwhile.
+			const again = second!.contexts()[0]!.pages().find((tab) => tab.url().startsWith("data:text/html"))!;
 			expect(await again.evaluate(() => (window as unknown as { kept: number }).kept)).toBe(42);
 			const session = await second!.newBrowserCDPSession();
 			await session.send("Browser.close").catch(() => {});

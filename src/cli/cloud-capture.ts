@@ -21,6 +21,7 @@ import { listDisplays, pickDisplay } from "../capture/displays.ts";
 import { setTimeout as wait } from "node:timers/promises";
 import { captureStreamFrame, describeStreamStats, readStreamStats, streamInitScript } from "../capture/stream-frame.ts";
 import type { StreamStats } from "../capture/stream-frame.ts";
+import { connectStreamWindow, openStreamWindow, streamWindowPorts } from "../capture/stream-window.ts";
 
 const { values, positionals } = parseArgs({
 	allowPositionals: true,
@@ -36,6 +37,7 @@ const { values, positionals } = parseArgs({
 		"read-during": { type: "boolean", default: false },
 		display: { type: "string", default: "internal" },
 		source: { type: "string", default: "video" },
+		"keep-open": { type: "boolean", default: false },
 	},
 });
 const provider = positionals[0] ?? "geforce";
@@ -46,7 +48,7 @@ if (positionals.length > 1 || values.image?.trim() === "" ||
 	[values.login, values.record, values.walk, values.pages, values.image !== undefined].filter(Boolean).length > 1 ||
 	!["video", "screen"].includes(values.source!) ||
 	!Number.isSafeInteger(maxCars) || maxCars < 1 || !Number.isSafeInteger(maxPages) || maxPages < 1 || !Number.isSafeInteger(settleMs) || settleMs < 100 || settleMs > 10000) {
-	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
+	throw new Error("Usage: cloud-capture.ts [geforce|xbox] [--display internal|primary|n] [--source video|screen] [--keep-open] [--image path | --login | --record | --walk [--max-cars n] [--settle-ms 100..10000] | --pages [--max-pages n] [--settle-ms 100..10000] [--read-during]]");
 }
 
 const urls: Record<string, string> = {
@@ -112,25 +114,39 @@ async function capture(): Promise<Buffer | undefined> {
 	if (!localAppData) throw new Error("LOCALAPPDATA is not available.");
 	const profileDirectory = join(localAppData, "fh-scanner", "browser-profiles", provider);
 	const display = pickDisplay(await listDisplays(), values.display!);
-	if (display) console.log(`Opening on ${display.name}${display.internal ? " (built-in screen)" : ""}, ${display.width}x${display.height}.`);
-	const context = await chromium.launchPersistentContext(profileDirectory, {
+	// A window left open by an earlier --keep-open run already has the stream running: use it as it is.
+	const port = streamWindowPorts[provider]!;
+	let browser = await connectStreamWindow(port);
+	if (browser && values.login) {
+		await browser.close();
+		throw new Error("A stream window kept open by an earlier run is using the browser profile. Close it, then sign in.");
+	}
+	const reused = browser !== undefined;
+	const windowArgs = [...display ? [`--window-position=${display.x},${display.y}`] : [], values.login ? "--start-maximized" : "--kiosk"];
+	if (reused) console.log(`Using the stream window left open by an earlier run (debugging port ${port}).`);
+	else if (display) console.log(`Opening on ${display.name}${display.internal ? " (built-in screen)" : ""}, ${display.width}x${display.height}.`);
+	if (!browser && values["keep-open"]) browser = await openStreamWindow({ profileDirectory, port, args: windowArgs });
+	const context = browser ? browser.contexts()[0]! : await chromium.launchPersistentContext(profileDirectory, {
 		channel: "msedge",
 		headless: false,
 		// A fixed viewport larger than the window clips the visible page; full screen keeps the game on screen.
 		viewport: null,
 		// --start-fullscreen left the page about 40 px short of the screen; kiosk mode fills it, so the capture is the
 		// whole screen and cropToGame trims any bars. Sign-in keeps a normal window so its pages and prompts work.
-		args: [
-			...display ? [`--window-position=${display.x},${display.y}`] : [],
-			values.login ? "--start-maximized" : "--kiosk",
-		],
+		args: windowArgs,
 	});
-	// Registered before any page loads, so the player's peer connection can report stream stats.
-	await context.addInitScript(streamInitScript);
 	const prompt = createInterface({ input: stdin, output: stdout });
 	try {
-		const page = context.pages()[0] ?? await context.newPage();
-		await page.goto(url!);
+		const host = new URL(url!).host;
+		const open = reused ? context.pages().find((tab) => URL.canParse(tab.url()) && new URL(tab.url()).host === host) : undefined;
+		const page = open ?? await (async () => {
+			// Registered before the player loads, so its peer connection can report stream stats. A reused window
+			// already has it from the run that opened the page.
+			await context.addInitScript(streamInitScript);
+			const tab = context.pages()[0] ?? await context.newPage();
+			await tab.goto(url!);
+			return tab;
+		})();
 		// The profile restores earlier tabs and kiosk mode adds a blank one; kiosk shows a single tab, often not this
 		// one, so the stream would run in a hidden tab behind a white screen. Keep only the tab the scanner drives.
 		for (const other of context.pages()) if (other !== page) await other.close();
@@ -195,7 +211,11 @@ async function capture(): Promise<Buffer | undefined> {
 		return await grab(page);
 	} finally {
 		prompt.close();
-		await context.close();
+		if (browser) {
+			// Disconnects only: the window and its stream stay up for the next run.
+			await browser.close();
+			console.log(`The stream window stays open for the next run (it will be reused automatically). Close it with Alt+F4 when you're done.`);
+		} else await context.close();
 	}
 }
 

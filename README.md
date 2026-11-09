@@ -62,6 +62,22 @@ temporary is dropped when the browser closes. Nothing is typed for you and the
 terminal never sees credentials, so you can do this through a remote desktop
 (Chrome Remote Desktop, Jump Desktop) from a phone or tablet.
 
+### Keeping the stream open between runs
+
+Starting a cloud session takes a while, so `--keep-open` starts Edge on its own
+and leaves the window, and the game stream in it, running after the run ends:
+
+```
+npm run capture:cloud -- geforce --pages --keep-open
+```
+
+Every later run finds that window by its local debugging port (9333 for
+GeForce Now, 9334 for Xbox) and uses it as it is, with or without the flag, so
+the game only needs to be on My Cars with the first car selected. Close the
+window with Alt+F4 when you're done. While it is open, any program on this PC
+can control that browser through the port, signed-in session included, so don't
+leave it running unattended.
+
 ### Stream frames and stats
 
 Both cloud players show the game as WebRTC video in the page. By default the

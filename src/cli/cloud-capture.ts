@@ -289,7 +289,7 @@ async function pages(page: import("playwright").Page, prompt: ReturnType<typeof 
 			press: async (key) => {
 				assertSignedIn(page.url(), provider);
 				await page.bringToFront();
-				await page.keyboard.press(key, { delay: 100 });
+				await page.keyboard.press(key, { delay: 50 });
 			},
 			wait: async (milliseconds) => { await wait(milliseconds); },
 			layout: findCards,

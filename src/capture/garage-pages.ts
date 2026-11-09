@@ -29,7 +29,7 @@ export interface GaragePagesOptions {
 	/** Longest wait for a move to show, and then for the screen to stop changing. */
 	settleMs: number;
 	maxPages: number;
-	/** How often the screen is checked while waiting; defaults to 150 ms. */
+	/** How often the screen is checked while waiting; defaults to 100 ms. */
 	pollMs?: number;
 	/**
 	 * Reads the cards only after paging ends. Reading alongside paging finishes sooner overall, but the OCR competes
@@ -110,7 +110,7 @@ export async function pageGarage(
 	let reads: Promise<void> = options.readAfterPaging ? new Promise<void>((resolve) => { releaseReads = resolve; }) : Promise.resolve();
 	let readError: unknown;
 	const sorted = () => [...cards.values()].sort((a, b) => a.column - b.column || a.row - b.row);
-	const pollMs = options.pollMs ?? 150;
+	const pollMs = options.pollMs ?? 100;
 	// Where each page's time goes, shown on its "Captured page" line.
 	let timing = { moves: 0, checks: 0, keys: 0, waits: 0, grabs: 0, compares: 0 };
 	async function timed<T>(part: "keys" | "waits" | "grabs" | "compares", work: () => Promise<T>): Promise<T> {

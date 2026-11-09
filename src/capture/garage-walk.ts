@@ -153,9 +153,21 @@ function belowTitle(tile: Region): Region {
 	return { left: tile.left, top: tile.top + title, width: tile.width, height: tile.height - title };
 }
 
-async function tileSample(image: Buffer, tile: Region): Promise<Buffer> {
-	return sharp(image).removeAlpha().extract(tile).resize(160, 120, { fit: "fill" })
-		.grayscale().blur(0.8).raw().toBuffer();
+// Every capture is compared twice while waiting for the screen to settle (with the one before and the one after),
+// so its samples are kept for as long as the capture itself.
+const tileSamples = new WeakMap<Buffer, Map<string, Promise<Buffer>>>();
+
+function tileSample(image: Buffer, tile: Region): Promise<Buffer> {
+	let samples = tileSamples.get(image);
+	if (!samples) tileSamples.set(image, samples = new Map());
+	const key = `${tile.left},${tile.top},${tile.width},${tile.height}`;
+	let sample = samples.get(key);
+	if (!sample) {
+		sample = sharp(image).removeAlpha().extract(tile).resize(160, 120, { fit: "fill" }).grayscale().blur(0.8).raw().toBuffer();
+		sample.catch(() => samples.delete(key));
+		samples.set(key, sample);
+	}
+	return sample;
 }
 
 export async function sameTileContents(previous: Buffer, current: Buffer, tile: Region): Promise<boolean> {

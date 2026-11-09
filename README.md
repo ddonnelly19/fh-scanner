@@ -85,7 +85,10 @@ stream under 1920 wide is scaled up to 1920 before reading, with a warning.
 While waiting for a move to show and the screen to settle, the page scan checks
 small 1280-wide JPEG frames, which are several times quicker to grab than a
 full PNG; the full-size frame is taken once per page. Each "Captured page" line
-shows how long that page took.
+shows how long that page took and where the time went. Cards are read in the
+background while paging goes on; `--read-after` holds the reading until paging
+ends, so the OCR doesn't slow paging down and the stream is free sooner, at the
+cost of a longer run overall.
 
 ### Choosing the screen
 

@@ -110,6 +110,23 @@ describe("garage paging", () => {
 		// The first screen, one per later page, and one for the final screen.
 		expect(captures).toBe(4);
 	});
+	it("can hold the card reads until paging has finished", async () => {
+		const heights = [1, 3, 2, 3, 1, 2, 3, 3, 1, 2, 2];
+		const grid = simulateGrid(heights);
+		const events: string[] = [];
+		const press = grid.actions.press;
+		const read = grid.actions.read;
+		const actions = {
+			...grid.actions,
+			press: async (key: string) => { events.push("press"); await press(key); },
+			read: async (image: Buffer) => { events.push("read"); return read(image); },
+		};
+		const result = await pageGarage(actions, { ...options, readAfterPaging: true }, async () => {});
+		expect(result.status).toBe("completed");
+		expect(positions(result.cars)).toEqual(expected(heights));
+		expect(events.indexOf("read")).toBeGreaterThan(events.lastIndexOf("press"));
+		expect(events.filter((event) => event === "read")).toHaveLength(3);
+	});
 	it("retries a dropped Right instead of stopping early", async () => {
 		const heights = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 		const grid = simulateGrid(heights, new Set([2, 6]));

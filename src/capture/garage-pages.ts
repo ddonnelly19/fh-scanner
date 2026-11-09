@@ -31,6 +31,11 @@ export interface GaragePagesOptions {
 	maxPages: number;
 	/** How often the screen is checked while waiting; defaults to 150 ms. */
 	pollMs?: number;
+	/**
+	 * Reads the cards only after paging ends. Reading alongside paging finishes sooner overall, but the OCR competes
+	 * with the screen checks for the CPU and slows paging down, which is the part that needs the stream left alone.
+	 */
+	readAfterPaging?: boolean;
 }
 
 /** A card with its column counted from the first column of the whole grid. */
@@ -101,7 +106,8 @@ export async function pageGarage(
 ): Promise<GaragePagesResult> {
 	const pages: GaragePage[] = [];
 	const cards = new Map<string, GarageCard>();
-	let reads: Promise<void> = Promise.resolve();
+	let releaseReads: (() => void) | undefined;
+	let reads: Promise<void> = options.readAfterPaging ? new Promise<void>((resolve) => { releaseReads = resolve; }) : Promise.resolve();
 	let readError: unknown;
 	const sorted = () => [...cards.values()].sort((a, b) => a.column - b.column || a.row - b.row);
 	const pollMs = options.pollMs ?? 150;
@@ -176,6 +182,10 @@ export async function pageGarage(
 		return page;
 	}
 	async function finish(result: Omit<GaragePagesResult, "pages" | "cars">): Promise<GaragePagesResult> {
+		if (releaseReads) {
+			actions.log(`Paging finished; reading ${pages.length} page${pages.length === 1 ? "" : "s"}. The stream can be used again.`);
+			releaseReads();
+		}
 		await reads;
 		if (readError !== undefined && result.status !== "interrupted") {
 			return { status: "interrupted", pages, cars: sorted(), error: readError instanceof Error ? readError.message : String(readError) };

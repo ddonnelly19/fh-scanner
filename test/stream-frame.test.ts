@@ -40,7 +40,8 @@ beforeAll(async () => {
 	// WebRTC starts at a low resolution and raises it as the connection's bandwidth estimate grows.
 	await page.waitForFunction(() => (document.getElementById("v") as HTMLVideoElement).videoWidth >= 640, undefined, { timeout: 25000 });
 }, 40000);
-afterAll(async () => { await browser?.close(); });
+// Edge can take well over the default 10 s to shut down after a WebRTC session.
+afterAll(async () => { await browser?.close(); }, 60000);
 
 describe("stream capture", () => {
 	it("reads a frame at the stream's resolution, not the video element's size", async () => {

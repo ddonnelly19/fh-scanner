@@ -119,7 +119,7 @@ describe("card icon matching", () => {
 		expect(new Set(shipped.map((item) => `${item.kind}:${item.label}`))).toEqual(new Set([
 			"drivetrain:AWD", "drivetrain:FWD", "drivetrain:RWD",
 			"tires:Street Tires", "tires:Rally Tires", "tires:Horizon Semi-Slick Tires", "tires:Slick Tires", "tires:Offroad Tires", "tires:Drift Tires",
-			"tires:Sport Tires", "tires:Vintage Tires", "tires:Vintage White Wall Tires",
+			"tires:Sport Tires", "tires:Vintage Tires", "tires:Vintage White Wall Tires", "tires:Vintage Race Tires",
 		]));
 		for (const item of shipped) {
 			expect([item.width, item.height]).toEqual([iconBoxes[item.kind].width, iconBoxes[item.kind].height]);
